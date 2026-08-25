@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYFS Client Portal | Interactive Portfolio Dashboard</title>
+    <meta name="description" content="Manage your E-Wealth account. Analyze your portfolio values, track mutual fund returns, monitor transaction history, and invest mock funds in real-time.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Immediate Authentication Guard to prevent DOM render leakage -->
+    <script>
+        if (!sessionStorage.getItem('keyfs_active_session')) {
+            window.location.replace('auth.html');
+        }
+    </script>
+</head>
+<body style="background-color: var(--bg-primary);">
+
+    <!-- Background mesh glows -->
+    <div class="bg-mesh-glow glow-1" style="opacity: 0.1;"></div>
+    <div class="bg-mesh-glow glow-2" style="opacity: 0.1;"></div>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-nav">
+            <div>
+                <a href="index.html" class="logo" style="margin-bottom: 3rem; display: flex;">
+                    KEYFS<span class="logo-dot"></span>
+                </a>
+                
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="sidebar-link active"><i class="fa-solid fa-gauge"></i> Portfolio Overview</a></li>
+                    <li><a href="products.html" class="sidebar-link"><i class="fa-solid fa-chart-line"></i> Mutual Funds</a></li>
+                    <li><a href="calculators.html" class="sidebar-link"><i class="fa-solid fa-calculator"></i> Calculators</a></li>
+                    <li><a href="#" class="sidebar-link"><i class="fa-solid fa-receipt"></i> Reports</a></li>
+                    <li><a href="#" class="sidebar-link"><i class="fa-solid fa-circle-question"></i> Help Desk</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <a href="index.html" class="sidebar-link" style="color:#EF4444;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Exit Console</a>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Viewport -->
+        <main class="dashboard-main">
+            <!-- Header bar -->
+            <header class="dash-header">
+                <div>
+                    <h1 style="font-size: 1.8rem; font-family: var(--font-heading);">Investor Console</h1>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Simulated E-Wealth trading account terminal</p>
+                </div>
+                
+                <div class="dash-user-badge">
+                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">Aayush Sharma</span>
+                    <div class="avatar">AS</div>
+                </div>
+            </header>
+
+            <!-- KYC Warning Banner -->
+            <div id="kyc-warning-banner" class="alert alert-success" style="background: rgba(239, 68, 68, 0.08); border: 1px solid #EF4444; color: #EF4444; margin-bottom: 2rem; display: none; align-items: center; justify-content: space-between; border-radius: 12px; padding: 1.2rem 1.5rem;">
+                <div style="display:flex; align-items:center; gap:0.8rem;">
+                    <i class="fa-solid fa-triangle-exclamation fa-lg" style="color:#EF4444;"></i>
+                    <div>
+                        <strong style="display:block; margin-bottom:0.1rem; font-size:0.95rem; color:#EF4444;">KYC Verification Required</strong>
+                        <span style="font-size:0.85rem; color:var(--text-secondary);">Your investment account is currently locked. Complete your KYC registration to unlock trading features.</span>
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="openKYCWizardModal()" style="padding: 0.5rem 1.2rem; font-size: 0.85rem; background:#EF4444; box-shadow:none; border-radius:6px; color:#080B11;">Verify KYC Now</button>
+            </div>
+
+            <!-- Portfolio Metrics Summary -->
+            <section class="dash-summary-row" style="padding: 0; margin-bottom: 2.5rem;">
+                <div class="dash-card">
+                    <p class="label">Current Portfolio Value</p>
+                    <h2 class="value text-gradient-blue" id="portfolio-total-value">₹0</h2>
+                    <p class="subtext" style="color: var(--text-secondary); font-size: 0.75rem;"><i class="fa-solid fa-arrows-spin fa-spin" style="margin-right: 0.2rem; color: var(--accent-blue);"></i> Live updates ticking</p>
+                </div>
+                
+                <div class="dash-card">
+                    <p class="label">Total Invested Principal</p>
+                    <h2 class="value" id="portfolio-invested">₹0</h2>
+                    <p class="subtext" style="color: var(--text-secondary); font-size: 0.75rem;">Deposited wealth</p>
+                </div>
+                
+                <div class="dash-card">
+                    <p class="label">Total Returns (P&amp;L)</p>
+                    <h2 class="value" id="portfolio-returns">₹0 (0.00%)</h2>
+                    <p class="subtext" style="font-size: 0.75rem; color: var(--text-secondary);">Absolute returns</p>
+                </div>
+
+                <div class="dash-card" style="background: rgba(16, 185, 129, 0.02); border-color: rgba(16, 185, 129, 0.15);">
+                    <p class="label">Uninvested Cash Balance</p>
+                    <h2 class="value" id="portfolio-cash-balance" style="color: var(--accent-emerald);">₹0</h2>
+                    <p class="subtext" style="color: var(--text-secondary); font-size: 0.75rem;">Ready capital for SIP/Buy</p>
+                </div>
+            </section>
+
+            <!-- Secondary Content Details Grid -->
+            <div class="dash-content-grid">
+                <!-- Left Hand Panels (Asset categories and Transactions log) -->
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    <!-- Asset Class Cards -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                            <div style="background: rgba(16, 185, 129, 0.1); width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent-emerald);">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">EQUITY FUNDS</span>
+                                <span id="asset-val-equity" style="font-weight: 700; font-size: 1.05rem;">₹0</span>
+                            </div>
+                        </div>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                            <div style="background: rgba(59, 130, 246, 0.1); width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: var(--accent-blue);">
+                                <i class="fa-solid fa-building-columns"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">BONDS &amp; DEBT</span>
+                                <span id="asset-val-debt" style="font-weight: 700; font-size: 1.05rem;">₹0</span>
+                            </div>
+                        </div>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: 12px; display: flex; align-items: center; gap: 1rem;">
+                            <div style="background: rgba(245, 158, 11, 0.1); width: 44px; height: 44px; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #F59E0B;">
+                                <i class="fa-solid fa-coins"></i>
+                            </div>
+                            <div>
+                                <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">GOLD ETFs</span>
+                                <span id="asset-val-gold" style="font-weight: 700; font-size: 1.05rem;">₹0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Transactions History Card -->
+                    <div class="dash-card">
+                        <h3 style="font-size: 1.15rem; margin-bottom: 1.2rem;"><i class="fa-solid fa-history" style="margin-right: 0.5rem; color: var(--accent-blue);"></i> Transaction Ledger</h3>
+                        <div class="table-responsive">
+                            <table class="data-table" style="font-size: 0.85rem;">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Type</th>
+                                        <th>Asset Description</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dash-transactions-body">
+                                    <!-- Transaction logs will be loaded dynamically -->
+                                    <tr>
+                                        <td colspan="5" style="text-align: center;">Loading ledger...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Hand Panel (Asset allocation Chart and actions) -->
+                <div style="display: flex; flex-direction: column; gap: 2rem;">
+                    <!-- Allocation chart -->
+                    <div class="dash-card" style="text-align: center;">
+                        <h3 style="font-size: 1.15rem; margin-bottom: 1.5rem; text-align: left;"><i class="fa-solid fa-pie-chart" style="margin-right: 0.5rem; color: var(--accent-emerald);"></i> Asset Allocation</h3>
+                        <div style="position: relative; width: 100%; height: 240px; margin: 0 auto;">
+                            <canvas id="allocationChartCanvas"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Quick Invest Panel -->
+                    <div class="dash-card" style="text-align: center; border-color: rgba(16, 185, 129, 0.2); background: rgba(16, 185, 129, 0.01);">
+                        <i class="fa-solid fa-circle-plus fa-3x" style="color: var(--accent-emerald); margin-bottom: 1rem;"></i>
+                        <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Simulate Transaction</h3>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5;">Test the platform by buying mock mutual funds, corporate bonds, or gold using your uninvested cash balance.</p>
+                        <button class="btn btn-primary" id="dashboard-btn-invest" style="width: 100%; border-radius: 8px;">Invest Mock Capital</button>
+                    </div>
+
+                    <!-- Linked Bank & Withdrawal Panel -->
+                    <div class="dash-card" id="bank-status-card" style="border-color: rgba(59, 130, 246, 0.2);">
+                        <h3 style="font-size: 1.15rem; margin-bottom: 1rem;"><i class="fa-solid fa-building-columns" style="margin-right: 0.5rem; color: var(--accent-blue);"></i> Linked Bank Account</h3>
+                        
+                        <!-- Unlinked state display -->
+                        <div id="bank-unlinked-view" style="display: block; text-align: center; padding: 1rem 0;">
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1.5rem; line-height: 1.5;">Link a bank account to enable cash withdrawals and funding.</p>
+                            <button class="btn btn-secondary" onclick="openLinkBankModal()" style="width: 100%; border-radius: 8px; font-size:0.85rem;"><i class="fa-solid fa-link" style="margin-right:0.4rem;"></i> Link Bank Account</button>
+                        </div>
+
+                        <!-- Linked state display -->
+                        <div id="bank-linked-view" style="display: none;">
+                            <div style="background: rgba(0,0,0,0.2); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color); margin-bottom: 1.5rem;">
+                                <strong id="lbl-bank-name" style="display:block; font-size:0.95rem; color:var(--text-primary);">HDFC Bank</strong>
+                                <span id="lbl-ac-num" style="display:block; font-size:0.85rem; color:var(--text-secondary); font-family: monospace; margin-top:0.2rem;">A/C ************4821</span>
+                                <span id="lbl-ifsc-code" style="display:block; font-size:0.75rem; color:var(--text-muted); margin-top:0.1rem;">IFSC: HDFC0000123</span>
+                            </div>
+                            <div style="display:flex; gap:0.5rem;">
+                                <button class="btn btn-secondary" onclick="openLinkBankModal()" style="flex:1; padding:0.5rem; border-radius:6px; font-size:0.8rem;">Change</button>
+                                <button class="btn btn-blue" onclick="openWithdrawModal()" style="flex:1; padding:0.5rem; border-radius:6px; font-size:0.8rem;"><i class="fa-solid fa-money-bill-transfer" style="margin-right:0.3rem;"></i> Withdraw</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Buy / Invest Modal Overlay -->
+    <div class="fund-details-modal" id="invest-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="modal-close-btn">&times;</button>
+            
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;"><i class="fa-solid fa-wallet text-gradient" style="margin-right: 0.5rem;"></i> Buy Investment</h2>
+            
+            <form id="mock-invest-form">
+                <div class="alert alert-success" id="invest-warning" style="background: rgba(239, 68, 68, 0.1); border-color:#EF4444; color:#EF4444; display:none;">
+                    Insufficient cash balance warning.
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="invest-asset">Select Target Asset Class</label>
+                    <select class="form-control" id="invest-asset">
+                        <option value="equity">Equity Mutual Funds (Nifty index / dynamic)</option>
+                        <option value="debt">Bonds / Fixed Income (Govt / corporate)</option>
+                        <option value="gold">Gold ETF (Precious metals index)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label" for="invest-amount">Investment Amount (INR)</label>
+                    <input type="number" class="form-control" id="invest-amount" required min="500" value="10000" placeholder="e.g. 10000">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" style="flex:1; border-radius:8px;" onclick="document.getElementById('invest-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1; border-radius:8px;">Execute Buy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- KYC Verification Wizard Modal -->
+    <div class="fund-details-modal" id="kyc-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="kyc-close-btn">&times;</button>
+            
+            <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;"><i class="fa-solid fa-address-card text-gradient-blue" style="margin-right: 0.5rem;"></i> KYC Registration</h2>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 2rem; border-bottom:1px solid var(--border-color); padding-bottom:0.8rem;">AMFI Compliance Verification Console</p>
+            
+            <div class="alert alert-success" id="kyc-error-msg" style="background: rgba(239, 68, 68, 0.1); border-color: #EF4444; color: #EF4444; display: none; font-size: 0.85rem; margin-bottom: 1.5rem;">
+                Error notification.
+            </div>
+
+            <!-- Step 1: Input Aadhaar / VID -->
+            <div id="kyc-step-1">
+                <div class="form-group">
+                    <label class="form-label" for="kyc-doc-type">Select Document Type</label>
+                    <select class="form-control" id="kyc-doc-type">
+                        <option value="aadhaar">Aadhaar Card (12-Digit Number)</option>
+                        <option value="vid">Virtual ID / VID (16-Digit Number)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label" for="kyc-doc-number">Document Identification Number</label>
+                    <input type="text" class="form-control" id="kyc-doc-number" required placeholder="e.g. 540890123456" pattern="[0-9]{12,16}">
+                </div>
+
+                <button type="button" class="btn btn-primary" onclick="submitKYCDocument()" style="width: 100%; border-radius: 8px;">Request Security OTP</button>
+            </div>
+
+            <!-- Step 2: OTP Verification -->
+            <div id="kyc-step-2" style="display: none;">
+                <p style="font-size:0.9rem; color:var(--text-secondary); margin-bottom:1.5rem; line-height:1.6;">
+                    A secure 6-digit verification code has been dispatched to your registered phone number. Enter the code below.
+                </p>
+                
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label" for="kyc-otp-input">Enter 6-Digit OTP</label>
+                    <input type="text" class="form-control" id="kyc-otp-input" required maxlength="6" pattern="[0-9]{6}" placeholder="e.g. 482015" style="text-align: center; font-size: 1.3rem; letter-spacing: 0.3em; font-weight: 700;">
+                </div>
+
+                <button type="button" class="btn btn-blue" onclick="submitKYCOTP()" style="width: 100%; border-radius: 8px;">Verify OTP &amp; Activate Account</button>
+            </div>
+
+            <!-- Step 3: Success Verification -->
+            <div id="kyc-step-3" style="display: none; text-align: center; padding: 1rem 0;">
+                <i class="fa-solid fa-circle-check fa-4x" style="color: var(--accent-emerald); margin-bottom: 1.5rem;"></i>
+                <h3 style="font-size: 1.4rem; margin-bottom: 0.5rem; color: var(--text-primary);">KYC Verified Successfully</h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.6;">
+                    Your identity has been authenticated. Your investment account is now active.
+                </p>
+                <button type="button" class="btn btn-primary" onclick="closeKYCWizard()" style="width: 100%; border-radius: 8px; color:#080B11;">Go to Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bank Linking Modal -->
+    <div class="fund-details-modal" id="bank-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="bank-close-btn">&times;</button>
+            
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;"><i class="fa-solid fa-building-columns text-gradient-blue" style="margin-right: 0.5rem;"></i> Link Bank Account</h2>
+            
+            <form id="link-bank-form">
+                <div class="alert alert-success" id="bank-error-msg" style="background: rgba(239, 68, 68, 0.1); border-color: #EF4444; color: #EF4444; display: none; font-size:0.85rem; margin-bottom:1.5rem;">
+                    Validation error details.
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="bank-name-input">Bank Name</label>
+                    <input type="text" class="form-control" id="bank-name-input" required placeholder="e.g. HDFC Bank">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="bank-ac-input">Account Number</label>
+                    <input type="text" class="form-control" id="bank-ac-input" required pattern="[0-9]{9,18}" placeholder="Enter account number">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label" for="bank-ifsc-input">IFSC Code</label>
+                    <input type="text" class="form-control" id="bank-ifsc-input" required style="text-transform: uppercase;" pattern="[A-Za-z]{4}0[A-Za-z0-9]{6}" placeholder="e.g. HDFC0000123">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" style="flex:1; border-radius:8px;" onclick="document.getElementById('bank-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-blue" style="flex:1; border-radius:8px;">Link Bank</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Withdrawal Modal -->
+    <div class="fund-details-modal" id="withdraw-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="withdraw-close-btn">&times;</button>
+            
+            <h2 style="font-size: 1.5rem; margin-bottom: 1.5rem;"><i class="fa-solid fa-money-bill-transfer text-gradient" style="margin-right: 0.5rem;"></i> Withdraw Funds</h2>
+            
+            <form id="withdraw-form">
+                <div class="alert alert-success" id="withdraw-error-msg" style="background: rgba(239, 68, 68, 0.1); border-color: #EF4444; color: #EF4444; display: none; font-size:0.85rem; margin-bottom:1.5rem;">
+                    Validation error details.
+                </div>
+
+                <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                    <span style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 0.2rem;">WITHDRAWING TO</span>
+                    <strong id="lbl-withdraw-target" style="font-size: 0.9rem;">State Bank of India (A/C ****2345)</strong>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label" for="withdraw-amount-input">Amount to Withdraw (INR)</label>
+                    <input type="number" class="form-control" id="withdraw-amount-input" required min="100" value="5000" placeholder="Enter amount">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" style="flex:1; border-radius:8px;" onclick="document.getElementById('withdraw-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1; border-radius:8px; color:#080B11;">Execute Withdrawal</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ChartJS library and portal scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

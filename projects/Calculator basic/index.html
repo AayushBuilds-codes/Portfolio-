@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Glassmorphic Calculator | Pinnacle</title>
+    <meta name="description" content="An advanced glassmorphic calculator with basic and scientific operators, physical keyboard shortcuts, local computation history logs, and the integrated Nova AI math assistant.">
+    <!-- Style Sheet --> 
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Ambient Glow Mesh Layer -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+
+    <!-- Mathematical Particle Canvas Background -->
+    <canvas id="particle-canvas"></canvas>
+
+    <!-- Top Application Header -->
+    <header class="header-actions">
+        <h1 class="app-title">PINNACLE<span>.CALC</span></h1>
+        
+        <div class="top-controls">
+            <!-- DEG / RAD toggle -->
+            <button class="control-btn" id="btn-angle-toggle" title="Toggle trigonometric angle units">DEG</button>
+            
+            <!-- Theme Toggler -->
+            <button class="control-btn theme-toggle-btn" id="btn-theme-toggle" aria-label="Toggle light and dark mode">
+                <!-- Sun Icon -->
+                <svg class="sun-icon" viewBox="0 0 24 24">
+                    <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.38.39-1.02 0-1.41zM5.99 16.95l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41z"/>
+                </svg>
+                <!-- Moon Icon -->
+                <svg class="moon-icon" viewBox="0 0 24 24">
+                    <path d="M12.3 22c5.1 0 9.3-4.1 9.3-9.2 0-3.3-1.7-6.2-4.4-7.8-.5-.3-1.1.1-1 .7.8 4.4-2.5 8.4-6.9 8.4-1.9 0-3.7-.7-5.1-2-.4-.4-1.1 0-1 .5 1.5 5.5 6.5 9.4 12.1 9.4z"/>
+                </svg>
+                <span>Theme</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Unified Calculator Container Wrapper -->
+    <main class="calc-wrapper">
+        
+        <!-- Calculation History Sidebar Panel -->
+        <section class="history-panel" id="history-panel">
+            <div class="history-header">
+                <h3>History</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="control-btn" id="btn-history-clear" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;" title="Clear Local History Logs">Clear</button>
+                    <button class="control-btn" id="btn-history-close" style="padding: 0.4rem 0.6rem;" title="Hide History panel">×</button>
+                </div>
+            </div>
+            <!-- Dynamic History List Logs -->
+            <div class="history-list" id="history-list">
+                <!-- Javascript will inject list here -->
+            </div>
+        </section>
+
+        <!-- Main Calculator Device Card -->
+        <section class="calc-container">
+            <!-- Screens display output -->
+            <div class="calc-screen">
+                <div class="formula" id="calc-formula"></div>
+                <div class="output" id="calc-output">0</div>
+            </div>
+
+            <!-- Scientific operators sliding drawer -->
+            <div class="sci-drawer" id="sci-drawer">
+                <button class="calc-btn btn-op" data-action="function" data-value="sin" title="Sine angle">sin</button>
+                <button class="calc-btn btn-op" data-action="function" data-value="cos" title="Cosine angle">cos</button>
+                <button class="calc-btn btn-op" data-action="function" data-value="tan" title="Tangent angle">tan</button>
+                <button class="calc-btn btn-op" data-action="operator" data-value="^" title="Power (x^y)">xʸ</button>
+                
+                <button class="calc-btn btn-op" data-action="function" data-value="log" title="Logarithm base 10">log</button>
+                <button class="calc-btn btn-op" data-action="function" data-value="ln" title="Natural Logarithm (base e)">ln</button>
+                <button class="calc-btn btn-op" data-action="function" data-value="sqrt" title="Square root">√</button>
+                <button class="calc-btn btn-op" data-action="operator" data-value="!" title="Factorial (x!)">x!</button>
+
+                <button class="calc-btn btn-op" data-action="constant" data-value="π" title="Pi constant (3.1415)">π</button>
+                <button class="calc-btn btn-op" data-action="constant" data-value="e" title="Euler constant (2.718)">e</button>
+                <button class="calc-btn btn-op" data-action="parenthesis" data-value="(" title="Open bracket">(</button>
+                <button class="calc-btn btn-op" data-action="parenthesis" data-value=")" title="Close bracket">)</button>
+            </div>
+
+            <!-- Main Arithmetic Keypad Grid -->
+            <div class="keyboard">
+                <!-- Row 1: Actions & Toggles -->
+                <button class="calc-btn btn-action" data-action="clear" title="Clear screen (C)">C</button>
+                <button class="calc-btn btn-action" id="btn-sci-toggle" title="Toggle scientific operations panel">f(x)</button>
+                <button class="calc-btn btn-action" id="btn-history-toggle" title="Toggle history logs panel">H</button>
+                <button class="calc-btn btn-op" data-action="operator" data-value="÷" title="Divide (/)">÷</button>
+
+                <!-- Row 2: digits & multiplier -->
+                <button class="calc-btn" data-action="num" data-value="7">7</button>
+                <button class="calc-btn" data-action="num" data-value="8">8</button>
+                <button class="calc-btn" data-action="num" data-value="9">9</button>
+                <button class="calc-btn btn-op" data-action="operator" data-value="×" title="Multiply (*)">×</button>
+
+                <!-- Row 3: digits & subtractor -->
+                <button class="calc-btn" data-action="num" data-value="4">4</button>
+                <button class="calc-btn" data-action="num" data-value="5">5</button>
+                <button class="calc-btn" data-action="num" data-value="6">6</button>
+                <button class="calc-btn btn-op" data-action="operator" data-value="-" title="Subtract (-)">-</button>
+
+                <!-- Row 4: digits & adder -->
+                <button class="calc-btn" data-action="num" data-value="1">1</button>
+                <button class="calc-btn" data-action="num" data-value="2">2</button>
+                <button class="calc-btn" data-action="num" data-value="3">3</button>
+                <button class="calc-btn btn-op" data-action="operator" data-value="+" title="Add (+)">+</button>
+
+                <!-- Row 5: backspace, zero, decimal, evaluate -->
+                <button class="calc-btn btn-action" data-action="delete" title="Backspace delete last value">⌫</button>
+                <button class="calc-btn" data-action="num" data-value="0">0</button>
+                <button class="calc-btn" data-action="decimal" title="Decimal point">.</button>
+                <button class="calc-btn btn-equals" data-action="calculate" title="Solve equation (=)">=</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ==========================================================================
+       NOVA - AI PERSONAL MATHEMATICS ASSISTANT WIDGET
+       ========================================================================== -->
+    <div class="nova-widget" id="nova-widget">
+        <!-- Floating Launcher Icon -->
+        <button class="nova-launcher" id="nova-launcher" aria-label="Open AI Assistant Nova" title="Ask Nova Math assistant">
+            <span class="nova-pulse"></span>
+            <svg class="nova-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 2.22.73 4.27 1.96 5.93L2.5 21.5l3.82-1.22C7.88 21.19 9.87 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            <span class="nova-badge">AI</span>
+        </button>
+
+        <!-- Chat Panel Window -->
+        <div class="nova-chat-window" id="nova-chat-window">
+            <!-- Header section -->
+            <div class="nova-header">
+                <div class="nova-header-profile">
+                    <div class="nova-avatar-container">
+                        <div class="nova-avatar">N</div>
+                        <span class="nova-status-dot"></span>
+                    </div>
+                    <div class="nova-header-info">
+                        <h3>Nova</h3>
+                        <span class="nova-subtitle">Pinnacle Math Assistant</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <!-- Voice Speak Narration Mute -->
+                    <button class="nova-voice-btn" id="nova-voice-btn" aria-label="Toggle Voice Mute" title="Toggle voice narration">
+                        <!-- Volume up -->
+                        <svg class="volume-up-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                        </svg>
+                        <!-- Volume mute -->
+                        <svg class="volume-mute-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor; display: none;">
+                            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                        </svg>
+                    </button>
+                    <!-- Close button -->
+                    <button class="nova-close-btn" id="nova-close-btn" aria-label="Close Chat Window">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages lists viewports -->
+            <div class="nova-messages" id="nova-messages">
+                <div class="nova-message-bubble assistant">
+                    <div class="message-content">
+                        Hello! I am <strong>Nova</strong>, your AI math assistant. Let me know what calculations we should solve today! Try asking me to explain concepts, constants, or solve equations.
+                    </div>
+                    <span class="message-time">Just now</span>
+                </div>
+            </div>
+
+            <!-- Quick Suggestions Chips -->
+            <div class="nova-suggestions" id="nova-suggestions">
+                <button class="suggestion-chip">What is the value of pi?</button>
+                <button class="suggestion-chip">Calculate 12 * 12</button>
+                <button class="suggestion-chip">Explain Calculus</button>
+                <button class="suggestion-chip">Tell me a math joke</button>
+            </div>
+
+            <!-- Input message bar -->
+            <form class="nova-input-area" id="nova-input-form">
+                <input type="text" id="nova-input-field" placeholder="Ask Nova to compute or explain..." required autocomplete="off">
+                <!-- Mic recording speech command -->
+                <button type="button" class="nova-mic-btn" id="nova-mic-btn" aria-label="Start Voice Recording" title="Dictate formula commands">
+                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;">
+                        <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                    </svg>
+                </button>
+                <!-- Send submit -->
+                <button type="submit" class="nova-send-btn" id="nova-send-btn" aria-label="Send message">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core Javascript Files -->
+    <script src="js/particles.js"></script>
+    <script src="js/calculator.js"></script>
+    <script src="js/nova-ai.js"></script>
+
+    <!-- Theme and global triggers logic -->
+    <script>
+        // Simple Theme Switcher scripts
+        const themeBtn = document.getElementById('btn-theme-toggle');
+        
+        // Load initial theme from localStorage
+        const storedTheme = localStorage.getItem('calc_theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', storedTheme);
+
+        if (themeBtn) {
+            themeBtn.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const nextTheme = currentTheme === 'light' ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                localStorage.setItem('calc_theme', nextTheme);
+            });
+        }
+    </script>
+</body>
+</html>

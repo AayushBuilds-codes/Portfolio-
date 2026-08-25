@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYFS Administration Portal | System Management</title>
+    <meta name="description" content="KEYFS Administrative console to manage customer accounts, edit investment assets, override balances, and audit transactions.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Immediate Authentication Guard to prevent DOM render leakage -->
+    <script>
+        if (sessionStorage.getItem('keyfs_active_session') !== 'keyfsuser@26') {
+            window.location.replace('auth.html');
+        }
+    </script>
+</head>
+<body style="background-color: var(--bg-primary);">
+
+    <!-- Background mesh glows -->
+    <div class="bg-mesh-glow glow-1" style="opacity: 0.08;"></div>
+    <div class="bg-mesh-glow glow-2" style="opacity: 0.08;"></div>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-nav" style="border-right-color: rgba(59, 130, 246, 0.2);">
+            <div>
+                <a href="index.html" class="logo" style="margin-bottom: 3rem; display: flex;">
+                    KEYFS ADMIN<span class="logo-dot" style="background-color: var(--accent-blue); box-shadow: 0 0 8px var(--accent-blue);"></span>
+                </a>
+                
+                <ul class="sidebar-menu">
+                    <li><a href="#" class="sidebar-link active"><i class="fa-solid fa-users-cog"></i> Client Accounts</a></li>
+                    <li><a href="#" class="sidebar-link" onclick="toggleAuditLedger(true)"><i class="fa-solid fa-shield-halved"></i> Global Audit Log</a></li>
+                </ul>
+            </div>
+            
+            <div>
+                <button class="sidebar-link" onclick="logoutAdmin()" style="background:none; border:none; width:100%; text-align:left; cursor:pointer; color:#EF4444;"><i class="fa-solid fa-arrow-right-from-bracket"></i> Sign Out Admin</button>
+            </div>
+        </aside>
+
+        <!-- Main Dashboard Viewport -->
+        <main class="dashboard-main">
+            <!-- Header bar -->
+            <header class="dash-header">
+                <div>
+                    <h1 style="font-size: 1.8rem; font-family: var(--font-heading);">System Master Console</h1>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Administrative controls over portfolios, balances, and clients</p>
+                </div>
+                
+                <div class="dash-user-badge" style="border-color: rgba(59, 130, 246, 0.3);">
+                    <span style="font-size: 0.85rem; font-weight: 600; color: var(--text-primary);">System Administrator</span>
+                    <div class="avatar" style="background:var(--accent-blue);">SA</div>
+                </div>
+            </header>
+
+            <!-- Main Client accounts Grid Panel -->
+            <div id="clients-panel">
+                <div class="glass-card" style="padding: 1.5rem; margin-bottom: 2rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h3 style="font-size: 1.15rem;"><i class="fa-solid fa-users" style="margin-right: 0.5rem; color: var(--accent-blue);"></i> Registered Client Database</h3>
+                        <div style="width: 300px; position:relative;">
+                            <i class="fa-solid fa-search" style="position:absolute; left:1rem; top:50%; transform:translateY(-50%); color:var(--text-muted);"></i>
+                            <input type="text" class="form-control" id="client-search" placeholder="Search clients..." style="padding-left:2.5rem; padding-top:0.5rem; padding-bottom:0.5rem; font-size:0.85rem;">
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr>
+                                    <th>Client Details</th>
+                                    <th>Credentials ID</th>
+                                    <th>PAN Card</th>
+                                    <th>Cash Balance</th>
+                                    <th>Invested Principal</th>
+                                    <th>Equity Portfolio</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-clients-table-body">
+                                <tr>
+                                    <td colspan="7" style="text-align: center;">Querying local database registry...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Audit Log (Hidden by default, toggled by sidebar) -->
+            <div id="audit-panel" style="display: none;">
+                <div class="glass-card" style="padding: 1.5rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                        <h3 style="font-size: 1.15rem;"><i class="fa-solid fa-history" style="margin-right: 0.5rem; color: var(--accent-blue);"></i> Global Transaction Audit Log</h3>
+                        <button class="btn btn-secondary" onclick="toggleAuditLedger(false)" style="padding:0.4rem 1rem; font-size:0.8rem; border-radius:4px;">Back to Client List</button>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="data-table" style="font-size: 0.85rem;">
+                            <thead>
+                                <tr>
+                                    <th>Client Email</th>
+                                    <th>Date</th>
+                                    <th>Transaction Type</th>
+                                    <th>Asset Description</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-audit-table-body">
+                                <tr>
+                                    <td colspan="6" style="text-align: center;">Aggregating audit logs...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Administrative Modal: Edit Client Profile Parameters -->
+    <div class="fund-details-modal" id="edit-user-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="edit-close-btn">&times;</button>
+            
+            <h2 style="font-size: 1.4rem; margin-bottom: 1.5rem;"><i class="fa-solid fa-user-edit text-gradient-blue" style="margin-right: 0.5rem;"></i> Edit Client Profile</h2>
+            
+            <form id="admin-edit-user-form">
+                <input type="hidden" id="edit-client-email">
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-client-name">Full Name</label>
+                    <input type="text" class="form-control" id="edit-client-name" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="edit-client-phone">Phone Number</label>
+                    <input type="tel" class="form-control" id="edit-client-phone" required pattern="[0-9]{10}">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="edit-client-pan">PAN Card Number</label>
+                    <input type="text" class="form-control" id="edit-client-pan" required style="text-transform: uppercase;" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label" for="edit-client-cash">Uninvested Cash Balance (INR)</label>
+                    <input type="number" class="form-control" id="edit-client-cash" required min="0">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" style="flex:1; border-radius:8px;" onclick="document.getElementById('edit-user-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-blue" style="flex:1; border-radius:8px;">Save Profile Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Administrative Modal: Execute Mock Investment Adjustments for Client -->
+    <div class="fund-details-modal" id="admin-invest-modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <button class="modal-close" id="invest-close-btn">&times;</button>
+            
+            <h2 style="font-size: 1.4rem; margin-bottom: 1.5rem;"><i class="fa-solid fa-exchange-alt text-gradient" style="margin-right: 0.5rem;"></i> Adjust Client Portfolio</h2>
+            
+            <form id="admin-invest-form">
+                <input type="hidden" id="invest-client-email">
+                
+                <div class="form-group">
+                    <label class="form-label" for="admin-tx-type">Transaction Mode</label>
+                    <select class="form-control" id="admin-tx-type">
+                        <option value="Buy">Buy (Deduct cash, add equity assets)</option>
+                        <option value="Sell">Sell (Liquidate equity, credit cash)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="admin-asset-name">Asset Description</label>
+                    <input type="text" class="form-control" id="admin-asset-name" required placeholder="e.g. Parag Parikh Flexi Cap Fund">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label class="form-label" for="admin-invest-amount">Investment Amount (INR)</label>
+                    <input type="number" class="form-control" id="admin-invest-amount" required min="500">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="button" class="btn btn-secondary" style="flex:1; border-radius:8px;" onclick="document.getElementById('admin-invest-modal').style.display='none'">Cancel</button>
+                    <button type="submit" class="btn btn-primary" style="flex:1; border-radius:8px;">Process Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

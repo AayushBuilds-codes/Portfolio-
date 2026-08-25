@@ -75,7 +75,7 @@ const responseDatabase = {
     resume: {
         keywords: ['resume', 'cv', 'resume pdf', 'cv pdf', 'credentials pdf'],
         responses: [
-            "You can [Download Aayush's Resume here](Resume.pdf) to view his complete experience, skills, and qualifications. You can also simply ask me to **'download resume'** or **'download cv'** and I will trigger the file download for you immediately!"
+            "You can [Download Aayush's Resume here](Aayush%20Agarwal%20Resume.pdf) to view his complete experience, skills, and qualifications. You can also simply ask me to **'download resume'** or **'download cv'** and I will trigger the file download for you immediately!"
         ]
     },
     certifications: {
@@ -314,7 +314,7 @@ function initNovaWidget() {
         // Command: Download Resume
         if ((clean.includes('download') && (clean.includes('resume') || clean.includes('cv'))) || (clean.includes('get') && (clean.includes('resume') || clean.includes('cv')))) {
             const link = document.createElement('a');
-            link.href = 'Resume.pdf';
+            link.href = 'Aayush%20Agarwal%20Resume.pdf';
             link.download = 'Aayush_Agarwal_Resume.pdf';
             document.body.appendChild(link);
             link.click();

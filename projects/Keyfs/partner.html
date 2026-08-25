@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYFS Partner Network | Start Your Financial Advisory Business</title>
+    <meta name="description" content="Join the KEYFS Partner program. Become a certified mutual fund distributor, track clients with our console, and build annual passive commission trails.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Background mesh glows -->
+    <div class="bg-mesh-glow glow-1"></div>
+    <div class="bg-mesh-glow glow-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                KEYFS<span class="logo-dot"></span>
+            </a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Mutual Funds</a></li>
+                    <li><a href="calculators.html" class="nav-link">Calculators</a></li>
+                    <li><a href="partner.html" class="nav-link active">Become a Partner</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Client Console</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-secondary">Login</a>
+                <a href="auth.html" class="btn btn-primary">Open Account</a>
+                <button class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Index Ticker -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                <!-- Ticker items populated by app.js -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <section style="padding-top: 160px;">
+        <div class="container">
+            <div class="hero-grid" style="align-items: center; margin-bottom: 5rem;">
+                <div>
+                    <h1 class="hero-title">Start Your <span class="text-gradient">Financial Advisory</span> Business</h1>
+                    <p class="hero-desc">Partner with KEYFS and register as an independent Mutual Fund Distributor. Tap into our operational CRM, extensive product basket, and robust commission models with zero upfront setup capital.</p>
+                    <a href="#partner-signup-section" class="btn btn-primary">Apply as Partner</a>
+                </div>
+                <div class="glass-card" style="border-color: rgba(59, 130, 246, 0.2);">
+                    <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; text-align: center;"><i class="fa-solid fa-calculator text-gradient" style="margin-right: 0.5rem;"></i> Partner Earning Estimator</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); text-align: center; margin-bottom: 2rem;">Estimate your potential distribution revenue based on client assets.</p>
+
+                    <!-- Sliders -->
+                    <div class="range-slider-container">
+                        <div class="slider-header">
+                            <label class="form-label" for="p-clients">Total Active Clients</label>
+                            <span class="slider-val-box" id="p-clients-val">150</span>
+                        </div>
+                        <input type="range" class="slider-input" id="p-clients" min="10" max="1000" step="10" value="150">
+                    </div>
+
+                    <div class="range-slider-container">
+                        <div class="slider-header">
+                            <label class="form-label" for="p-sip">Average Monthly SIP / Client</label>
+                            <span class="slider-val-box" id="p-sip-val">₹5,000</span>
+                        </div>
+                        <input type="range" class="slider-input" id="p-sip" min="1000" max="50000" step="1000" value="5000">
+                    </div>
+
+                    <div class="range-slider-container">
+                        <div class="slider-header">
+                            <label class="form-label" for="p-aum">Lumpsum AUM Mobilized</label>
+                            <span class="slider-val-box" id="p-aum-val">₹1 Crore</span>
+                        </div>
+                        <input type="range" class="slider-input" id="p-aum" min="500000" max="200000000" step="500000" value="10000000">
+                    </div>
+
+                    <!-- Earnings display table -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; text-align: center; margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px;">
+                            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">EST. MONTHLY REVENUE</span>
+                            <span id="est-monthly-earning" style="font-size: 1.3rem; font-weight: 700; color: var(--accent-emerald); font-family: var(--font-heading);">₹10,500</span>
+                        </div>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1rem; border-radius: 8px;">
+                            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block; margin-bottom: 0.4rem;">EST. ANNUAL TRAIL</span>
+                            <span id="est-annual-earning" style="font-size: 1.3rem; font-weight: 700; color: var(--accent-blue); font-family: var(--font-heading);">₹1,26,000</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Program Benefits Grid -->
+            <div class="features-grid" style="margin-bottom: 5rem;">
+                <div class="glass-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-wallet fa-lg"></i>
+                    </div>
+                    <h3 class="feature-title">Multiple Payout Models</h3>
+                    <p class="feature-desc">Earn trail commissions on active assets under management (AUM) along with upfront payouts on equity transitions and NPS onboarding channels.</p>
+                </div>
+                
+                <div class="glass-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-chart-line fa-lg"></i>
+                    </div>
+                    <h3 class="feature-title">Advanced Partner Console</h3>
+                    <p class="feature-desc">Get a dedicated business console to track client transactions, SIP completions, AUM increments, pending KYC mandates, and payout statements.</p>
+                </div>
+
+                <div class="glass-card">
+                    <div class="feature-icon">
+                        <i class="fa-solid fa-graduation-cap fa-lg"></i>
+                    </div>
+                    <h3 class="feature-title">NISM &amp; ARN Assistance</h3>
+                    <p class="feature-desc">New to finance? Our dedicated compliance officers assist you in clearing the NISM exam and acquiring your AMFI Registration Number (ARN) credentials.</p>
+                </div>
+            </div>
+
+            <!-- Signup Form Section -->
+            <div id="partner-signup-section" style="max-width: 750px; margin: 0 auto;">
+                <div style="text-align: center; margin-bottom: 2.5rem;">
+                    <h2 style="font-size: 2.2rem; margin-bottom: 0.5rem;">Join KEYFS <span class="text-gradient">Advisory Network</span></h2>
+                    <p style="color: var(--text-secondary);">Fill out the application below, and a distributor onboarding head will call you.</p>
+                </div>
+
+                <div class="glass-card">
+                    <form class="lead-form" id="partner-form">
+                        <div class="alert alert-success" id="partner-success-msg">
+                            <i class="fa-regular fa-circle-check"></i> Registration captured successfully! Our onboarding associate will contact you within 24 working hours.
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="p-name">Full Name</label>
+                                <input type="text" class="form-control" id="p-name" required placeholder="e.g. Anand Iyer">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="p-email">Email Address</label>
+                                <input type="email" class="form-control" id="p-email" required placeholder="e.g. anand@advisors.com">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="p-phone">Phone Number</label>
+                                <input type="tel" class="form-control" id="p-phone" required pattern="[0-9]{10}" placeholder="10-digit mobile number">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="p-city">City / Location</label>
+                                <input type="text" class="form-control" id="p-city" required placeholder="e.g. Pune, Maharashtra">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div class="form-group">
+                                <label class="form-label" for="p-occ">Current Occupation</label>
+                                <select class="form-control" id="p-occ">
+                                    <option>Insurance Agent</option>
+                                    <option>Tax Professional / CA</option>
+                                    <option>Salaried Corporate Professional</option>
+                                    <option>Business Owner</option>
+                                    <option>Retired/Others</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="p-arn">Do you hold an AMFI ARN?</label>
+                                <select class="form-control" id="p-arn">
+                                    <option>No, I want to apply for one</option>
+                                    <option>Yes, I have an active ARN</option>
+                                    <option>My ARN is currently expired/suspended</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px; margin-top: 1rem;">Submit Partner Request</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer" style="margin-top: 5rem;">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-logo-desc">
+                    <a href="index.html" class="logo" style="margin-bottom: 1rem;">
+                        KEYFS<span class="logo-dot"></span>
+                    </a>
+                    <p class="footer-desc">Key Financial Services (KEYFS) is a premier digital distributor platform offering a robust E-Wealth transaction console, comprehensive asset advisory, and structured commission channels.</p>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Investments</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html" class="footer-link">Mutual Funds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Equity Shares</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Corporate Bonds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Gold ETFs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Planning Tools</h4>
+                    <ul class="footer-links">
+                        <li><a href="calculators.html" class="footer-link">SIP Calculator</a></li>
+                        <li><a href="calculators.html" class="footer-link">Goal Planner</a></li>
+                        <li><a href="calculators.html" class="footer-link">Delay Cost Tracker</a></li>
+                        <li><a href="partner.html" class="footer-link">Earning Estimator</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="partner.html" class="footer-link">Partner Program</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                        <li><a href="#" class="footer-link">Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="compliance-box">
+                <p><strong>Mutual Fund investments are subject to market risks, read all scheme related documents carefully.</strong> The NAV of schemes can go up or down depending upon factors and forces affecting the securities market including interest rates, trading volumes, and settlement periods. Past performance of AMCs/Schemes does not guarantee future results.</p>
+                <p>KEYFS (Key Financial Services) acts as an AMFI registered Mutual Fund distributor (ARN: Mock-Registered). We receive commission payouts from Asset Management Companies for distribution services. Commissions details are disclosed in accordance with SEBI regulations and are available to clients upon request.</p>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 Key Financial Services (KEYFS). All Rights Reserved.</span>
+                <span style="display: flex; gap: 1rem;">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms &amp; Conditions</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    
+    <!-- Partner Earnings Simulator Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const clientInput = document.getElementById('p-clients');
+            const sipInput = document.getElementById('p-sip');
+            const aumInput = document.getElementById('p-aum');
+
+            function updateEarnings() {
+                const clients = parseInt(clientInput.value);
+                const avgSip = parseFloat(sipInput.value);
+                const aum = parseFloat(aumInput.value);
+
+                // Update text boxes next to labels
+                document.getElementById('p-clients-val').innerText = clients;
+                document.getElementById('p-sip-val').innerText = '₹' + avgSip.toLocaleString('en-IN');
+                
+                let aumText = '';
+                if (aum >= 10000000) {
+                    aumText = '₹' + (aum / 10000000).toFixed(2) + ' Crore';
+                } else if (aum >= 100000) {
+                    aumText = '₹' + (aum / 100000).toFixed(0) + ' Lakh';
+                }
+                document.getElementById('p-aum-val').innerText = aumText;
+
+                // Commission Logic:
+                // 1. Trail commission of ~0.75% per annum on AUM
+                const trailEarningAnnual = aum * 0.0075;
+                // 2. Upfront/First-year commission on new monthly SIP volumes (~0.50% of new annual volumes)
+                const newSIPVolumeAnnual = clients * avgSip * 12;
+                const sipEarningUpfront = newSIPVolumeAnnual * 0.005;
+
+                const annualTotal = trailEarningAnnual + sipEarningUpfront;
+                const monthlyTotal = annualTotal / 12;
+
+                // Display
+                document.getElementById('est-monthly-earning').innerText = '₹' + Math.round(monthlyTotal).toLocaleString('en-IN');
+                document.getElementById('est-annual-earning').innerText = '₹' + Math.round(annualTotal).toLocaleString('en-IN');
+            }
+
+            // Bind listeners
+            clientInput.addEventListener('input', updateEarnings);
+            sipInput.addEventListener('input', updateEarnings);
+            aumInput.addEventListener('input', updateEarnings);
+
+            updateEarnings(); // Initial run
+        });
+    </script>
+</body>
+</html>

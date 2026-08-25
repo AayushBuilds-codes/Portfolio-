@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinnacle Weather | AI-Powered Glassmorphic Dashboard</title>
+    <meta name="description" content="A next-generation, glassmorphic weather dashboard featuring real-time meteorological API mapping and the interactive Nova AI weather assistant.">
+    
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Ambient Glowing Background Circles -->
+    <div class="ambient-glow glow-1" id="ambient-glow-1"></div>
+    <div class="ambient-glow glow-2" id="ambient-glow-2"></div>
+
+    <!-- Weather Animations Canvas Overlay -->
+    <canvas id="weather-particles" class="weather-canvas"></canvas>
+
+    <!-- Main Container -->
+    <div class="dashboard-wrapper">
+        
+        <!-- Header Section -->
+        <header class="header">
+            <div class="brand">
+                <span class="brand-pinnacle">PINNACLE</span>
+                <span class="brand-sub">.WEATHER</span>
+            </div>
+            
+            <!-- Unit and Theme Toggle Area -->
+            <div class="top-controls">
+                <button class="unit-toggle" id="unit-toggle" title="Toggle °C / °F">
+                    <span class="unit-label active" id="unit-c">°C</span>
+                    <span class="unit-divider">|</span>
+                    <span class="unit-label" id="unit-f">°F</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Search and Quick-Select Panel -->
+        <section class="search-section">
+            <div class="search-bar-container">
+                <div class="search-input-wrapper">
+                    <svg class="search-icon" viewBox="0 0 24 24">
+                        <path fill="currentColor" d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/>
+                    </svg>
+                    <input type="text" id="city-search" placeholder="Search for a city..." autocomplete="off">
+                    <button class="location-btn" id="location-btn" title="Use current location">
+                        <svg viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Autocomplete Dropdown List -->
+                <ul class="search-dropdown" id="search-dropdown">
+                    <!-- Dynamic geocoded cities will render here -->
+                </ul>
+            </div>
+
+            <!-- Quick Select Cities -->
+            <div class="quick-cities">
+                <button class="city-chip active" data-city="Kanpur">Kanpur</button>
+                <button class="city-chip" data-city="London">London</button>
+                <button class="city-chip" data-city="Tokyo">Tokyo</button>
+                <button class="city-chip" data-city="New York">New York</button>
+                <button class="city-chip" data-city="Paris">Paris</button>
+            </div>
+        </section>
+
+        <!-- Main Weather Dashboard Grid -->
+        <main class="grid-container">
+            
+            <!-- Current Weather Main Card -->
+            <section class="card current-card">
+                <div class="current-header">
+                    <div class="location-info">
+                        <h2 class="city-name" id="city-name">Kanpur, IN</h2>
+                        <p class="current-date" id="current-date">Sunday, May 31</p>
+                    </div>
+                    <div class="weather-badge" id="weather-badge">Sunny</div>
+                </div>
+
+                <div class="current-body">
+                    <div class="temp-display">
+                        <span class="temp-val" id="temp-val">32</span>
+                        <span class="temp-unit" id="temp-unit">°C</span>
+                    </div>
+                    
+                    <div class="current-icon-container" id="current-icon-container">
+                        <!-- Dynamic SVG Icon inserted by JS -->
+                    </div>
+                </div>
+
+                <div class="current-footer">
+                    <div class="temp-range">
+                        <span class="range-high">H: <span id="temp-high">35°C</span></span>
+                        <span class="range-divider">/</span>
+                        <span class="range-low">L: <span id="temp-low">24°C</span></span>
+                    </div>
+                    <p class="weather-description" id="weather-description">Clear skies and pleasant breeze</p>
+                </div>
+            </section>
+
+            <!-- Detailed Weather Metrics Grid -->
+            <section class="metrics-grid">
+                
+                <!-- Wind Speed Card -->
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">WIND SPEED</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M13 16a4 4 0 0 1 4 4 1 1 0 0 1-2 0 2 2 0 0 0-2-2h-3a1 1 0 0 1 0-2h3m-5-6h7a3 3 0 0 0 3-3 1 1 0 0 0-2 0 1 1 0 0 1-1 1H8a1 1 0 0 1 0-2h1a1 1 0 0 0 0-2H8a3 3 0 0 0-3 3 3 3 0 0 0 3 3m10 4a3 3 0 0 1-3 3H4a1 1 0 0 1 0-2h11a1 1 0 0 0 1-1 1 1 0 0 0-1-1H3a1 1 0 0 1 0-2h12a3 3 0 0 1 3 3Z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-body">
+                        <div class="metric-val" id="wind-val">12 <span class="metric-sub-unit">km/h</span></div>
+                        <div class="wind-direction-indicator">
+                            <svg class="wind-arrow" id="wind-arrow" viewBox="0 0 24 24">
+                                <path fill="currentColor" d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/>
+                            </svg>
+                            <span id="wind-dir">NE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Humidity Card -->
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">HUMIDITY</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0zM12 20a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-body">
+                        <div class="metric-val" id="humidity-val">65<span class="metric-sub-unit">%</span></div>
+                        <div class="humidity-bar-wrapper">
+                            <div class="humidity-bar-fill" id="humidity-bar" style="width: 65%;"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- UV Index Card -->
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">UV INDEX</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10zm0 8a3 3 0 1 1 0-6 3 3 0 0 1 0 6zm0-13a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0V3a1 1 0 0 1 1-1zm0 17a1 1 0 0 1 1 1v2a1 1 0 0 1-2 0v-2a1 1 0 0 1 1-1zm8.485-13.071a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 0 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zm-14.142 14.142a1 1 0 0 1 0 1.414l-1.414 1.414a1 1 0 0 1-1.414-1.414l1.414-1.414a1 1 0 0 1 1.414 0zm15.657-6.071a1 1 0 0 1-1 1h-2a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1zM7 12a1 1 0 0 1-1 1H4a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1zm12.071 7.071a1 1 0 0 1-1.414 0l-1.414-1.414a1 1 0 0 1 1.414-1.414l1.414 1.414a1 1 0 0 1 0 1.414zm-14.142-14.142a1 1 0 0 1-1.414 0l-1.414-1.414a1 1 0 0 1 1.414-1.414l1.414 1.414a1 1 0 0 1 0 1.414z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-body">
+                        <div class="metric-val" id="uv-val">6</div>
+                        <div class="uv-badge" id="uv-badge">MODERATE</div>
+                    </div>
+                </div>
+
+                <!-- Pressure Card -->
+                <div class="card metric-card">
+                    <div class="metric-header">
+                        <span class="metric-title">BAROMETER</span>
+                        <svg class="metric-icon" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8zm1-8h4v2h-6V7h2z"/>
+                        </svg>
+                    </div>
+                    <div class="metric-body">
+                        <div class="metric-val" id="pressure-val">1013 <span class="metric-sub-unit">hPa</span></div>
+                        <span class="pressure-badge" id="pressure-badge">Normal</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 5-Day Forecast Panel -->
+        <section class="forecast-section">
+            <h3 class="section-title">5-DAY FORECAST</h3>
+            <div class="forecast-grid" id="forecast-grid">
+                <!-- Forecast Cards will be dynamically inserted here -->
+            </div>
+        </section>
+        
+        <!-- Footer -->
+        <footer class="footer">
+            <p>© 2026 Pinnacle Weather. Built using Vanilla HTML, CSS, and JS. AI powered by Nova.</p>
+        </footer>
+    </div>
+
+    <!-- ==========================================================================
+       NOVA - AI WEATHER ASSISTANT WIDGET
+       ========================================================================== -->
+    <div class="nova-widget" id="nova-widget">
+        <!-- Floating Launcher Icon -->
+        <button class="nova-launcher" id="nova-launcher" aria-label="Open AI Assistant Nova" title="Ask Nova Weather Assistant">
+            <span class="nova-pulse"></span>
+            <svg class="nova-icon" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 2.22.73 4.27 1.96 5.93L2.5 21.5l3.82-1.22C7.88 21.19 9.87 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/>
+            </svg>
+            <span class="nova-badge">AI</span>
+        </button>
+
+        <!-- Chat Panel Window -->
+        <div class="nova-chat-window" id="nova-chat-window">
+            <!-- Header section -->
+            <div class="nova-header">
+                <div class="nova-header-profile">
+                    <div class="nova-avatar-container">
+                        <div class="nova-avatar">N</div>
+                        <span class="nova-status-dot"></span>
+                    </div>
+                    <div class="nova-header-info">
+                        <h3>Nova</h3>
+                        <span class="nova-subtitle">Pinnacle Weather Assistant</span>
+                    </div>
+                </div>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <!-- Voice Speak Toggle -->
+                    <button class="nova-voice-btn" id="nova-voice-btn" aria-label="Toggle Voice Mute" title="Toggle voice narration">
+                        <!-- Volume up icon -->
+                        <svg class="volume-up-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                        </svg>
+                        <!-- Volume mute icon -->
+                        <svg class="volume-mute-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor; display: none;">
+                            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                        </svg>
+                    </button>
+                    <!-- Close button -->
+                    <button class="nova-close-btn" id="nova-close-btn" aria-label="Close Chat Window">
+                        <svg viewBox="0 0 24 24">
+                            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Messages List Viewport -->
+            <div class="nova-messages" id="nova-messages">
+                <div class="nova-message-bubble assistant">
+                    <div class="message-content">
+                        Hello! I am <strong>Nova</strong>, your AI weather assistant. I can summarize the current weather forecast, suggest outfit choices, give travel alerts, or explain scientific weather indexes. What would you like to know?
+                    </div>
+                    <span class="message-time">Just now</span>
+                </div>
+            </div>
+
+            <!-- Suggestion Chips -->
+            <div class="nova-suggestions" id="nova-suggestions">
+                <button class="suggestion-chip">What should I wear today?</button>
+                <button class="suggestion-chip">Summarize this weather</button>
+                <button class="suggestion-chip">Is it good for outdoor activities?</button>
+                <button class="suggestion-chip">Explain relative humidity</button>
+            </div>
+
+            <!-- Message Form Input -->
+            <form class="nova-input-area" id="nova-input-form">
+                <input type="text" id="nova-input-field" placeholder="Ask Nova about the weather..." required autocomplete="off">
+                <!-- Speech Voice Mic Recording -->
+                <button type="button" class="nova-mic-btn" id="nova-mic-btn" aria-label="Start Voice Recording" title="Voice command input">
+                    <svg viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;">
+                        <path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                    </svg>
+                </button>
+                <!-- Send button -->
+                <button type="submit" class="nova-send-btn" id="nova-send-btn" aria-label="Send message">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Application Script Files -->
+    <script src="js/app.js"></script>
+    <script src="js/nova.js"></script>
+</body>
+</html>

@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYFS - Financial Calculators | Mutual Fund SIP & Lumpsum Wealth Planner</title>
+    <meta name="description" content="Calculate your Systematic Investment Plan (SIP) returns, lumpsum growth, goal parameters, and the cost of delay in starting investments with KEYFS.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Background mesh glows -->
+    <div class="bg-mesh-glow glow-1"></div>
+    <div class="bg-mesh-glow glow-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                KEYFS<span class="logo-dot"></span>
+            </a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Mutual Funds</a></li>
+                    <li><a href="calculators.html" class="nav-link active">Calculators</a></li>
+                    <li><a href="partner.html" class="nav-link">Become a Partner</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Client Console</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-secondary">Login</a>
+                <a href="auth.html" class="btn btn-primary">Open Account</a>
+                <button class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Index Ticker -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                <!-- Ticker items populated by app.js -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Section -->
+    <section style="padding-top: 160px; min-height: 90vh;">
+        <div class="container">
+            <h1 class="section-title">Interactive <span class="text-gradient">Financial Planners</span></h1>
+            <p class="section-subtitle">Plan your financial milestones with precision using our advanced growth projection engines.</p>
+
+            <div class="glass-card calculator-section">
+                <!-- Left Hand Controller Panel -->
+                <div>
+                    <div class="calc-sidebar-tabs">
+                        <div class="calc-tab active" data-calc="sip">SIP</div>
+                        <div class="calc-tab" data-calc="lumpsum">Lumpsum</div>
+                        <div class="calc-tab" data-calc="goal">Goal Planner</div>
+                        <div class="calc-tab" data-calc="delay">Delay Cost</div>
+                    </div>
+
+                    <!-- 1. SIP Calculator Form -->
+                    <div class="calc-form" id="sip-calc-form">
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="sip-monthly">Monthly Investment</label>
+                                <span class="slider-val-box" id="sip-monthly-val">₹25,000</span>
+                            </div>
+                            <input type="range" class="slider-input" id="sip-monthly" min="500" max="1000000" step="500" value="25000">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="sip-rate">Expected Return Rate (p.a.)</label>
+                                <span class="slider-val-box" id="sip-rate-val">12%</span>
+                            </div>
+                            <input type="range" class="slider-input" id="sip-rate" min="1" max="30" step="0.5" value="12">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="sip-years">Time Period (Tenure)</label>
+                                <span class="slider-val-box" id="sip-years-val">10 Yr</span>
+                            </div>
+                            <input type="range" class="slider-input" id="sip-years" min="1" max="40" step="1" value="10">
+                        </div>
+                    </div>
+
+                    <!-- 2. Lumpsum Calculator Form -->
+                    <div class="calc-form" id="lumpsum-calc-form" style="display: none;">
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="lumpsum-amt">Total Investment</label>
+                                <span class="slider-val-box" id="lumpsum-amt-val">₹5,00,000</span>
+                            </div>
+                            <input type="range" class="slider-input" id="lumpsum-amt" min="5000" max="5000000" step="5000" value="500000">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="lumpsum-rate">Expected Return Rate (p.a.)</label>
+                                <span class="slider-val-box" id="lumpsum-rate-val">12%</span>
+                            </div>
+                            <input type="range" class="slider-input" id="lumpsum-rate" min="1" max="30" step="0.5" value="12">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="lumpsum-years">Time Period (Tenure)</label>
+                                <span class="slider-val-box" id="lumpsum-years-val">10 Yr</span>
+                            </div>
+                            <input type="range" class="slider-input" id="lumpsum-years" min="1" max="40" step="1" value="10">
+                        </div>
+                    </div>
+
+                    <!-- 3. Goal Planner Form -->
+                    <div class="calc-form" id="goal-calc-form" style="display: none;">
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="goal-target">Target Amount Needed</label>
+                                <span class="slider-val-box" id="goal-target-val">₹50,00,000</span>
+                            </div>
+                            <input type="range" class="slider-input" id="goal-target" min="50000" max="100000000" step="50000" value="5000000">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="goal-rate">Expected Return Rate (p.a.)</label>
+                                <span class="slider-val-box" id="goal-rate-val">12%</span>
+                            </div>
+                            <input type="range" class="slider-input" id="goal-rate" min="1" max="30" step="0.5" value="12">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="goal-years">Years to Reach Goal</label>
+                                <span class="slider-val-box" id="goal-years-val">10 Yr</span>
+                            </div>
+                            <input type="range" class="slider-input" id="goal-years" min="1" max="40" step="1" value="10">
+                        </div>
+                    </div>
+
+                    <!-- 4. Delay Cost Form -->
+                    <div class="calc-form" id="delay-calc-form" style="display: none;">
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="delay-monthly">Monthly Investment Amount</label>
+                                <span class="slider-val-box" id="delay-monthly-val">₹10,000</span>
+                            </div>
+                            <input type="range" class="slider-input" id="delay-monthly" min="500" max="500000" step="500" value="10000">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="delay-rate">Expected Return Rate (p.a.)</label>
+                                <span class="slider-val-box" id="delay-rate-val">12%</span>
+                            </div>
+                            <input type="range" class="slider-input" id="delay-rate" min="1" max="30" step="0.5" value="12">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="delay-years">Target Investment Tenure</label>
+                                <span class="slider-val-box" id="delay-years-val">20 Yr</span>
+                            </div>
+                            <input type="range" class="slider-input" id="delay-years" min="5" max="40" step="1" value="20">
+                        </div>
+
+                        <div class="range-slider-container">
+                            <div class="slider-header">
+                                <label class="form-label" for="delay-time">Delay Period (Procrastination)</label>
+                                <span class="slider-val-box" id="delay-time-val">3 Yr</span>
+                            </div>
+                            <input type="range" class="slider-input" id="delay-time" min="1" max="10" step="1" value="3">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Hand Results Panel -->
+                <div class="calc-results-panel">
+                    <!-- Dynamic Text Results -->
+                    <div class="calc-summary-grid">
+                        <div class="summary-card">
+                            <p id="label-left">Invested Amount</p>
+                            <h4 id="sip-total-invested">₹0</h4>
+                        </div>
+                        <div class="summary-card">
+                            <p id="label-mid">Est. Returns</p>
+                            <h4 id="sip-est-returns">₹0</h4>
+                        </div>
+                        <div class="summary-card highlight">
+                            <p id="label-right">Total Value</p>
+                            <h4 id="sip-total-value">₹0</h4>
+                        </div>
+                    </div>
+
+                    <!-- Alternate Results for Delay Plan (Hidden by default, updated by calculators.js) -->
+                    <div class="calc-summary-grid" id="delay-results-grid" style="display: none; grid-template-columns: 1fr 1fr 1fr; width: 100%;">
+                        <div class="summary-card">
+                            <p>Wealth if Started Today</p>
+                            <h4 id="delay-wealth-now">₹0</h4>
+                        </div>
+                        <div class="summary-card">
+                            <p>Wealth if Delayed</p>
+                            <h4 id="delay-wealth-delayed">₹0</h4>
+                        </div>
+                        <div class="summary-card highlight" style="border-color:#EF4444; background: rgba(239, 68, 68, 0.02);">
+                            <p style="color:#EF4444;">Net Wealth Lost (Cost)</p>
+                            <h4 id="delay-cost" style="color:#EF4444;">₹0</h4>
+                        </div>
+                    </div>
+
+                    <!-- Alternate Results for Goal Plan (Hidden by default) -->
+                    <div class="calc-summary-grid" id="goal-results-grid" style="display: none; grid-template-columns: 1.2fr 0.9fr 0.9fr; width: 100%;">
+                        <div class="summary-card highlight">
+                            <p>Required Monthly SIP</p>
+                            <h4 id="goal-required-sip">₹0</h4>
+                        </div>
+                        <div class="summary-card">
+                            <p>Total Invested</p>
+                            <h4 id="goal-total-invested">₹0</h4>
+                        </div>
+                        <div class="summary-card">
+                            <p>Required Returns</p>
+                            <h4 id="goal-est-returns">₹0</h4>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Chart Output Area -->
+                    <div class="chart-container">
+                        <canvas id="calcChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calculators explanations & guidelines -->
+            <div style="margin-top: 5rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;">
+                <div class="glass-card" style="padding: 2rem;">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--accent-emerald);"><i class="fa-solid fa-graduation-cap" style="margin-right: 0.5rem;"></i> Systematic Investment Plan (SIP)</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;">A Systematic Investment Plan (SIP) is a route offered by mutual funds to invest weekly or monthly rather than in a single lumpsum. It promotes regular savings habits and benefits from rupee cost averaging. When market indexes are volatile, a SIP buys more units at lower NAV values, smoothing out entry prices over time.</p>
+                </div>
+                <div class="glass-card" style="padding: 2rem;">
+                    <h3 style="font-size: 1.3rem; margin-bottom: 1rem; color: var(--accent-blue);"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 0.5rem;"></i> The Psychological "Cost of Delay"</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7;">In financial compounding, time is more critical than the amount invested. Delaying starting a SIP even by 3 years can cut your final retirement corpus by 30% to 40% due to lost final years of compounded interest. The Delay cost calculator illustrates how a minor delay cost aggregates into a massive deficit in wealth accumulation.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-logo-desc">
+                    <a href="index.html" class="logo" style="margin-bottom: 1rem;">
+                        KEYFS<span class="logo-dot"></span>
+                    </a>
+                    <p class="footer-desc">Key Financial Services (KEYFS) is a premier digital distributor platform offering a robust E-Wealth transaction console, comprehensive asset advisory, and structured commission channels.</p>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Investments</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html" class="footer-link">Mutual Funds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Equity Shares</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Corporate Bonds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Gold ETFs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Planning Tools</h4>
+                    <ul class="footer-links">
+                        <li><a href="calculators.html" class="footer-link">SIP Calculator</a></li>
+                        <li><a href="calculators.html" class="footer-link">Goal Planner</a></li>
+                        <li><a href="calculators.html" class="footer-link">Delay Cost Tracker</a></li>
+                        <li><a href="partner.html" class="footer-link">Earning Estimator</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="partner.html" class="footer-link">Partner Program</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                        <li><a href="#" class="footer-link">Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="compliance-box">
+                <p><strong>Mutual Fund investments are subject to market risks, read all scheme related documents carefully.</strong> The NAV of schemes can go up or down depending upon factors and forces affecting the securities market including interest rates, trading volumes, and settlement periods. Past performance of AMCs/Schemes does not guarantee future results.</p>
+                <p>KEYFS (Key Financial Services) acts as an AMFI registered Mutual Fund distributor (ARN: Mock-Registered). We receive commission payouts from Asset Management Companies for distribution services. Commissions details are disclosed in accordance with SEBI regulations and are available to clients upon request.</p>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 Key Financial Services (KEYFS). All Rights Reserved.</span>
+                <span style="display: flex; gap: 1rem;">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms &amp; Conditions</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ChartJS library CDN required for drawing interactive pie charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/calculators.js"></script>
+    
+    <!-- Override UI Labels based on Tab selection -->
+    <script>
+        document.querySelectorAll('.calc-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const calcType = tab.getAttribute('data-calc');
+                const standardSummary = document.querySelector('.calc-results-panel .calc-summary-grid');
+                const delaySummary = document.getElementById('delay-results-grid');
+                const goalSummary = document.getElementById('goal-results-grid');
+                
+                // Hide all summaries
+                standardSummary.style.display = 'none';
+                delaySummary.style.display = 'none';
+                goalSummary.style.display = 'none';
+
+                if (calcType === 'sip' || calcType === 'lumpsum') {
+                    standardSummary.style.display = 'grid';
+                    document.getElementById('label-left').innerText = 'Invested Amount';
+                    document.getElementById('label-mid').innerText = 'Est. Returns';
+                    document.getElementById('label-right').innerText = 'Total Value';
+                } else if (calcType === 'goal') {
+                    goalSummary.style.display = 'grid';
+                } else if (calcType === 'delay') {
+                    delaySummary.style.display = 'grid';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

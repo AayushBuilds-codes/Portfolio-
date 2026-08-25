@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aura Tech | Futuristic Smart Wearables & Gear</title>
+    <meta name="description" content="Explore and buy the next generation of smart wearables, neural gear, audio, and holographic projectors at Aura Tech, assisted by Nova AI.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Main Style Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="dark-mode">
+    <!-- Neural Network Animated Background Overlay -->
+    <canvas id="hero-canvas"></canvas>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="header-container container">
+            <a href="#" class="logo">
+                <span class="logo-glow"></span>
+                Aura <span>Tech</span>
+            </a>
+            
+            <div class="search-wrapper">
+                <input type="text" id="search-input" placeholder="Search futuristic gear...">
+                <button id="search-btn" class="search-btn">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/></svg>
+                </button>
+            </div>
+
+            <nav class="nav-menu">
+                <a href="#catalog" class="nav-link active">Catalog</a>
+                <a href="#recommendations" class="nav-link">Recommended</a>
+                <button id="theme-toggle" class="theme-toggle-btn" aria-label="Toggle Theme">
+                    <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-10.96c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06zM7.05 18.01c.39-.39.39-1.03 0-1.41s-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06z" fill="currentColor"/></svg>
+                    <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20"><path d="M12.3 22h-.1c-5.4 0-10-4.6-10-10 0-4.3 2.9-8.1 7.1-9.2.6-.1 1.2.3 1.2.9v.3c-.7 1.8-.7 3.8.1 5.6.8 1.8 2.2 3.2 4 4 .8.4 1.7.6 2.6.6 1 0 1.9-.2 2.8-.7.5-.3 1.1 0 1.2.5.9 4.2-2.9 8.2-7.1 9.2-.6.1-1.3-.2-1.8-.8z" fill="currentColor"/></svg>
+                </button>
+                <button id="cart-toggle-btn" class="cart-btn" aria-label="Open Cart">
+                    <svg viewBox="0 0 24 24" width="20" height="20"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z" fill="currentColor"/></svg>
+                    <span id="cart-badge" class="cart-badge">0</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Showcase Section -->
+    <section class="hero">
+        <div class="hero-content container">
+            <div class="hero-text-block">
+                <span class="hero-tag">Step into Tomorrow</span>
+                <h1>Elevate Your Reality with Aura Wearables</h1>
+                <p>Welcome to Aura Tech, where sensory enhancement meets premium minimalist aesthetics. Meet **Nova**, our intelligent assistant. Say *"Add Aura Glass to cart"* or ask for custom recommendations!</p>
+                <div class="hero-actions">
+                    <a href="#catalog" class="btn btn-primary">Browse Catalog</a>
+                    <button class="btn btn-secondary" onclick="document.getElementById('nova-launcher').click()">Ask Nova AI</button>
+                </div>
+            </div>
+            <div class="hero-visual-block">
+                <div class="glow-orb"></div>
+                <div class="device-showcase">
+                    <div class="device-card-floating glass">
+                        <div class="device-img-holder">
+                            <span class="item-tag">Top Choice</span>
+                            <div class="custom-vector-art ring-art">
+                                <div class="outer-ring"></div>
+                                <div class="inner-glow"></div>
+                            </div>
+                        </div>
+                        <div class="device-info">
+                            <h3>Nova Ring</h3>
+                            <p>Premium Biometric Tracker</p>
+                            <span class="price">$199.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Storefront Content -->
+    <main class="container store-main">
+        <!-- Sidebar Controls (Sticky) -->
+        <aside class="sidebar-controls glass">
+            <h2>Filters</h2>
+            
+            <div class="filter-group">
+                <h3>Categories</h3>
+                <ul class="category-list">
+                    <li><button class="category-btn active" data-category="all">All Gear</button></li>
+                    <li><button class="category-btn" data-category="smart-wearables">Smart Wearables</button></li>
+                    <li><button class="category-btn" data-category="neural-gear">Neural Gear</button></li>
+                    <li><button class="category-btn" data-category="audio-gear">Audio Gear</button></li>
+                    <li><button class="category-btn" data-category="holograms">Holograms</button></li>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h3>Sort By</h3>
+                <select id="sort-select" class="custom-select">
+                    <option value="popular">Popularity & Rating</option>
+                    <option value="price-asc">Price: Low to High</option>
+                    <option value="price-desc">Price: High to Low</option>
+                </select>
+            </div>
+
+            <div class="store-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Items Loaded</span>
+                    <span id="items-count-stat" class="stat-val">8</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Avg Rating</span>
+                    <span class="stat-val">4.8★</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Product Catalog Listing Grid -->
+        <section id="catalog" class="catalog-section">
+            <div class="section-title">
+                <h2>Futuristic Catalog</h2>
+                <p>Discover neural networks, smart interfaces, and ambient holograms</p>
+            </div>
+            
+            <!-- Products Grid Container -->
+            <div id="products-grid" class="products-grid">
+                <!-- Dynamic Product Cards will be inserted here -->
+            </div>
+            
+            <div id="no-products-msg" class="no-products-msg hidden">
+                <p>No devices found matching your criteria. Try asking Nova to "reset filters"!</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Dynamic Recommendations Section -->
+    <section id="recommendations" class="recommendations-section">
+        <div class="container">
+            <div class="section-title text-center">
+                <h2>Tailored for You</h2>
+                <p>Behavior-driven recommendations based on your views and cart selections</p>
+            </div>
+            <div id="recommendations-container" class="recommendations-grid">
+                <!-- Dynamically generated suggestions based on user shopping behavior -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart Slide-out Drawer -->
+    <div id="cart-drawer" class="cart-drawer">
+        <div class="cart-drawer-overlay"></div>
+        <div class="cart-drawer-content glass">
+            <div class="cart-drawer-header">
+                <h2>Your Shopping Cart</h2>
+                <button id="cart-close-btn" class="close-btn" aria-label="Close Cart">&times;</button>
+            </div>
+            
+            <!-- Cart Items Container -->
+            <div id="cart-items" class="cart-items-container">
+                <!-- Dynamic Cart Items list will go here -->
+            </div>
+
+            <!-- Cart Footer -->
+            <div class="cart-drawer-footer">
+                <div class="cart-summary">
+                    <div class="summary-line">
+                        <span>Subtotal:</span>
+                        <span id="cart-subtotal" class="summary-value">$0.00</span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Shipping:</span>
+                        <span class="summary-value free-shipping">FREE</span>
+                    </div>
+                </div>
+                <div class="cart-actions">
+                    <button id="clear-cart-btn" class="btn btn-secondary btn-full">Clear Cart</button>
+                    <button id="checkout-btn" class="btn btn-primary btn-full">Proceed to Checkout</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal Dialog -->
+    <div id="checkout-modal" class="modal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content glass">
+            <button id="checkout-close-btn" class="close-btn" aria-label="Close Modal">&times;</button>
+            
+            <div class="checkout-steps">
+                <div class="checkout-step active" id="step-form">
+                    <h2>Secure Checkout</h2>
+                    <form id="checkout-form" class="checkout-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cust-name">Full Name</label>
+                                <input type="text" id="cust-name" required placeholder="John Doe">
+                            </div>
+                            <div class="form-group">
+                                <label for="cust-email">Email Address</label>
+                                <input type="email" id="cust-email" required placeholder="john@example.com">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="cust-address">Shipping Address</label>
+                            <input type="text" id="cust-address" required placeholder="123 Quantum St, Cyber City">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="cust-card">Card Number</label>
+                                <input type="text" id="cust-card" required placeholder="4111 2222 3333 4444" pattern="\d{16}" title="16-digit card number">
+                            </div>
+                            <div class="form-group-triple">
+                                <div class="form-group-sub">
+                                    <label for="cust-expiry">Expiry</label>
+                                    <input type="text" id="cust-expiry" required placeholder="MM/YY" pattern="\d{2}/\d{2}" title="MM/YY format">
+                                </div>
+                                <div class="form-group-sub">
+                                    <label for="cust-cvv">CVV</label>
+                                    <input type="password" id="cust-cvv" required placeholder="123" pattern="\d{3}" title="3-digit CVV">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="order-summary-box">
+                            <h3>Order Summary</h3>
+                            <div class="order-total-row">
+                                <span>Total to Pay:</span>
+                                <span id="checkout-total" class="total-val">$0.00</span>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full btn-large">Place Order</button>
+                    </form>
+                </div>
+
+                <!-- Processing Order Loader State -->
+                <div class="checkout-step hidden" id="step-processing">
+                    <div class="loader-container">
+                        <div class="quantum-loader"></div>
+                        <h3>Authorizing Biosig Payment...</h3>
+                        <p>Establishing secure connection with decentralized bank network...</p>
+                    </div>
+                </div>
+
+                <!-- Success State -->
+                <div class="checkout-step hidden" id="step-success">
+                    <div class="success-container">
+                        <div class="checkmark-animation">
+                            <svg viewBox="0 0 52 52">
+                                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                            </svg>
+                        </div>
+                        <h2>Order Confirmed!</h2>
+                        <p>Thank you for choosing Aura Tech. Your order key is <span id="order-id" class="order-key">#AT-99812</span>.</p>
+                        <p class="sub-message">Nova will monitor your delivery schedule. A copy of the digital receipt has been sent to your bio-node email.</p>
+                        <button id="success-close-btn" class="btn btn-primary">Return to Store</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nova floating launcher button -->
+    <button id="nova-launcher" class="nova-launcher" aria-label="Open Nova Assistant">
+        <span class="nova-pulse"></span>
+        <span class="nova-badge">AI</span>
+        <svg class="nova-icon" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15.5h-2v-2h2v2zm0-4.5h-2V7h2v6z"/>
+        </svg>
+    </button>
+
+    <!-- Nova Chat Overlay Window -->
+    <div id="nova-chat-window" class="nova-chat-window">
+        <div class="nova-header">
+            <div class="nova-header-profile">
+                <div class="nova-avatar-container">
+                    <div class="nova-avatar">N</div>
+                    <span class="nova-status-dot"></span>
+                </div>
+                <div class="nova-header-info">
+                    <h3>Nova AI</h3>
+                    <span class="nova-subtitle">Shopping Companion</span>
+                </div>
+            </div>
+            <div style="display: flex; gap: 0.5rem;">
+                <!-- Voice mute/unmute control -->
+                <button id="nova-voice-btn" class="nova-voice-btn" title="Toggle voice narration">
+                    <svg class="volume-up-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                    </svg>
+                    <svg class="volume-mute-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="display:none;">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                    </svg>
+                </button>
+                <!-- Close Button -->
+                <button id="nova-close-btn" class="nova-close-btn" title="Minimize assistant">
+                    <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Chat messages stream -->
+        <div id="nova-messages" class="nova-messages">
+            <!-- Messages added dynamically -->
+        </div>
+
+        <!-- Quick Action Suggestion Chips -->
+        <div id="nova-suggestions" class="nova-suggestions">
+            <button class="suggestion-chip">Recommend something</button>
+            <button class="suggestion-chip">Add Aura Glass</button>
+            <button class="suggestion-chip">Return policy?</button>
+            <button class="suggestion-chip">Show Neural Gear</button>
+        </div>
+
+        <!-- Inputs and Microphone Form -->
+        <form id="nova-input-form" class="nova-input-area">
+            <button type="button" id="nova-mic-btn" class="nova-mic-btn" title="Voice Input (STT)">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                </svg>
+            </button>
+            <input type="text" id="nova-input-field" placeholder="Ask Nova a question..." autocomplete="off">
+            <button type="submit" class="nova-send-btn" title="Send text message">
+                <svg viewBox="0 0 24 24">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                </svg>
+            </button>
+        </form>
+    </div>
+
+    <!-- Application Core Script -->
+    <script src="app.js"></script>
+    <!-- Nova Assistant Widget Script -->
+    <script src="nova.js"></script>
+</body>
+</html>

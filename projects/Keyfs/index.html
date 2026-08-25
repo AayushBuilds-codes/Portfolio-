@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYFS - Key Financial Services | Digital Mutual Fund Distributor & Wealth Advisor</title>
+    <meta name="description" content="Open a paperless E-Wealth account today. Invest in Mutual Funds, ETFs, and Corporate Bonds online with dedicated support from KEYFS (Key Financial Services).">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Font Awesome Icons for general graphics -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Background mesh glows -->
+    <div class="bg-mesh-glow glow-1"></div>
+    <div class="bg-mesh-glow glow-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                KEYFS<span class="logo-dot"></span>
+            </a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link active">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Mutual Funds</a></li>
+                    <li><a href="calculators.html" class="nav-link">Calculators</a></li>
+                    <li><a href="partner.html" class="nav-link">Become a Partner</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Client Console</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-secondary">Login</a>
+                <a href="auth.html" class="btn btn-primary">Open Account</a>
+                <button class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Index Ticker -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                <!-- Ticker items will load dynamically from app.js -->
+                <div class="ticker-item"><span class="name">NIFTY 50</span><span class="value">23,516.45</span><span class="change up">▲ +82.35 (0.35%)</span></div>
+                <div class="ticker-item"><span class="name">SENSEX</span><span class="value">77,310.10</span><span class="change up">▲ +275.40 (0.36%)</span></div>
+                <div class="ticker-item"><span class="name">GOLD (10g)</span><span class="value">72,150.00</span><span class="change up">▲ +320.00 (0.45%)</span></div>
+                <div class="ticker-item"><span class="name">USD/INR</span><span class="value">83.56</span><span class="change up">▲ +0.04 (0.05%)</span></div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div>
+                <h1 class="hero-title">Your Trusted <span class="text-gradient">Wealth Creation</span> Partner</h1>
+                <p class="hero-desc">KEYFS (Key Financial Services) provides a state-of-the-art E-Wealth account offering 100% online investments, custom portfolio builders, and professional distributor advisory.</p>
+                <div class="hero-actions">
+                    <a href="products.html" class="btn btn-primary">Explore Mutual Funds</a>
+                    <a href="calculators.html" class="btn btn-secondary">SIP Calculators <i class="fa-solid fa-arrow-trend-up" style="margin-left: 0.5rem;"></i></a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-target="1994">0</h3>
+                        <p>Established</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-target="250000">0</h3>
+                        <p>Happy Investors</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-target="45000">0</h3>
+                        <p>AUM (Cr. ₹)</p>
+                    </div>
+                    <div class="stat-item">
+                        <h3 class="stat-number" data-target="5000">0</h3>
+                        <p>Active Distributors</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Graphic Feature Visual using Glassmorphism -->
+            <div class="glass-card" style="padding: 2.5rem; text-align: center; border-color: rgba(59, 130, 246, 0.2);">
+                <div style="background: rgba(59, 130, 246, 0.1); width: 80px; height: 80px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 2rem auto; color: var(--accent-blue);">
+                    <i class="fa-solid fa-shield-halved fa-2x"></i>
+                </div>
+                <h3 style="font-size: 1.6rem; margin-bottom: 1rem;">SECURE &amp; COMPLIANT</h3>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem; font-size: 0.95rem;">KEYFS is registered with the Association of Mutual Funds in India (AMFI) as an official Mutual Fund Distributor. Rest assured that all asset transfers are routed securely via official exchange portals.</p>
+                <div style="display: flex; flex-direction: column; gap: 1rem; text-align: left; background: rgba(0, 0, 0, 0.2); padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color);">
+                    <div style="display: flex; gap: 0.8rem; align-items: center;">
+                        <i class="fa-regular fa-circle-check text-gradient" style="font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.9rem; font-weight: 500;">SEBI &amp; AMFI Compliant platform</span>
+                    </div>
+                    <div style="display: flex; gap: 0.8rem; align-items: center;">
+                        <i class="fa-regular fa-circle-check text-gradient" style="font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.9rem; font-weight: 500;">100% paperless digital onboarding</span>
+                    </div>
+                    <div style="display: flex; gap: 0.8rem; align-items: center;">
+                        <i class="fa-regular fa-circle-check text-gradient" style="font-size: 1.2rem;"></i>
+                        <span style="font-size: 0.9rem; font-weight: 500;">Regular portfolio review triggers</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Basket Section -->
+    <section style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color);">
+        <div class="container">
+            <h2 class="section-title">Diverse <span class="text-gradient">Product Basket</span></h2>
+            <p class="section-subtitle">A comprehensive suite of investment assets readily available online under a single portal login.</p>
+            
+            <div class="products-grid">
+                <a href="products.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-chart-line fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">MUTUAL FUNDS</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Direct and Regular Schemes from all major AMCs.</p>
+                </a>
+                
+                <a href="dashboard.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-hand-holding-dollar fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">LOAN AGAINST MF</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Unlock instant liquidity keeping portfolio intact.</p>
+                </a>
+                
+                <a href="dashboard.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-chart-pie fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">EQUITY &amp; ETFs</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Real-time stock transactions and basket indexing.</p>
+                </a>
+                
+                <a href="dashboard.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-sack-dollar fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">PMS</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Premium Portfolio Management for High Networth clients.</p>
+                </a>
+
+                <a href="dashboard.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-umbrella fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">INSURANCE</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Cover your risk with comprehensive Life &amp; Health policies.</p>
+                </a>
+
+                <a href="dashboard.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-landmark fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">FIXED INCOME</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">High yield Corporate FDs, Sovereign Gold Bonds, and Debentures.</p>
+                </a>
+
+                <a href="dashboard.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-piggy-bank fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">PENSION SCHEMES</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">National Pension System (NPS) plans for tax savings.</p>
+                </a>
+
+                <a href="partner.html" class="glass-card product-card">
+                    <div class="product-icon">
+                        <i class="fa-solid fa-people-group fa-3x"></i>
+                    </div>
+                    <h4 style="margin-bottom: 0.5rem;">PARTNERSHIP</h4>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary);">Become a financial distributor with zero startup capital.</p>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Key E-Wealth Account Features Section -->
+    <section>
+        <div class="container">
+            <div class="hero-grid" style="align-items: center;">
+                <div>
+                    <h2 style="font-size: 2.2rem; margin-bottom: 1.5rem;">Premium Features of <br><span class="text-gradient">KEYFS E-Wealth</span> Account</h2>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2rem;">
+                        <li style="display: flex; gap: 1rem;">
+                            <div style="color: var(--accent-emerald); font-size: 1.2rem;"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">All-In-One Dashboard</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);">Track mutual funds, equity portfolios, deposits, and insurance coverages in a single clean portal view.</p>
+                            </div>
+                        </li>
+                        <li style="display: flex; gap: 1rem;">
+                            <div style="color: var(--accent-emerald); font-size: 1.2rem;"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Paperless Account Activation</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);">100% online onboarding with instant KYC verification. Complete your registration under 5 minutes.</p>
+                            </div>
+                        </li>
+                        <li style="display: flex; gap: 1rem;">
+                            <div style="color: var(--accent-emerald); font-size: 1.2rem;"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Detailed Insights &amp; Capital Gains Reports</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);">Generate comprehensive tax liability sheets, capital gains statements, and performance metrics instantly.</p>
+                            </div>
+                        </li>
+                        <li style="display: flex; gap: 1rem;">
+                            <div style="color: var(--accent-emerald); font-size: 1.2rem;"><i class="fa-solid fa-chevron-right"></i></div>
+                            <div>
+                                <h4 style="font-size: 1.1rem; margin-bottom: 0.2rem;">Dedicated Advisory Support</h4>
+                                <p style="font-size: 0.9rem; color: var(--text-secondary);">Get assigned a local financial advisor/distributor to guide you through volatile market cycles.</p>
+                            </div>
+                        </li>
+                    </ul>
+                    <a href="dashboard.html" class="btn btn-primary">Open Account Now</a>
+                </div>
+
+                <div class="glass-card" style="background: rgba(16, 185, 129, 0.02); border-color: rgba(16, 185, 129, 0.1);">
+                    <h3 style="font-size: 1.4rem; margin-bottom: 1.5rem; text-align: center;">Verified Investor Performance</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); text-align: center; margin-bottom: 2rem;">Returns generated by all key investors with an AUM exceeding ₹1 Lakh holding trust for 10+ Years.</p>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; text-align: center;">
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">INVESTORS ACTIVE</span>
+                            <span style="font-size: 1.8rem; font-weight: 700; color: var(--text-primary); font-family: var(--font-heading);">12,450+</span>
+                        </div>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">TRUST PERIOD</span>
+                            <span style="font-size: 1.8rem; font-weight: 700; color: var(--accent-emerald); font-family: var(--font-heading);">10 yrs+</span>
+                        </div>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">MEAN RETURN</span>
+                            <span style="font-size: 1.8rem; font-weight: 700; color: var(--accent-emerald); font-family: var(--font-heading);">14.8% <span style="font-size: 0.8rem; font-weight: 500;">p.a.</span></span>
+                        </div>
+                        <div style="background: var(--bg-secondary); border: 1px solid var(--border-color); padding: 1.5rem; border-radius: 12px;">
+                            <span style="font-size: 0.8rem; color: var(--text-secondary); display: block; margin-bottom: 0.5rem;">MEDIAN RETURN</span>
+                            <span style="font-size: 1.8rem; font-weight: 700; color: var(--accent-blue); font-family: var(--font-heading);">13.9% <span style="font-size: 0.8rem; font-weight: 500;">p.a.</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Advisory Form Section -->
+    <section style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-color);">
+        <div class="container" style="max-width: 800px;">
+            <h2 class="section-title">Schedule a <span class="text-gradient">Free Consultation</span></h2>
+            <p class="section-subtitle">Let a KEYFS Wealth Manager analyze your requirements and draft a customized mutual fund SIP plan.</p>
+            
+            <div class="glass-card">
+                <form class="lead-form" id="consultation-form">
+                    <div class="alert alert-success" id="consult-success-msg">
+                        <i class="fa-regular fa-circle-check"></i> Thank you! Your request is captured. A wealth manager will reach out shortly.
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="c-name">Full Name</label>
+                        <input type="text" class="form-control" id="c-name" required placeholder="e.g. Rahul Sharma">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="c-email">Email Address</label>
+                            <input type="email" class="form-control" id="c-email" required placeholder="e.g. name@domain.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="c-phone">Phone Number</label>
+                            <input type="tel" class="form-control" id="c-phone" required pattern="[0-9]{10}" placeholder="10-digit mobile number">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="c-message">Brief Description of Financial Goal</label>
+                        <textarea class="form-control" id="c-message" rows="4" placeholder="How can we help? (e.g. Planning for child's higher education, retirement portfolio structure)"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px;">Submit Callback Request</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-logo-desc">
+                    <a href="index.html" class="logo" style="margin-bottom: 1rem;">
+                        KEYFS<span class="logo-dot"></span>
+                    </a>
+                    <p class="footer-desc">Key Financial Services (KEYFS) is a premier digital distributor platform offering a robust E-Wealth transaction console, comprehensive asset advisory, and structured commission channels.</p>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Investments</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html" class="footer-link">Mutual Funds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Equity Shares</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Corporate Bonds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Gold ETFs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Planning Tools</h4>
+                    <ul class="footer-links">
+                        <li><a href="calculators.html" class="footer-link">SIP Calculator</a></li>
+                        <li><a href="calculators.html" class="footer-link">Goal Planner</a></li>
+                        <li><a href="calculators.html" class="footer-link">Delay Cost Tracker</a></li>
+                        <li><a href="partner.html" class="footer-link">Earning Estimator</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="partner.html" class="footer-link">Partner Program</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                        <li><a href="#" class="footer-link">Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Compliance Warning Text -->
+            <div class="compliance-box">
+                <p><strong>Mutual Fund investments are subject to market risks, read all scheme related documents carefully.</strong> The NAV of schemes can go up or down depending upon factors and forces affecting the securities market including interest rates, trading volumes, and settlement periods. Past performance of AMCs/Schemes does not guarantee future results.</p>
+                <p>KEYFS (Key Financial Services) acts as an AMFI registered Mutual Fund distributor (ARN: Mock-Registered). We receive commission payouts from Asset Management Companies for distribution services. Commissions details are disclosed in accordance with SEBI regulations and are available to clients upon request.</p>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 Key Financial Services (KEYFS). All Rights Reserved.</span>
+                <span style="display: flex; gap: 1rem;">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms &amp; Conditions</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Global App Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

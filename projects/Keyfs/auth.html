@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEYFS Authentication | Login &amp; Open E-Wealth Account</title>
+    <meta name="description" content="Access your KEYFS digital investment account. Log in or open a new account in under 5 minutes with our secure paperless registration system.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Background mesh glows -->
+    <div class="bg-mesh-glow glow-1"></div>
+    <div class="bg-mesh-glow glow-2"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                KEYFS<span class="logo-dot"></span>
+            </a>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="nav-link">Home</a></li>
+                    <li><a href="products.html" class="nav-link">Mutual Funds</a></li>
+                    <li><a href="calculators.html" class="nav-link">Calculators</a></li>
+                    <li><a href="partner.html" class="nav-link">Become a Partner</a></li>
+                    <li><a href="dashboard.html" class="nav-link">Client Console</a></li>
+                </ul>
+            </nav>
+
+            <div class="nav-actions">
+                <a href="auth.html" class="btn btn-secondary">Login</a>
+                <a href="auth.html" class="btn btn-primary">Open Account</a>
+                <button class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Live Index Ticker -->
+        <div class="ticker-wrap">
+            <div class="ticker">
+                <!-- Ticker items populated by app.js -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Auth Center Section -->
+    <section style="padding-top: 170px; min-height: 90vh; display: flex; align-items: center;">
+        <div class="container" style="max-width: 550px;">
+            <div class="glass-card" id="auth-card" style="padding: 3rem;">
+                
+                <!-- Tab Switching Panel -->
+                <div class="calc-sidebar-tabs" style="margin-bottom: 2.5rem;">
+                    <div class="calc-tab active auth-tab" data-tab="login">Login</div>
+                    <div class="calc-tab auth-tab" data-tab="register">Open Account</div>
+                </div>
+
+                <!-- 1. Secure Login Form -->
+                <form id="login-form">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center;">Welcome to <span class="text-gradient">E-Wealth Login</span></h3>
+                    
+                    <div class="alert alert-success" id="log-error-msg" style="background: rgba(239, 68, 68, 0.1); border-color: #EF4444; color: #EF4444;">
+                        Invalid credentials error message.
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="l-email">Registered Email Address</label>
+                        <input type="email" class="form-control" id="l-email" required placeholder="name@domain.com">
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label class="form-label" for="l-password">Password</label>
+                        <input type="password" class="form-control" id="l-password" required placeholder="Enter account password">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px;">Access Portal Console</button>
+                </form>
+
+                <!-- 2. Secure Open Account / Registration Form -->
+                <form id="register-form" style="display: none;">
+                    <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; text-align: center;">Open <span class="text-gradient">E-Wealth Account</span></h3>
+                    
+                    <div class="alert alert-success" id="reg-error-msg" style="background: rgba(239, 68, 68, 0.1); border-color: #EF4444; color: #EF4444;">
+                        Input validation error message.
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="r-name">Full Name (As on PAN Card)</label>
+                        <input type="text" class="form-control" id="r-name" required placeholder="e.g. Ramesh Kumar">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="r-email">Email Address</label>
+                            <input type="email" class="form-control" id="r-email" required placeholder="ramesh@gmail.com">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="r-phone">Mobile Number</label>
+                            <input type="tel" class="form-control" id="r-phone" required pattern="[0-9]{10}" placeholder="10-digit number">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label class="form-label" for="r-pan">PAN Card Number</label>
+                            <input type="text" class="form-control" id="r-pan" required style="text-transform: uppercase;" placeholder="ABCDE1234F">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="r-funding">Initial Funding (INR)</label>
+                            <input type="number" class="form-control" id="r-funding" required min="1000" value="50000" placeholder="e.g. 50000">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 2rem;">
+                        <label class="form-label" for="r-password">Secure Password</label>
+                        <input type="password" class="form-control" id="r-password" required minlength="6" placeholder="Choose a password (min 6 chars)">
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; border-radius: 8px;">Submit &amp; Open Account</button>
+                </form>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-logo-desc">
+                    <a href="index.html" class="logo" style="margin-bottom: 1rem;">
+                        KEYFS<span class="logo-dot"></span>
+                    </a>
+                    <p class="footer-desc">Key Financial Services (KEYFS) is a premier digital distributor platform offering a robust E-Wealth transaction console, comprehensive asset advisory, and structured commission channels.</p>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Investments</h4>
+                    <ul class="footer-links">
+                        <li><a href="products.html" class="footer-link">Mutual Funds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Equity Shares</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Corporate Bonds</a></li>
+                        <li><a href="dashboard.html" class="footer-link">Gold ETFs</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="footer-title">Planning Tools</h4>
+                    <ul class="footer-links">
+                        <li><a href="calculators.html" class="footer-link">SIP Calculator</a></li>
+                        <li><a href="calculators.html" class="footer-link">Goal Planner</a></li>
+                        <li><a href="calculators.html" class="footer-link">Delay Cost Tracker</a></li>
+                        <li><a href="partner.html" class="footer-link">Earning Estimator</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 class="footer-title">Company</h4>
+                    <ul class="footer-links">
+                        <li><a href="#" class="footer-link">About Us</a></li>
+                        <li><a href="partner.html" class="footer-link">Partner Program</a></li>
+                        <li><a href="#" class="footer-link">Contact Us</a></li>
+                        <li><a href="#" class="footer-link">Compliance</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="compliance-box">
+                <p><strong>Mutual Fund investments are subject to market risks, read all scheme related documents carefully.</strong> The NAV of schemes can go up or down depending upon factors and forces affecting the securities market including interest rates, trading volumes, and settlement periods. Past performance of AMCs/Schemes does not guarantee future results.</p>
+                <p>KEYFS (Key Financial Services) acts as an AMFI registered Mutual Fund distributor (ARN: Mock-Registered). We receive commission payouts from Asset Management Companies for distribution services. Commissions details are disclosed in accordance with SEBI regulations and are available to clients upon request.</p>
+            </div>
+
+            <div class="footer-bottom">
+                <span>© 2026 Key Financial Services (KEYFS). All Rights Reserved.</span>
+                <span style="display: flex; gap: 1rem;">
+                    <a href="#" class="footer-link">Privacy Policy</a>
+                    <a href="#" class="footer-link">Terms &amp; Conditions</a>
+                </span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/db.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>

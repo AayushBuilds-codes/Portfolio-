@@ -1,0 +1,931 @@
+/* Import Premium Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Roboto+Mono:wght@400;500;700&display=swap');
+
+/* ==========================================================================
+   CSS DESIGN SYSTEM VARIABLES
+   ========================================================================== */
+:root {
+    /* Fonts */
+    --font-sans: 'Outfit', sans-serif;
+    --font-mono: 'Roboto Mono', monospace;
+
+    /* Transition Speeds */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+
+    /* Theme Tokens (Default Dark Mode) */
+    --bg-gradient: linear-gradient(135deg, #0b0c16 0%, #15162c 50%, #080911 100%);
+    --glass-bg: rgba(22, 24, 47, 0.65);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-shadow: rgba(0, 0, 0, 0.4);
+    
+    --text-primary: #f3f4f6;
+    --text-muted: #9ca3af;
+    --text-inverse: #111827;
+
+    /* Accents & Gradients */
+    --primary: #6366f1; /* Indigo */
+    --primary-light: #818cf8;
+    --primary-glow: rgba(99, 102, 241, 0.3);
+    --accent: #f43f5e; /* Rose */
+    --accent-glow: rgba(244, 63, 94, 0.35);
+    --secondary: #10b981; /* Emerald */
+    --secondary-glow: rgba(16, 185, 129, 0.2);
+
+    /* Calculator Buttons */
+    --btn-num-bg: rgba(255, 255, 255, 0.04);
+    --btn-num-hover: rgba(255, 255, 255, 0.09);
+    --btn-op-bg: rgba(99, 102, 241, 0.12);
+    --btn-op-hover: rgba(99, 102, 241, 0.24);
+    --btn-action-bg: rgba(244, 63, 94, 0.12);
+    --btn-action-hover: rgba(244, 63, 94, 0.24);
+
+    --screen-bg: rgba(10, 11, 22, 0.6);
+}
+
+/* Light Theme overrides */
+[data-theme="light"] {
+    --bg-gradient: linear-gradient(135deg, #f0f2fd 0%, #e0e4f7 50%, #eaedf8 100%);
+    --glass-bg: rgba(255, 255, 255, 0.55);
+    --glass-border: rgba(99, 102, 241, 0.15);
+    --glass-shadow: rgba(79, 70, 229, 0.08);
+    
+    --text-primary: #1e1b4b; /* Deep Indigo */
+    --text-muted: #4f46e5;
+    --text-inverse: #ffffff;
+
+    --primary: #4f46e5;
+    --primary-light: #6366f1;
+    --primary-glow: rgba(79, 70, 229, 0.15);
+    --accent: #e11d48;
+    --accent-glow: rgba(225, 29, 72, 0.2);
+    --secondary: #059669;
+    --secondary-glow: rgba(5, 150, 105, 0.15);
+
+    --btn-num-bg: rgba(255, 255, 255, 0.85);
+    --btn-num-hover: rgba(99, 102, 241, 0.08);
+    --btn-op-bg: rgba(79, 70, 229, 0.08);
+    --btn-op-hover: rgba(79, 70, 229, 0.15);
+    --btn-action-bg: rgba(225, 29, 72, 0.06);
+    --btn-action-hover: rgba(225, 29, 72, 0.12);
+
+    --screen-bg: rgba(255, 255, 255, 0.8);
+}
+
+/* ==========================================================================
+   RESET & LAYOUT BASE
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: var(--font-sans);
+}
+
+body {
+    min-height: 100vh;
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: background var(--transition-slow);
+}
+
+/* Background Particle Canvas & Ambient Aura */
+#particle-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.ambient-glow {
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    border-radius: 50%;
+    filter: blur(100px);
+    z-index: 2;
+    opacity: 0.45;
+    pointer-events: none;
+    transition: all var(--transition-slow);
+}
+
+.glow-1 {
+    top: -150px;
+    right: -100px;
+    background: radial-gradient(circle, var(--primary) 0%, transparent 70%);
+}
+
+.glow-2 {
+    bottom: -150px;
+    left: -100px;
+    background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+}
+
+/* ==========================================================================
+   APP HEADER
+   ========================================================================== */
+.header-actions {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.app-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.app-title span {
+    color: var(--accent);
+}
+
+.top-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.control-btn {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(8px);
+    transition: all var(--transition-fast);
+}
+
+.control-btn:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 12px var(--primary-glow);
+    transform: translateY(-2px);
+}
+
+.control-btn svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+/* Theme Toggle Button Icon swaps */
+.theme-toggle-btn svg {
+    width: 18px;
+    height: 18px;
+}
+.theme-toggle-btn .sun-icon { display: block; }
+.theme-toggle-btn .moon-icon { display: none; }
+[data-theme="light"] .theme-toggle-btn .sun-icon { display: none; }
+[data-theme="light"] .theme-toggle-btn .moon-icon { display: block; }
+
+/* ==========================================================================
+   MAIN CALCULATOR SECTION
+   ========================================================================== */
+.calc-container {
+    width: 370px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    box-shadow: 0 20px 50px var(--glass-shadow);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    backdrop-filter: blur(16px);
+    z-index: 5;
+    position: relative;
+    transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.calc-container:hover {
+    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.45);
+}
+
+/* Calculator Screen Display */
+.calc-screen {
+    background: var(--screen-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 18px;
+    padding: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-end;
+    min-height: 120px;
+    position: relative;
+    overflow: hidden;
+}
+
+.calc-screen::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+    pointer-events: none;
+}
+
+.formula {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    text-align: right;
+    max-width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    margin-bottom: 0.6rem;
+    scroll-behavior: smooth;
+}
+
+.formula::-webkit-scrollbar {
+    height: 4px;
+}
+.formula::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.output {
+    font-size: 2.3rem;
+    font-weight: 700;
+    font-family: var(--font-mono);
+    color: var(--text-primary);
+    text-align: right;
+    width: 100%;
+    word-break: break-all;
+    overflow-y: auto;
+    max-height: 80px;
+}
+
+/* Scientific Operator Drawer */
+.sci-drawer {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.6rem;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height var(--transition-normal) ease-out, margin var(--transition-normal);
+}
+
+.sci-drawer.open {
+    max-height: 250px;
+    margin-bottom: 0.4rem;
+}
+
+.sci-drawer .calc-btn {
+    padding: 0.65rem 0;
+    font-size: 0.85rem;
+    background: var(--btn-op-bg);
+}
+.sci-drawer .calc-btn:hover {
+    background: var(--btn-op-hover);
+    color: var(--text-primary);
+}
+
+/* Grid Keyboard Layout */
+.keyboard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.7rem;
+}
+
+.calc-btn {
+    border: none;
+    outline: none;
+    background: var(--btn-num-bg);
+    color: var(--text-primary);
+    font-size: 1.25rem;
+    font-weight: 500;
+    padding: 1rem 0;
+    border-radius: 18px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid transparent;
+}
+
+.calc-btn:hover {
+    background: var(--btn-num-hover);
+    transform: translateY(-2px);
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.calc-btn:active {
+    transform: scale(0.95);
+}
+
+/* Button Classes Styling */
+.btn-op {
+    background: var(--btn-op-bg);
+    color: var(--primary-light);
+    font-weight: 600;
+}
+.btn-op:hover {
+    background: var(--btn-op-hover);
+}
+
+.btn-action {
+    background: var(--btn-action-bg);
+    color: var(--accent);
+    font-weight: 600;
+}
+.btn-action:hover {
+    background: var(--btn-action-hover);
+}
+
+.btn-equals {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--text-inverse);
+    font-weight: 700;
+    box-shadow: 0 4px 15px var(--primary-glow);
+}
+.btn-equals:hover {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+    box-shadow: 0 6px 20px var(--primary-glow);
+}
+
+/* ==========================================================================
+   HISTORY SIDE PANEL DRAWWER
+   ========================================================================== */
+.history-panel {
+    position: absolute;
+    top: 0;
+    left: -290px;
+    width: 275px;
+    height: 100%;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    backdrop-filter: blur(20px);
+    box-shadow: -10px 10px 40px var(--glass-shadow);
+    z-index: 4;
+    transition: left var(--transition-normal) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.history-panel.open {
+    left: -290px; /* Kept outside on desktop if using relative layout, but wait! */
+}
+
+/* On medium screens, slide history side card directly */
+@media (min-width: 992px) {
+    .calc-wrapper {
+        display: flex;
+        gap: 1.5rem;
+        position: relative;
+        z-index: 5;
+    }
+    
+    .history-panel {
+        position: relative;
+        left: 0 !important;
+        height: auto;
+        min-height: 480px;
+    }
+    
+    .history-panel #btn-history-close {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) {
+    .history-panel {
+        position: fixed;
+        left: -320px;
+        top: 0;
+        bottom: 0;
+        height: 100vh;
+        border-radius: 0 28px 28px 0;
+        z-index: 100;
+    }
+    .history-panel.open {
+        left: 0 !important;
+    }
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--glass-border);
+    padding-bottom: 0.6rem;
+}
+
+.history-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.history-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    padding-right: 0.2rem;
+}
+
+.history-list::-webkit-scrollbar {
+    width: 4px;
+}
+.history-list::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+
+.history-item {
+    padding: 0.8rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid transparent;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-align: right;
+}
+
+.history-item:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--glass-border);
+    transform: translateX(3px);
+}
+
+.history-formula {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.history-result {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary-light);
+    font-family: var(--font-mono);
+    margin-top: 0.2rem;
+}
+
+.history-time {
+    font-size: 0.7rem;
+    color: #6b7280;
+    margin-top: 0.3rem;
+}
+
+.history-empty {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-top: 2rem;
+}
+
+/* ==========================================================================
+   NOVA - AI PERSONAL MATH ASSISTANT WIDGET
+   ========================================================================== */
+.nova-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+/* Floating Launcher Button */
+.nova-launcher {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 8px 32px var(--primary-glow);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
+}
+
+.nova-launcher:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 10px 35px rgba(99, 102, 241, 0.5);
+}
+
+/* Launcher Pulsing Effect */
+.nova-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: var(--primary);
+    opacity: 0.4;
+    z-index: -1;
+    animation: novaPulseAnimation 2.2s infinite;
+}
+
+@keyframes novaPulseAnimation {
+    0% { transform: scale(1); opacity: 0.55; }
+    100% { transform: scale(1.7); opacity: 0; }
+}
+
+.nova-icon {
+    width: 26px;
+    height: 26px;
+    fill: var(--text-inverse);
+}
+
+.nova-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--accent);
+    color: var(--text-primary);
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.4rem;
+    border-radius: 10px;
+    border: 2px solid #000;
+}
+
+/* Chat Window Container */
+.nova-chat-window {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 380px;
+    height: 520px;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    box-shadow: 0 15px 40px var(--glass-shadow);
+    backdrop-filter: blur(25px);
+    display: flex;
+    flex-direction: column;
+    z-index: 1001;
+    overflow: hidden;
+    transform: scale(0.8) translateY(60px);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s;
+}
+
+.nova-chat-window.open {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Chat Header */
+.nova-header {
+    padding: 1.1rem;
+    background: rgba(22, 24, 47, 0.4);
+    border-bottom: 1px solid var(--glass-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nova-header-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nova-avatar-container {
+    position: relative;
+}
+
+.nova-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--text-inverse);
+    font-weight: 700;
+    font-size: 1.1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px var(--primary-glow);
+}
+
+.nova-status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--secondary);
+    border: 2px solid rgba(22, 24, 47, 0.8);
+}
+
+.nova-header-info h3 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.nova-subtitle {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+}
+
+/* Close & Voice toggle icons */
+.nova-close-btn, .nova-voice-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 0.2rem;
+    border-radius: 50%;
+    transition: all var(--transition-fast);
+}
+
+.nova-close-btn:hover, .nova-voice-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nova-close-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Voice mute status swapping */
+.nova-voice-btn.muted .volume-up-icon { display: none; }
+.nova-voice-btn.muted .volume-mute-icon { display: block; fill: var(--accent); }
+.nova-voice-btn:not(.muted) .volume-up-icon { display: block; }
+.nova-voice-btn:not(.muted) .volume-mute-icon { display: none; }
+
+/* Messages Area */
+.nova-messages {
+    flex: 1;
+    padding: 1.1rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.nova-messages::-webkit-scrollbar {
+    width: 4px;
+}
+.nova-messages::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+    border-radius: 10px;
+}
+
+.nova-message-bubble {
+    max-width: 80%;
+    display: flex;
+    flex-direction: column;
+    animation: bubbleEnter 0.3s cubic-bezier(0.1, 1, 0.1, 1);
+}
+
+@keyframes bubbleEnter {
+    from { transform: translateY(10px) scale(0.96); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.nova-message-bubble.assistant {
+    align-self: flex-start;
+}
+
+.nova-message-bubble.user {
+    align-self: flex-end;
+}
+
+.message-content {
+    padding: 0.8rem 1rem;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    border-radius: 18px;
+}
+
+.assistant .message-content {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    border-bottom-left-radius: 4px;
+}
+
+.user .message-content {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+    color: var(--text-inverse);
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.message-content code {
+    background: rgba(244, 63, 94, 0.15);
+    color: var(--accent);
+    padding: 0.1rem 0.3rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.message-time {
+    font-size: 0.65rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+    padding: 0 0.25rem;
+}
+
+.assistant .message-time { align-self: flex-start; }
+.user .message-time { align-self: flex-end; }
+
+/* Typing indicator */
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+}
+.typing-indicator span {
+    width: 6px;
+    height: 6px;
+    background: var(--text-muted);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: typingAnimation 1.4s infinite;
+}
+.typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+.typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+@keyframes typingAnimation {
+    0%, 100% { transform: translateY(0); opacity: 0.4; }
+    50% { transform: translateY(-4px); opacity: 1; }
+}
+
+/* Suggestion Chips */
+.nova-suggestions {
+    padding: 0.5rem 1.1rem;
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-top: 1px solid var(--glass-border);
+    background: rgba(22, 24, 47, 0.2);
+}
+
+.nova-suggestions::-webkit-scrollbar {
+    height: 2px;
+}
+.nova-suggestions::-webkit-scrollbar-thumb {
+    background: var(--glass-border);
+}
+
+.suggestion-chip {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--text-primary);
+    font-size: 0.76rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.suggestion-chip:hover {
+    border-color: var(--primary);
+    box-shadow: 0 0 8px var(--primary-glow);
+}
+
+/* Input Bar Area */
+.nova-input-area {
+    padding: 0.8rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-top: 1px solid var(--glass-border);
+    background: rgba(22, 24, 47, 0.4);
+}
+
+.nova-input-area input {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    outline: none;
+    transition: border-color var(--transition-fast);
+}
+
+.nova-input-area input:focus {
+    border-color: var(--primary);
+}
+
+.nova-send-btn, .nova-mic-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--text-muted);
+    transition: all var(--transition-fast);
+}
+
+.nova-send-btn:hover {
+    color: var(--primary-light);
+    background: rgba(99, 102, 241, 0.08);
+}
+.nova-mic-btn:hover {
+    color: var(--accent);
+    background: rgba(244, 63, 94, 0.08);
+}
+
+.nova-send-btn svg, .nova-mic-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+}
+
+/* Microphone pulsing recording status */
+.nova-mic-btn.recording {
+    background: var(--accent);
+    color: var(--text-inverse);
+    animation: micPulseAnimation 1.2s infinite alternate;
+}
+
+@keyframes micPulseAnimation {
+    from { box-shadow: 0 0 4px var(--accent-glow); }
+    to { box-shadow: 0 0 14px var(--accent); }
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN ADAPTATIONS
+   ========================================================================== */
+@media (max-width: 480px) {
+    .calc-container {
+        width: 100%;
+        max-width: 350px;
+        margin: 1rem;
+        padding: 1.1rem;
+    }
+    
+    .nova-chat-window {
+        width: calc(100vw - 2rem);
+        height: 480px;
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    .nova-widget {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    .header-actions {
+        top: 1rem;
+        left: 1rem;
+        right: 1rem;
+    }
+    
+    .app-title {
+        font-size: 1.1rem;
+    }
+    
+    .control-btn {
+        padding: 0.5rem 0.9rem;
+        font-size: 0.8rem;
+    }
+}

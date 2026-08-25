@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeCraft | Dynamic Event Creator & AI Coordinator Dashboard</title>
+    <meta name="description" content="Design, promote, and coordinate premium dynamic events. Custom themes, live landing pages, ticket generators, and Nova AI planning assistance.">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Radial Ambient Embers Grid background -->
+    <div class="bg-grid"></div>
+
+    <div class="app-container">
+        <!-- Navigation Header Bar -->
+        <header class="app-navbar">
+            <a href="#" class="brand">
+                <div class="brand-logo">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                </div>
+                <span class="brand-text">VibeCraft</span>
+            </a>
+
+            <!-- Mode Switches -->
+            <div class="nav-controls">
+                <button class="nav-btn active" id="btn-workspace-tab">Design Workspace</button>
+                <button class="nav-btn" id="btn-dashboard-tab">Management Dashboard</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Area -->
+        <main class="workspace-grid" id="main-workspace">
+            
+            <!-- Left Panel: Event Creator Form (Planner Customizer) -->
+            <section class="panel-card customizer-panel">
+                <h2 class="panel-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                    </svg>
+                    Event Planner
+                </h2>
+
+                <form id="event-customizer-form" onsubmit="event.preventDefault();">
+                    <!-- Event Title Input -->
+                    <div class="form-group">
+                        <label for="event-title" class="form-label">Event Title</label>
+                        <input type="text" id="event-title" class="form-input" placeholder="e.g. DevCon Tech Summit 2026" value="DevCon Tech Summit 2026">
+                    </div>
+
+                    <!-- Category Select -->
+                    <div class="form-group">
+                        <label for="event-category" class="form-label">Category</label>
+                        <select id="event-category" class="form-select">
+                            <option value="Meetup" selected>Tech Meetup</option>
+                            <option value="Concert">Music Concert</option>
+                            <option value="Festival">Food & Spice Festival</option>
+                            <option value="Workshop">Creative Workshop</option>
+                            <option value="Gallery">Art Exhibition</option>
+                            <option value="Sports">Sports Gala</option>
+                        </select>
+                    </div>
+
+                    <!-- Date & Time Inputs -->
+                    <div class="form-group">
+                        <label for="event-date" class="form-label">Date & Time</label>
+                        <input type="datetime-local" id="event-date" class="form-input">
+                    </div>
+
+                    <!-- Location Input -->
+                    <div class="form-group">
+                        <label for="event-location" class="form-label">Location / Venue</label>
+                        <input type="text" id="event-location" class="form-input" placeholder="e.g. Royal Heights Convention Hall" value="Royal Heights Convention Hall">
+                    </div>
+
+                    <!-- Price & Quantity Inputs -->
+                    <div class="form-group">
+                        <label for="ticket-price" class="form-label">Ticket Base Price (₹)</label>
+                        <input type="number" id="ticket-price" class="form-input" value="499" min="0">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ticket-capacity" class="form-label">Total Seat Capacity</label>
+                        <input type="number" id="ticket-capacity" class="form-input" value="150" min="10">
+                    </div>
+
+                    <!-- Event Description -->
+                    <div class="form-group">
+                        <label for="event-desc" class="form-label">Event Description</label>
+                        <textarea id="event-desc" class="form-textarea" placeholder="Describe your event...">Join us for a stellar day of keynote sessions, coding hackathons, and networking opportunities. Led by industry specialists!</textarea>
+                    </div>
+
+                    <!-- Theme Customizer Preset Colors -->
+                    <div class="form-group">
+                        <label class="form-label">Theme Accent</label>
+                        <div class="theme-selector">
+                            <div class="theme-dot purple active" data-theme="purple" title="Neon Purple"></div>
+                            <div class="theme-dot saffron" data-theme="saffron" title="Sunset Saffron"></div>
+                            <div class="theme-dot teal" data-theme="teal" title="Electric Teal"></div>
+                            <div class="theme-dot gold" data-theme="gold" title="Cyberpunk Gold"></div>
+                        </div>
+                    </div>
+
+                    <!-- Banner Layout Selector -->
+                    <div class="form-group">
+                        <label for="banner-layout" class="form-label">Banner Art Style</label>
+                        <select id="banner-layout" class="form-select">
+                            <option value="gradient" selected>Vibrant Gradient</option>
+                            <option value="minimalist">Minimalist Dark</option>
+                            <option value="modern-grid">Cyberpunk Grid</option>
+                        </select>
+                    </div>
+
+                    <!-- Ticket Style Selector -->
+                    <div class="form-group">
+                        <label for="ticket-style" class="form-label">Pass Layout Style</label>
+                        <select id="ticket-style" class="form-select">
+                            <option value="modern" selected>Modern Neon Bar</option>
+                            <option value="classic">Classic Perforated Card</option>
+                        </select>
+                    </div>
+                </form>
+            </section>
+
+            <!-- Right Panel: Dynamic Live Preview Area -->
+            <section class="preview-container">
+                <h3 class="form-label" style="margin-left: 0.25rem;">Live Public Landing Page Preview</h3>
+                
+                <!-- Landing Page Container -->
+                <div class="event-landing-preview" id="event-landing-preview">
+                    <!-- Banner -->
+                    <div class="event-banner-show gradient" id="event-banner-show">
+                        <div class="banner-title-overlay">
+                            <span class="banner-category" id="preview-category">Tech Meetup</span>
+                            <h2 class="banner-title" id="preview-title">DevCon Tech Summit 2026</h2>
+                        </div>
+                    </div>
+
+                    <!-- Content body -->
+                    <div class="event-preview-body">
+                        <!-- Description Column -->
+                        <div class="preview-desc-col">
+                            <div class="preview-meta-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                <span id="preview-location">Royal Heights Convention Hall</span>
+                            </div>
+                            
+                            <div class="preview-meta-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                <span id="preview-datetime">June 15, 2026 at 6:00 PM</span>
+                            </div>
+
+                            <p class="preview-desc-text" id="preview-description">
+                                Join us for a stellar day of keynote sessions, coding hackathons, and networking opportunities. Led by industry specialists!
+                            </p>
+
+                            <!-- Live Countdown widget -->
+                            <div class="countdown-widget">
+                                <span class="countdown-title">Registration Countdown</span>
+                                <div class="countdown-timer" id="countdown-timer">
+                                    <div class="countdown-unit">
+                                        <span class="countdown-number" id="timer-days">00</span>
+                                        <span class="countdown-label">Days</span>
+                                    </div>
+                                    <div class="countdown-unit">
+                                        <span class="countdown-number" id="timer-hours">00</span>
+                                        <span class="countdown-label">Hours</span>
+                                    </div>
+                                    <div class="countdown-unit">
+                                        <span class="countdown-number" id="timer-mins">00</span>
+                                        <span class="countdown-label">Mins</span>
+                                    </div>
+                                    <div class="countdown-unit">
+                                        <span class="countdown-number" id="timer-secs">00</span>
+                                        <span class="countdown-label">Secs</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ticket Action Box -->
+                        <div class="preview-action-col">
+                            <div class="promo-pass-box">
+                                <div class="promo-price-tag">
+                                    <span class="price-title">Access Ticket</span>
+                                    <span class="price-val" id="preview-price">₹499.00</span>
+                                </div>
+                                <button class="btn-theme" id="btn-mock-register">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:1.2rem;height:1.2rem;">
+                                        <path d="M2 9a3 3 0 0 1 0 6v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2a3 3 0 0 1 0-6V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v2z"/>
+                                    </svg>
+                                    Book Seating Ticket
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Live Generated Ticket Pass Preview -->
+                <h3 class="form-label" style="margin-left: 0.25rem;">Customized Printable Pass</h3>
+                <div class="ticket-generator-card">
+                    <div class="ticket-visual-area" id="ticket-visual-area">
+                        <!-- Dynamic SVG gets injected here -->
+                    </div>
+                    <button class="nav-btn" style="background:var(--theme-primary); color:var(--text-inverse); font-weight:700;" onclick="window.print();">
+                        Print / Download Event Pass
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Hidden Panel: Event Management Dashboard -->
+        <main class="workspace-grid hidden" id="main-dashboard">
+            <!-- Left panel: Analytics breakdown -->
+            <section class="panel-card management-dashboard">
+                <h2 class="panel-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="20" x2="18" y2="10"/>
+                        <line x1="12" y1="20" x2="12" y2="4"/>
+                        <line x1="6" y1="20" x2="6" y2="14"/>
+                    </svg>
+                    Event Analytics
+                </h2>
+
+                <!-- Numerical dashboard metrics -->
+                <div class="dashboard-stats-grid">
+                    <!-- Metric: Registrations -->
+                    <div class="stat-item-box">
+                        <div class="stat-icon-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info-col">
+                            <h4>Registrations</h4>
+                            <span class="value" id="dash-registrations">94 / 150</span>
+                        </div>
+                    </div>
+
+                    <!-- Metric: Revenue -->
+                    <div class="stat-item-box">
+                        <div class="stat-icon-wrapper">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="1" x2="12" y2="23"/>
+                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                            </svg>
+                        </div>
+                        <div class="stat-info-col">
+                            <h4>Ticket Revenue</h4>
+                            <span class="value" id="dash-revenue">₹46,906.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Progress tracking charts -->
+                <div class="analytics-chart-card">
+                    <div class="progress-list">
+                        <h3 class="form-label">Sales Targets</h3>
+                        
+                        <div class="progress-item">
+                            <div class="progress-label-row">
+                                <span>General Admission Tickets</span>
+                                <span id="label-general-pct">75%</span>
+                            </div>
+                            <div class="progress-bar-track">
+                                <div class="progress-bar-fill" id="bar-general-fill" style="width: 75%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-item">
+                            <div class="progress-label-row">
+                                <span>VIP Exclusive Passes</span>
+                                <span id="label-vip-pct">45%</span>
+                            </div>
+                            <div class="progress-bar-track">
+                                <div class="progress-bar-fill" id="bar-vip-fill" style="width: 45%;"></div>
+                            </div>
+                        </div>
+
+                        <div class="progress-item">
+                            <div class="progress-label-row">
+                                <span>Capacity Cap limit reached</span>
+                                <span id="label-capacity-pct">62%</span>
+                            </div>
+                            <div class="progress-bar-track">
+                                <div class="progress-bar-fill" id="bar-capacity-fill" style="width: 62.6%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Circular gauge satisfaction meter -->
+                    <div class="satisfaction-gauge-box">
+                        <div class="circular-gauge">
+                            <svg viewBox="0 0 140 140">
+                                <circle class="bg-circle" cx="70" cy="70" r="60"/>
+                                <circle class="fill-circle" id="satisfaction-fill-circle" cx="70" cy="70" r="60"/>
+                            </svg>
+                            <span class="gauge-percentage" id="satisfaction-val">96%</span>
+                        </div>
+                        <h4 class="form-label">Attendee Engagement Rate</h4>
+                        <p style="font-size: 0.75rem; color: var(--text-tertiary); margin-top: 0.25rem;">Calculated based on interactive pre-registrations</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right panel: Attendee Guest list database table -->
+            <section class="panel-card registrant-list-box">
+                <h2 class="panel-title" style="margin-bottom:1rem;">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14 2 14 8 20 8"/>
+                        <line x1="16" y1="13" x2="8" y2="13"/>
+                        <line x1="16" y1="17" x2="8" y2="17"/>
+                        <polyline points="10 9 9 9 8 9"/>
+                    </svg>
+                    Registered Attendee List
+                </h2>
+
+                <div class="table-wrapper">
+                    <table class="guest-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Ticket Tier</th>
+                                <th>Seat Allocation</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guest-table-body">
+                            <!-- Dynamic rendering of preloaded guests -->
+                            <tr>
+                                <td>Aravind Kumar</td>
+                                <td>aravind@gmail.com</td>
+                                <td><span class="badge-status vip">VIP</span></td>
+                                <td>Row A - Seat 14</td>
+                                <td><span style="color:#10b981;font-weight:700;">✓ Checked-In</span></td>
+                            </tr>
+                            <tr>
+                                <td>Meera Sharma</td>
+                                <td>meera.sharma@yahoo.com</td>
+                                <td><span class="badge-status standard">Standard</span></td>
+                                <td>Row C - Seat 8</td>
+                                <td><span style="color:#10b981;font-weight:700;">✓ Checked-In</span></td>
+                            </tr>
+                            <tr>
+                                <td>Rahul Verma</td>
+                                <td>rahul101@outlook.com</td>
+                                <td><span class="badge-status standard">Standard</span></td>
+                                <td>Row D - Seat 22</td>
+                                <td><span style="color:#eab308;font-weight:700;">Pending</span></td>
+                            </tr>
+                            <tr>
+                                <td>Priya Patel</td>
+                                <td>priya.patel@gmail.com</td>
+                                <td><span class="badge-status vip">VIP</span></td>
+                                <td>Row B - Seat 3</td>
+                                <td><span style="color:#10b981;font-weight:700;">✓ Checked-In</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Nova chatbot launcher button -->
+        <button id="nova-launcher" class="nova-launcher" aria-label="Open Nova Event Coordinator AI">
+            <span class="nova-pulse"></span>
+            <span class="nova-badge">AI</span>
+            <svg class="nova-icon" viewBox="0 0 24 24">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+        </button>
+
+        <!-- Nova Assistant Widget Overlay -->
+        <div id="nova-chat-window" class="nova-chat-window">
+            <div class="nova-header">
+                <div class="nova-header-profile">
+                    <div class="nova-avatar-container">
+                        <div class="nova-avatar">N</div>
+                        <span class="nova-status-dot"></span>
+                    </div>
+                    <div class="nova-header-info">
+                        <h3>Nova AI</h3>
+                        <span class="nova-subtitle">Event Coordinator</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <!-- Voice mute/unmute control -->
+                    <button id="nova-voice-btn" class="nova-voice-btn" title="Toggle Voice Narration">
+                        <svg class="volume-up-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
+                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                        </svg>
+                        <svg class="volume-mute-icon" viewBox="0 0 24 24" width="18" height="18" fill="currentColor" style="display:none;">
+                            <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                        </svg>
+                    </button>
+                    <!-- Close Window Button -->
+                    <button id="nova-close-btn" class="nova-close-btn" title="Minimize Assistant">
+                        <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Chat Stream logs -->
+            <div id="nova-messages" class="nova-messages">
+                <!-- Chat elements injected by JS -->
+            </div>
+
+            <!-- Suggestion Quick Actions -->
+            <div id="nova-suggestions" class="nova-suggestions">
+                <button class="suggestion-chip">Plan a code meetup next Saturday</button>
+                <button class="suggestion-chip">Suggest taglines for salsa class</button>
+                <button class="suggestion-chip">Write a food fest description</button>
+                <button class="suggestion-chip">Switch theme to teal</button>
+            </div>
+
+            <!-- Form input with mic -->
+            <form id="nova-input-form" class="nova-input-area">
+                <button type="button" id="nova-mic-btn" class="nova-mic-btn" title="Voice Input (STT)">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                        <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/>
+                    </svg>
+                </button>
+                <input type="text" id="nova-input-field" placeholder="Ask Nova to plan an event or suggest details..." autocomplete="off">
+                <button type="submit" class="nova-send-btn" title="Send message">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Core App Logic -->
+    <script src="app.js"></script>
+    <!-- Nova Assistant Logic -->
+    <script src="nova.js"></script>
+</body>
+</html>

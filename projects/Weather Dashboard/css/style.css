@@ -1,0 +1,1248 @@
+/* ==========================================================================
+   PINNACLE WEATHER DESIGN SYSTEM (style.css)
+   ========================================================================== */
+
+/* Design Tokens & Default CSS Variables */
+:root {
+    --font-primary: 'Outfit', sans-serif;
+
+    /* Theme Colors (Default: Dark Modern / Clear State) */
+    --bg-base: #0a0d16;
+    --card-bg: rgba(18, 22, 35, 0.45);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+
+    /* Glow colors */
+    --primary: #3b82f6;
+    --primary-rgb: 59, 130, 246;
+    --accent: #10b981;
+    --accent-rgb: 16, 185, 129;
+
+    --glow-top-left: rgba(59, 130, 246, 0.25);
+    --glow-bottom-right: rgba(16, 185, 129, 0.15);
+
+    /* Layout values */
+    --border-radius: 20px;
+    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --transition-micro: all 0.2s ease;
+}
+
+/* ==========================================================================
+   DYNAMIC WEATHER THEMES (Injected via documentElement data-weather-theme)
+   ========================================================================== */
+
+/* 1. Sunny Theme */
+[data-weather-theme="sunny"] {
+    --bg-base: #0f1011;
+    --primary: #f59e0b;
+    --primary-rgb: 245, 158, 11;
+    --accent: #ef4444;
+    --accent-rgb: 239, 68, 68;
+    --glow-top-left: rgba(245, 158, 11, 0.22);
+    --glow-bottom-right: rgba(239, 68, 68, 0.12);
+    --card-bg: rgba(25, 22, 18, 0.5);
+}
+
+/* 2. Rainy / Drizzle Theme */
+[data-weather-theme="rainy"] {
+    --bg-base: #090e14;
+    --primary: #2563eb;
+    --primary-rgb: 37, 99, 235;
+    --accent: #0ea5e9;
+    --accent-rgb: 14, 165, 233;
+    --glow-top-left: rgba(37, 99, 235, 0.25);
+    --glow-bottom-right: rgba(14, 165, 233, 0.15);
+    --card-bg: rgba(13, 20, 32, 0.5);
+}
+
+/* 3. Cloudy / Overcast Theme */
+[data-weather-theme="cloudy"] {
+    --bg-base: #0f1115;
+    --primary: #64748b;
+    --primary-rgb: 100, 116, 139;
+    --accent: #cbd5e1;
+    --accent-rgb: 203, 213, 225;
+    --glow-top-left: rgba(100, 116, 139, 0.22);
+    --glow-bottom-right: rgba(203, 213, 225, 0.12);
+    --card-bg: rgba(20, 22, 28, 0.5);
+}
+
+/* 4. Snowy / Sleet Theme */
+[data-weather-theme="snowy"] {
+    --bg-base: #0b111a;
+    --primary: #38bdf8;
+    --primary-rgb: 56, 189, 248;
+    --accent: #e2e8f0;
+    --accent-rgb: 226, 232, 240;
+    --glow-top-left: rgba(56, 189, 248, 0.22);
+    --glow-bottom-right: rgba(226, 232, 240, 0.15);
+    --card-bg: rgba(16, 23, 33, 0.5);
+}
+
+/* 5. Stormy Theme */
+[data-weather-theme="stormy"] {
+    --bg-base: #08070d;
+    --primary: #8b5cf6;
+    --primary-rgb: 139, 92, 246;
+    --accent: #ec4899;
+    --accent-rgb: 236, 72, 153;
+    --glow-top-left: rgba(139, 92, 246, 0.25);
+    --glow-bottom-right: rgba(236, 72, 153, 0.15);
+    --card-bg: rgba(14, 11, 23, 0.5);
+}
+
+/* 6. Foggy Theme */
+[data-weather-theme="foggy"] {
+    --bg-base: #0d0f12;
+    --primary: #475569;
+    --primary-rgb: 71, 85, 105;
+    --accent: #94a3b8;
+    --accent-rgb: 148, 163, 184;
+    --glow-top-left: rgba(71, 85, 105, 0.2);
+    --glow-bottom-right: rgba(148, 163, 184, 0.1);
+    --card-bg: rgba(21, 23, 27, 0.5);
+}
+
+/* ==========================================================================
+   GLOBAL RESET & BASICS
+   ========================================================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-primary);
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+    transition: background-color 0.8s ease;
+}
+
+/* Ambient glow nodes background effect */
+.ambient-glow {
+    position: absolute;
+    width: 60vw;
+    height: 60vw;
+    max-width: 600px;
+    max-height: 600px;
+    border-radius: 50%;
+    filter: blur(140px);
+    z-index: 0;
+    pointer-events: none;
+    transition: background-color 1s ease;
+}
+
+.glow-1 {
+    top: -10%;
+    left: -10%;
+    background-color: var(--glow-top-left);
+}
+
+.glow-2 {
+    bottom: -10%;
+    right: -10%;
+    background-color: var(--glow-bottom-right);
+}
+
+/* Canvas weather layer overlay */
+.weather-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* ==========================================================================
+   CONTAINERS & HEADER LAYOUTS
+   ========================================================================== */
+.dashboard-wrapper {
+    position: relative;
+    z-index: 2;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 1rem;
+}
+
+.brand {
+    font-weight: 800;
+    font-size: 1.6rem;
+    letter-spacing: -0.5px;
+}
+
+.brand-pinnacle {
+    background: linear-gradient(135deg, #ffffff 40%, var(--text-secondary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.brand-sub {
+    color: var(--primary);
+    transition: var(--transition-smooth);
+}
+
+.top-controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* ==========================================================================
+   UNIT SWITCHER BUTTON
+   ========================================================================== */
+.unit-toggle {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    border-radius: 50px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    backdrop-filter: blur(10px);
+    transition: var(--transition-micro);
+}
+
+.unit-toggle:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+.unit-label {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    transition: var(--transition-micro);
+}
+
+.unit-label.active {
+    color: var(--primary);
+    text-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+}
+
+.unit-divider {
+    color: rgba(255, 255, 255, 0.2);
+    font-size: 0.85rem;
+}
+
+/* ==========================================================================
+   SEARCH BAR & QUICK SELECT SYSTEM
+   ========================================================================== */
+.search-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.search-bar-container {
+    position: relative;
+    width: 100%;
+}
+
+.search-input-wrapper {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 0 1.25rem;
+    height: 60px;
+    backdrop-filter: blur(16px);
+    transition: var(--transition-smooth);
+}
+
+.search-input-wrapper:focus-within {
+    border-color: var(--primary);
+    box-shadow: 0 0 25px rgba(var(--primary-rgb), 0.15);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.search-icon {
+    width: 22px;
+    height: 22px;
+    color: var(--text-secondary);
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+#city-search {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 1.1rem;
+    font-weight: 500;
+    width: 100%;
+    height: 100%;
+}
+
+#city-search::placeholder {
+    color: var(--text-muted);
+}
+
+.location-btn {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    color: var(--text-secondary);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-micro);
+    flex-shrink: 0;
+    margin-left: 0.5rem;
+}
+
+.location-btn:hover {
+    color: var(--primary);
+    transform: scale(1.1);
+}
+
+.location-btn svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* Geocoding Dropdown list style */
+.search-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    width: 100%;
+    background: rgba(18, 22, 35, 0.95);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(25px);
+    list-style: none;
+    z-index: 100;
+    max-height: 280px;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    display: none; /* Injected by JS */
+}
+
+.search-dropdown.show {
+    display: block;
+}
+
+.search-dropdown li {
+    padding: 1rem 1.5rem;
+    font-weight: 500;
+    font-size: 1rem;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition-micro);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.search-dropdown li:last-child {
+    border-bottom: none;
+}
+
+.search-dropdown li:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--primary);
+    padding-left: 1.8rem;
+}
+
+/* Quick Select City Chips */
+.quick-cities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.city-chip {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    padding: 0.6rem 1.25rem;
+    border-radius: 50px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(10px);
+}
+
+.city-chip:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+.city-chip.active {
+    background: rgba(var(--primary-rgb), 0.12);
+    border-color: var(--primary);
+    color: var(--text-primary);
+    box-shadow: 0 4px 15px rgba(var(--primary-rgb), 0.25);
+}
+
+/* ==========================================================================
+   GLASSMORPHIC CARDS LAYOUT
+   ========================================================================== */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    transition: border-color 0.8s ease, background 0.8s ease;
+}
+
+/* Main layouts grid */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1.2fr 1.8fr;
+    gap: 1.5rem;
+}
+
+/* Current Weather Large Card */
+.current-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.current-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 150px;
+    height: 150px;
+    background: radial-gradient(circle, rgba(var(--primary-rgb), 0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+.current-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 1;
+}
+
+.city-name {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.current-date {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    margin-top: 0.2rem;
+}
+
+.weather-badge {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    padding: 0.4rem 0.9rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.current-body {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+}
+
+.temp-display {
+    display: flex;
+    align-items: flex-start;
+}
+
+.temp-val {
+    font-size: 5.5rem;
+    font-weight: 800;
+    line-height: 0.85;
+    letter-spacing: -3px;
+    background: linear-gradient(180deg, #ffffff 60%, rgba(255, 255, 255, 0.65));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.temp-unit {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-top: 0.5rem;
+    margin-left: 0.2rem;
+    transition: var(--transition-smooth);
+}
+
+.current-icon-container {
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.current-icon-container svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 8px 15px rgba(0, 0, 0, 0.35));
+}
+
+.current-footer {
+    position: relative;
+    z-index: 1;
+}
+
+.temp-range {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+}
+
+.range-high {
+    color: var(--text-primary);
+}
+
+.range-low {
+    color: var(--text-secondary);
+}
+
+.range-divider {
+    margin: 0 0.5rem;
+    color: var(--text-muted);
+}
+
+.weather-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+/* ==========================================================================
+   DETAILED METRICS PANELS
+   ========================================================================== */
+.metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.metric-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    min-height: 140px;
+    position: relative;
+}
+
+.metric-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metric-title {
+    font-weight: 700;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.metric-icon {
+    width: 20px;
+    height: 20px;
+    color: var(--primary);
+    transition: var(--transition-smooth);
+}
+
+.metric-val {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.metric-sub-unit {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    margin-left: 0.2rem;
+}
+
+/* Wind Indicator Rotation details */
+.wind-direction-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.wind-arrow {
+    width: 16px;
+    height: 16px;
+    color: var(--accent);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Humidity Progress bar bar metrics */
+.humidity-bar-wrapper {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.humidity-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary), var(--accent));
+    border-radius: 10px;
+    width: 0;
+    transition: width 1s ease-out;
+}
+
+/* UV Badge dynamic level colors */
+.uv-badge {
+    display: inline-block;
+    padding: 0.25rem 0.65rem;
+    border-radius: 5px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    background: rgba(var(--accent-rgb), 0.15);
+    border: 1px solid rgba(var(--accent-rgb), 0.3);
+    color: var(--accent);
+    margin-top: 0.2rem;
+}
+
+/* Pressure badge */
+.pressure-badge {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+/* ==========================================================================
+   FORECAST ROW SLIDES
+   ========================================================================== */
+.forecast-section {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.section-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+}
+
+.forecast-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 1rem;
+}
+
+.forecast-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 0.75rem;
+    padding: 1.25rem 1rem;
+    transition: var(--transition-smooth);
+}
+
+.forecast-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(var(--primary-rgb), 0.25);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.forecast-date {
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.forecast-icon {
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.forecast-icon svg {
+    width: 100%;
+    height: 100%;
+}
+
+.forecast-temp {
+    display: flex;
+    flex-direction: column;
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.forecast-temp-max {
+    color: var(--text-primary);
+}
+
+.forecast-temp-min {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 0.1rem;
+}
+
+.forecast-desc {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: capitalize;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   FOOTER
+   ========================================================================== */
+.footer {
+    margin-top: auto;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 1.5rem;
+    text-align: center;
+}
+
+.footer p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ==========================================================================
+   NOVA - AI PERSONAL ASSISTANT STYLINGS
+   ========================================================================== */
+.nova-widget {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    z-index: 1000;
+}
+
+/* Launcher Trigger orb button */
+.nova-launcher {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(124, 58, 237, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.nova-launcher:hover {
+    transform: scale(1.1) rotate(5deg);
+    box-shadow: 0 15px 35px rgba(124, 58, 237, 0.6);
+}
+
+.nova-pulse {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: inherit;
+    z-index: -1;
+    animation: nova-sonar 2s infinite;
+}
+
+.nova-icon {
+    width: 28px;
+    height: 28px;
+    fill: #ffffff;
+}
+
+.nova-badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: var(--accent);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 50px;
+    border: 2px solid var(--bg-base);
+    letter-spacing: 0.5px;
+}
+
+/* Chat container window */
+.nova-chat-window {
+    position: absolute;
+    bottom: 80px;
+    right: 0;
+    width: 380px;
+    height: 520px;
+    background: rgba(15, 18, 30, 0.95);
+    border: 1px solid var(--card-border);
+    border-radius: var(--border-radius);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform: translateY(30px) scale(0.95);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-smooth);
+    z-index: 1001;
+}
+
+.nova-chat-window.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Header style for chat */
+.nova-header {
+    padding: 1.2rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nova-header-profile {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.nova-avatar-container {
+    position: relative;
+}
+
+.nova-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, #7c3aed 100%);
+    color: #ffffff;
+    font-weight: 800;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.nova-status-dot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    border: 2px solid rgba(15, 18, 30, 0.95);
+}
+
+.nova-header-info h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.nova-subtitle {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.nova-voice-btn,
+.nova-close-btn {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-micro);
+}
+
+.nova-voice-btn:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.nova-close-btn:hover {
+    color: #ef4444;
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.nova-close-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: currentColor;
+}
+
+/* Chat bubble viewport */
+.nova-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+/* Custom scroll bar inside chat */
+.nova-messages::-webkit-scrollbar,
+.search-dropdown::-webkit-scrollbar {
+    width: 6px;
+}
+
+.nova-messages::-webkit-scrollbar-thumb,
+.search-dropdown::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+.nova-message-bubble {
+    max-width: 80%;
+    padding: 0.9rem 1.1rem;
+    border-radius: 18px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+    font-weight: 500;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    animation: fade-up-bubble 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.nova-message-bubble.assistant {
+    background: rgba(255, 255, 255, 0.04);
+    color: var(--text-primary);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+    border: 1px solid var(--card-border);
+}
+
+.nova-message-bubble.user {
+    background: linear-gradient(135deg, var(--primary) 0%, rgba(var(--primary-rgb), 0.75) 100%);
+    color: #ffffff;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+}
+
+.message-time {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.4);
+    align-self: flex-end;
+}
+
+/* Assistant typing loading state bubble */
+.nova-message-bubble.typing {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+}
+
+.typing-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--text-secondary);
+    border-radius: 50%;
+    animation: typing-bounce 1.4s infinite ease-in-out both;
+}
+
+.typing-dot:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.typing-dot:nth-child(3) {
+    animation-delay: 0.4s;
+}
+
+/* AI Suggestions chips */
+.nova-suggestions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    overflow-x: auto;
+    background: rgba(0, 0, 0, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.02);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.nova-suggestions::-webkit-scrollbar {
+    display: none; /* Hide scrollbars for chips row */
+}
+
+.suggestion-chip {
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    color: var(--text-secondary);
+    padding: 0.4rem 0.8rem;
+    border-radius: 50px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 0.78rem;
+    cursor: pointer;
+    transition: var(--transition-micro);
+}
+
+.suggestion-chip:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--primary);
+    color: var(--text-primary);
+}
+
+/* Bottom Chat Input Form */
+.nova-input-area {
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: rgba(0, 0, 0, 0.15);
+}
+
+#nova-input-field {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--card-border);
+    border-radius: 50px;
+    height: 44px;
+    padding: 0 1.2rem;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    outline: none;
+    transition: var(--transition-micro);
+}
+
+#nova-input-field:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.nova-mic-btn {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-micro);
+}
+
+.nova-mic-btn:hover {
+    color: var(--primary);
+    background: rgba(255, 255, 255, 0.04);
+}
+
+.nova-mic-btn.listening {
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.1);
+    animation: pulse-recording 1.5s infinite;
+}
+
+.nova-send-btn {
+    background: var(--primary);
+    border: none;
+    outline: none;
+    color: #ffffff;
+    cursor: pointer;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+    box-shadow: 0 4px 10px rgba(var(--primary-rgb), 0.2);
+}
+
+.nova-send-btn:hover {
+    transform: scale(1.08);
+    background: #2563eb;
+}
+
+.nova-send-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+    margin-left: 2px;
+}
+
+/* ==========================================================================
+   ANIMATION KEYFRAMES
+   ========================================================================== */
+@keyframes nova-sonar {
+    0% {
+        transform: scale(1);
+        opacity: 0.6;
+    }
+    100% {
+        transform: scale(1.4);
+        opacity: 0;
+    }
+}
+
+@keyframes typing-bounce {
+    0%, 60%, 100% {
+        transform: translateY(0);
+    }
+    30% {
+        transform: translateY(-6px);
+    }
+}
+
+@keyframes pulse-recording {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+    }
+    50% {
+        transform: scale(1.08);
+        box-shadow: 0 0 0 8px rgba(239, 68, 68, 0);
+    }
+}
+
+@keyframes fade-up-bubble {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==========================================================================
+   RESPONSIVE LAYOUT MEDIA QUERIES
+   ========================================================================== */
+@media (max-width: 900px) {
+    .grid-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .forecast-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .dashboard-wrapper {
+        padding: 1.5rem 1rem;
+        gap: 1.5rem;
+    }
+
+    .brand {
+        font-size: 1.3rem;
+    }
+
+    .city-name {
+        font-size: 1.5rem;
+    }
+
+    .temp-val {
+        font-size: 4rem;
+    }
+
+    .temp-unit {
+        font-size: 1.8rem;
+    }
+
+    .current-icon-container {
+        width: 90px;
+        height: 90px;
+    }
+
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .forecast-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+    }
+
+    .nova-chat-window {
+        width: calc(100vw - 2rem);
+        right: -1rem;
+        bottom: 80px;
+    }
+}

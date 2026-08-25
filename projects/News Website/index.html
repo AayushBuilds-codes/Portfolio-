@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pinnacle Globe - Global News Aggregator</title>
+    <meta name="description" content="Get diverse and up-to-date global news coverage on Pinnacle Globe. Features live search, categories, clean article reading modes, and Nova AI personal narration.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- CSS stylesheet link -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Background glow shapes for ambient visual aesthetics -->
+    <div class="ambient-glow glow-1"></div>
+    <div class="ambient-glow glow-2"></div>
+    <div class="ambient-glow glow-3"></div>
+
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="navbar-container">
+            <a href="#" class="brand" id="brand-logo">
+                <span class="brand-gradient">Pinnacle</span> Globe
+            </a>
+            
+            <div class="nav-controls">
+                <!-- Search bar wrapper -->
+                <div class="search-wrapper">
+                    <svg class="search-icon" viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" fill="currentColor"/>
+                    </svg>
+                    <input type="text" id="news-search-input" placeholder="Search global news..." aria-label="Search news articles">
+                    <button class="clear-search-btn" id="clear-search" aria-label="Clear search">×</button>
+                </div>
+
+                <!-- Theme Toggle Button -->
+                <button class="icon-btn theme-toggle-btn" id="theme-toggle" title="Toggle Theme" aria-label="Toggle light or dark display mode">
+                    <!-- Sun Icon -->
+                    <svg class="theme-icon sun" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM2 13h2c.55 0 1-.45 1-1s-.45-1-1-1H2c-.55 0-1 .45-1 1s.45 1 1 1zm18 0h2c.55 0 1-.45 1-1s-.45-1-1-1h-2c-.55 0-1 .45-1 1s.45 1 1 1zM11 2v2c0 .55.45 1 1 1s1-.45 1-1V2c0-.55-.45-1-1-1s-1 .45-1 1zm0 18v2c0 .55.45 1 1 1s1-.45 1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1zM5.99 4.58c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41L5.99 4.58zm12.37 12.37c-.39-.39-1.03-.39-1.41 0s-.39 1.03 0 1.41l1.06 1.06c.39.39 1.03.39 1.41 0s.39-1.03 0-1.41l-1.06-1.06zm1.06-12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41zm-12.37 12.37c-.39-.39-1.03-.39-1.41 0l-1.06 1.06c-.39.39-.39 1.03 0 1.41s1.03.39 1.41 0l1.06-1.06c.39-.39.39-1.03 0-1.41z" fill="currentColor"/>
+                    </svg>
+                    <!-- Moon Icon -->
+                    <svg class="theme-icon moon" viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M12.3 22h-.1c-5.5 0-10-4.5-10-10C2.2 6.8 6.4 2.5 11.8 2c.5 0 .9.3 1 .8s-.1.9-.5 1.2c-3.1 2.1-4.7 5.7-4.2 9.5.6 4.3 4.1 7.8 8.4 8.4 2.5.4 5-.4 6.8-2 .3-.3.8-.4 1.2-.1.4.3.5.7.3 1.1C20.3 20.4 16.5 22 12.3 22z" fill="currentColor"/>
+                    </svg>
+                </button>
+
+                <!-- Bookmarks Toggle Button -->
+                <button class="icon-btn bookmark-toggle-btn" id="bookmark-drawer-toggle" title="View Bookmarks" aria-label="Open saved news bookmark drawer">
+                    <svg viewBox="0 0 24 24" width="20" height="20">
+                        <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z" fill="currentColor"/>
+                    </svg>
+                    <span class="bookmark-badge" id="bookmark-count">0</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- News Category Channel Links Bar -->
+    <nav class="category-bar">
+        <div class="category-container">
+            <button class="category-tab active" data-category="all">Latest News</button>
+            <button class="category-tab" data-category="world">World</button>
+            <button class="category-tab" data-category="technology">Technology</button>
+            <button class="category-tab" data-category="business">Business</button>
+            <button class="category-tab" data-category="science">Science</button>
+            <button class="category-tab" data-category="health">Health</button>
+            <button class="category-tab" data-category="sports">Sports</button>
+            <button class="category-tab" data-category="entertainment">Entertainment</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="main-content">
+        <!-- Feed Title Area -->
+        <div class="feed-header">
+            <h1 id="feed-title" class="feed-title">Breaking Highlights</h1>
+            <div class="feed-status" id="feed-status">Showing 12 aggregated articles</div>
+        </div>
+
+        <!-- Featured Hero Story -->
+        <section class="hero-story-container" id="hero-story-section">
+            <!-- Dynamic content injected here by app.js -->
+            <div class="hero-story-loading">
+                <div class="skeleton-shimmer hero-skeleton-img"></div>
+                <div class="hero-skeleton-text">
+                    <div class="skeleton-shimmer skeleton-badge"></div>
+                    <div class="skeleton-shimmer skeleton-title"></div>
+                    <div class="skeleton-shimmer skeleton-excerpt"></div>
+                    <div class="skeleton-shimmer skeleton-metadata"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- News Grid List -->
+        <section class="news-grid-container" id="news-grid">
+            <!-- Dynamic contents will be injected here by app.js -->
+            <!-- Loading Skeletons -->
+            <div class="skeleton-card">
+                <div class="skeleton-shimmer skeleton-card-img"></div>
+                <div class="skeleton-card-body">
+                    <div class="skeleton-shimmer skeleton-card-badge"></div>
+                    <div class="skeleton-shimmer skeleton-card-title"></div>
+                    <div class="skeleton-shimmer skeleton-card-excerpt"></div>
+                    <div class="skeleton-shimmer skeleton-card-meta"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-shimmer skeleton-card-img"></div>
+                <div class="skeleton-card-body">
+                    <div class="skeleton-shimmer skeleton-card-badge"></div>
+                    <div class="skeleton-shimmer skeleton-card-title"></div>
+                    <div class="skeleton-shimmer skeleton-card-excerpt"></div>
+                    <div class="skeleton-shimmer skeleton-card-meta"></div>
+                </div>
+            </div>
+            <div class="skeleton-card">
+                <div class="skeleton-shimmer skeleton-card-img"></div>
+                <div class="skeleton-card-body">
+                    <div class="skeleton-shimmer skeleton-card-badge"></div>
+                    <div class="skeleton-shimmer skeleton-card-title"></div>
+                    <div class="skeleton-shimmer skeleton-card-excerpt"></div>
+                    <div class="skeleton-shimmer skeleton-card-meta"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Empty state warning -->
+        <div class="empty-state" id="empty-state">
+            <svg viewBox="0 0 24 24" width="64" height="64">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z" fill="currentColor"/>
+            </svg>
+            <h2>No Articles Found</h2>
+            <p>We couldn't find any articles matching your criteria. Try adjusting your search query or selecting a different category channel.</p>
+            <button class="accent-btn" id="reset-filters">View Latest News</button>
+        </div>
+    </main>
+
+    <!-- Slide-out Bookmarks Drawer -->
+    <aside class="bookmarks-drawer" id="bookmarks-drawer" aria-label="Bookmarked Articles">
+        <div class="drawer-header">
+            <h2>Saved Stories</h2>
+            <button class="close-drawer-btn" id="close-drawer" aria-label="Close bookmarks drawer">
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+                </svg>
+            </button>
+        </div>
+        <div class="drawer-content" id="bookmarks-list">
+            <!-- Bookmarked list items will load dynamically -->
+            <div class="bookmarks-empty">
+                <p>No saved articles yet. Bookmark news articles while reading to check them out later.</p>
+            </div>
+        </div>
+    </aside>
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <!-- Distraction-free Article Reader Modal -->
+    <div class="reader-modal" id="reader-modal">
+        <div class="reader-container">
+            <!-- Reader controls bar -->
+            <div class="reader-toolbar">
+                <div class="toolbar-left">
+                    <button class="toolbar-btn" id="reader-close-btn" title="Back to Feed">
+                        <svg viewBox="0 0 24 24" width="18" height="18">
+                            <path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z" fill="currentColor"/>
+                        </svg>
+                        <span>Feed</span>
+                    </button>
+                </div>
+                <div class="toolbar-right">
+                    <!-- Text Resizer Controls -->
+                    <div class="resizer-group">
+                        <button class="toolbar-btn text-size-btn" id="decrease-text" title="Decrease Font Size" aria-label="Decrease Font Size">A-</button>
+                        <button class="toolbar-btn text-size-btn" id="increase-text" title="Increase Font Size" aria-label="Increase Font Size">A+</button>
+                    </div>
+
+                    <!-- Bookmark Toggle -->
+                    <button class="toolbar-btn bookmark-btn" id="reader-bookmark-btn" title="Save Story">
+                        <svg class="bookmark-icon-outline" viewBox="0 0 24 24" width="18" height="18">
+                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2zm0 15l-5-2.18L7 18V5h10v13z" fill="currentColor"/>
+                        </svg>
+                        <svg class="bookmark-icon-filled" viewBox="0 0 24 24" width="18" height="18" style="display:none;">
+                            <path d="M17 3H7c-1.1 0-2 .9-2 2v16l7-3 7 3V5c0-1.1-.9-2-2-2z" fill="currentColor"/>
+                        </svg>
+                        <span class="btn-label">Save</span>
+                    </button>
+
+                    <!-- Text-To-Speech Narrator controls -->
+                    <div class="tts-group">
+                        <button class="toolbar-btn tts-btn" id="tts-play-btn" title="Listen to Article">
+                            <svg class="tts-play-icon" viewBox="0 0 24 24" width="18" height="18">
+                                <path d="M8 5v14l11-7z" fill="currentColor"/>
+                            </svg>
+                            <svg class="tts-pause-icon" viewBox="0 0 24 24" width="18" height="18" style="display:none;">
+                                <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/>
+                            </svg>
+                            <span id="tts-btn-text">Listen</span>
+                        </button>
+                        <button class="toolbar-btn tts-stop-btn" id="tts-stop-btn" title="Stop Audio" disabled>
+                            <svg viewBox="0 0 24 24" width="18" height="18">
+                                <path d="M6 6h12v12H6z" fill="currentColor"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Full Article Reader Content -->
+            <article class="reader-content" id="reader-content-body">
+                <!-- Injected dynamically by app.js -->
+            </article>
+        </div>
+    </div>
+
+    <!-- NOVA AI WIDGET LAUNCHER & CHAT SYSTEM -->
+    <!-- Launcher orb -->
+    <button class="nova-launcher" id="nova-launcher" title="Ask Nova AI Assistant" aria-label="Open Nova AI Voice Assistant">
+        <div class="nova-pulse"></div>
+        <svg class="nova-icon" viewBox="0 0 24 24" width="26" height="26">
+            <path d="M19 2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h4l2.5 2.5 2.5-2.5h4c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+        </svg>
+        <span class="nova-badge">AI</span>
+    </button>
+
+    <!-- Chat Portal Frame -->
+    <section class="nova-chat-window" id="nova-chat-window" aria-label="Nova AI Personal Assistant">
+        <!-- Widget Header -->
+        <header class="nova-header">
+            <div class="nova-header-profile">
+                <div class="nova-avatar-container">
+                    <div class="nova-avatar">N</div>
+                    <div class="nova-status-dot"></div>
+                </div>
+                <div class="nova-header-info">
+                    <h3>Nova</h3>
+                    <span class="nova-subtitle">AI News Assistant</span>
+                </div>
+            </div>
+            
+            <div class="nova-header-actions">
+                <!-- Volume narrator voice toggle -->
+                <button class="nova-voice-btn" id="nova-voice-btn" title="Unmute voice output">
+                    <!-- Volume Up Icon -->
+                    <svg class="volume-up-icon" viewBox="0 0 24 24" width="18" height="18" style="display:none;">
+                        <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
+                    </svg>
+                    <!-- Volume Mute Icon -->
+                    <svg class="volume-mute-icon" viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.21.05-.42.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" fill="currentColor"/>
+                    </svg>
+                </button>
+
+                <!-- Close Widget -->
+                <button class="nova-close-btn" id="nova-close-btn" title="Close chat panel">
+                    <svg viewBox="0 0 24 24" width="18" height="18">
+                        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" fill="currentColor"/>
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Message Dialog Area -->
+        <div class="nova-messages" id="nova-messages">
+            <!-- Messages bubbles will load dynamically -->
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="nova-suggestions" id="nova-suggestions">
+            <button class="suggestion-chip">Show Tech news</button>
+            <button class="suggestion-chip">Summarize article</button>
+            <button class="suggestion-chip">Toggle theme</button>
+            <button class="suggestion-chip">Recommend stories</button>
+        </div>
+
+        <!-- Chat Form Input Area -->
+        <form class="nova-input-area" id="nova-input-form" autocomplete="off">
+            <!-- Microphone Input (Speech to Text) -->
+            <button type="button" class="nova-mic-btn" id="nova-mic-btn" title="Speak to Nova">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                    <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" fill="currentColor"/>
+                </svg>
+            </button>
+            
+            <input type="text" id="nova-input-field" placeholder="Ask Nova a question..." aria-label="Type question for Nova AI">
+            
+            <button type="submit" class="nova-send-btn" id="nova-send-btn" title="Send message" aria-label="Send message button">
+                <svg viewBox="0 0 24 24" width="18" height="18">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z" fill="currentColor"/>
+                </svg>
+            </button>
+        </form>
+    </section>
+
+    <!-- Javascript links -->
+    <script src="js/app.js"></script>
+    <script src="js/nova.js"></script>
+</body>
+</html>
