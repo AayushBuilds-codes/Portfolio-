@@ -9,6 +9,12 @@ document.addEventListener('DOMContentLoaded', () => {
     initContactForm();
     initBackToTop();
     updateProjectsFromGitHub();
+    initDynamicAvatar();
+    initTelemetryBar();
+    initSkillsSearch();
+    initModelPlayground();
+    initDeveloperTerminal();
+    initGlobalShortcuts();
 });
 
 /* ==========================================================================
@@ -162,15 +168,66 @@ function initTypingEffect() {
 let githubReposCached = null;
 let isSyncing = false;
 
+let currentActiveFilter = 'all';
+let currentSearchQuery = '';
+let currentViewMode = 'grid';
+
 function initProjects() {
-    const projectsGrid = document.querySelector('.projects-grid');
+    const projectsGrid = document.getElementById('projects-grid') || document.querySelector('.projects-grid');
+    const tableContainer = document.getElementById('projects-table-container');
     const filterButtons = document.querySelectorAll('.filter-btn');
     const syncBtn = document.getElementById('github-sync-btn');
+    const searchInput = document.getElementById('project-search-input');
+    const searchClearBtn = document.getElementById('search-clear-btn');
+    const viewGridBtn = document.getElementById('view-grid-btn');
+    const viewTableBtn = document.getElementById('view-table-btn');
 
     if (!projectsGrid || typeof projects === 'undefined') return;
 
-    // Render all projects initially
-    renderProjects(projects, projectsGrid);
+    // Helper to refresh current project display
+    window.refreshProjectDisplay = function() {
+        let baseList = [];
+        if (currentActiveFilter === 'github') {
+            baseList = githubReposCached || [];
+        } else if (currentActiveFilter === 'all') {
+            baseList = [...projects];
+        } else {
+            baseList = projects.filter(p => p.category === currentActiveFilter);
+        }
+
+        // Apply search query filter
+        let filtered = baseList;
+        if (currentSearchQuery.trim() !== '') {
+            const q = currentSearchQuery.toLowerCase();
+            filtered = baseList.filter(p => {
+                const titleMatch = (p.title || '').toLowerCase().includes(q);
+                const descMatch = (p.description || '').toLowerCase().includes(q);
+                const techMatch = (p.tech || []).some(t => t.toLowerCase().includes(q));
+                const archMatch = (p.architecture || '').toLowerCase().includes(q);
+                return titleMatch || descMatch || techMatch || archMatch;
+            });
+        }
+
+        // Update count indicator
+        const countBadge = document.getElementById('projects-count-indicator');
+        if (countBadge) {
+            countBadge.innerHTML = `Showing <strong>${filtered.length}</strong> active module${filtered.length === 1 ? '' : 's'}`;
+        }
+
+        // Toggle Views
+        if (currentViewMode === 'table' && tableContainer) {
+            projectsGrid.style.display = 'none';
+            tableContainer.style.display = 'block';
+            renderProjectsTable(filtered, tableContainer);
+        } else {
+            if (tableContainer) tableContainer.style.display = 'none';
+            projectsGrid.style.display = 'grid';
+            renderProjects(filtered, projectsGrid);
+        }
+    };
+
+    // Render initially
+    window.refreshProjectDisplay();
 
     // Bind click event to GitHub Sync Button
     if (syncBtn) {
@@ -182,45 +239,62 @@ function initProjects() {
     // Filter project items
     filterButtons.forEach(btn => {
         btn.addEventListener('click', () => {
-            // Remove active class from other buttons
             filterButtons.forEach(b => b.classList.remove('active'));
-            // Add active class to clicked button
             btn.classList.add('active');
 
-            const filterValue = btn.getAttribute('data-filter');
-            
-            // Handle filtering
-            let filteredProjects = [];
-            if (filterValue === 'github') {
-                if (githubReposCached) {
-                    filteredProjects = githubReposCached;
-                } else {
-                    // Show skeleton screens while fetching
-                    renderSkeletonCards(projectsGrid, 4);
-                    syncGitHubData(false).then(() => {
-                        if (btn.classList.contains('active')) {
-                            renderProjects(githubReposCached, projectsGrid);
-                        }
-                    });
-                    return;
-                }
-            } else {
-                filteredProjects = filterValue === 'all' 
-                    ? projects 
-                    : projects.filter(p => p.category === filterValue);
+            currentActiveFilter = btn.getAttribute('data-filter');
+
+            if (currentActiveFilter === 'github' && !githubReposCached) {
+                renderSkeletonCards(projectsGrid, 4);
+                syncGitHubData(false).then(() => {
+                    if (btn.classList.contains('active')) {
+                        window.refreshProjectDisplay();
+                    }
+                });
+                return;
             }
 
-            // Animate grid change
-            projectsGrid.style.opacity = '0';
-            projectsGrid.style.transform = 'translateY(10px)';
-
-            setTimeout(() => {
-                renderProjects(filteredProjects, projectsGrid);
-                projectsGrid.style.opacity = '1';
-                projectsGrid.style.transform = 'translateY(0)';
-            }, 300);
+            window.refreshProjectDisplay();
         });
     });
+
+    // Real-Time Search Handler
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            currentSearchQuery = e.target.value;
+            if (searchClearBtn) {
+                searchClearBtn.style.display = currentSearchQuery.length > 0 ? 'block' : 'none';
+            }
+            window.refreshProjectDisplay();
+        });
+
+        if (searchClearBtn) {
+            searchClearBtn.addEventListener('click', () => {
+                searchInput.value = '';
+                currentSearchQuery = '';
+                searchClearBtn.style.display = 'none';
+                searchInput.focus();
+                window.refreshProjectDisplay();
+            });
+        }
+    }
+
+    // View Mode Switcher
+    if (viewGridBtn && viewTableBtn) {
+        viewGridBtn.addEventListener('click', () => {
+            viewGridBtn.classList.add('active');
+            viewTableBtn.classList.remove('active');
+            currentViewMode = 'grid';
+            window.refreshProjectDisplay();
+        });
+
+        viewTableBtn.addEventListener('click', () => {
+            viewTableBtn.classList.add('active');
+            viewGridBtn.classList.remove('active');
+            currentViewMode = 'table';
+            window.refreshProjectDisplay();
+        });
+    }
 
     // Handle project detail modal events
     initModalEvents();
@@ -761,19 +835,9 @@ async function syncGitHubData(forceSync = false) {
             }
         }
         
-        // 6. Refresh current grid if active filter is github
-        const projectsGrid = document.querySelector('.projects-grid');
-        const activeFilterBtn = document.querySelector('.filter-btn.active');
-        if (projectsGrid && activeFilterBtn) {
-            const filterValue = activeFilterBtn.getAttribute('data-filter');
-            if (filterValue === 'github') {
-                renderProjects(githubReposCached, projectsGrid);
-            } else {
-                const filteredProjects = filterValue === 'all' 
-                    ? projects 
-                    : projects.filter(p => p.category === filterValue);
-                renderProjects(filteredProjects, projectsGrid);
-            }
+        // 6. Refresh current display with active filter/search/view mode
+        if (typeof window.refreshProjectDisplay === 'function') {
+            window.refreshProjectDisplay();
         }
         
         finishSync('Synced: Live', true);
@@ -826,3 +890,763 @@ function showToast(message, type = 'success') {
         toast.style.opacity = '0';
     }, 3000);
 }
+
+/* ==========================================================================
+   DYNAMIC HOLOGRAPHIC AVATAR STAGE & 3D PARALLAX
+   ========================================================================== */
+function initDynamicAvatar() {
+    const card = document.getElementById('avatar-card-3d');
+    const container = document.getElementById('hero-showcase');
+    const cutoutImg = document.getElementById('hero-cutout-img');
+    const glare = document.querySelector('.holo-glare');
+    const hudLayer = document.getElementById('ai-hud-layer');
+    const toggleHudBtn = document.getElementById('toggle-hud-btn');
+    const auraDots = document.querySelectorAll('.aura-dot');
+    const greetingBtn = document.getElementById('avatar-greeting-btn');
+    const ripple = document.getElementById('avatar-ripple');
+
+    if (!card || !container) return;
+
+    // Load saved aura if exists
+    const savedAura = localStorage.getItem('portfolio_aura') || 'teal';
+    setAura(savedAura);
+
+    // 1. Mouse 3D Parallax Tilt Effect
+    let isHovered = false;
+    const maxTilt = 15; // maximum degrees of tilt
+
+    card.addEventListener('mouseenter', () => {
+        isHovered = true;
+        card.style.transition = 'transform 0.1s ease-out, box-shadow 0.3s ease';
+    });
+
+    card.addEventListener('mousemove', (e) => {
+        if (!isHovered) return;
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        
+        const rotateX = ((y - centerY) / centerY) * -maxTilt;
+        const rotateY = ((x - centerX) / centerX) * maxTilt;
+        
+        card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.03, 1.03, 1.03)`;
+        
+        if (cutoutImg) {
+            const imgShiftX = ((x - centerX) / centerX) * 8;
+            const imgShiftY = ((y - centerY) / centerY) * 8;
+            cutoutImg.style.transform = `translate3d(${imgShiftX.toFixed(1)}px, ${(imgShiftY - 4).toFixed(1)}px, 30px) scale(1.06)`;
+        }
+
+        if (glare) {
+            const glareX = (x / rect.width) * 100;
+            const glareY = (y / rect.height) * 100;
+            glare.style.background = `radial-gradient(circle at ${glareX.toFixed(1)}% ${glareY.toFixed(1)}%, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.05) 50%, transparent 80%)`;
+        }
+    });
+
+    card.addEventListener('mouseleave', () => {
+        isHovered = false;
+        card.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease';
+        card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        
+        if (cutoutImg) {
+            cutoutImg.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease';
+            cutoutImg.style.transform = 'translateY(4px) scale(1.02)';
+        }
+
+        if (glare) {
+            glare.style.background = 'linear-gradient(125deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.03) 40%, transparent 70%)';
+        }
+    });
+
+    // 2. Interactive Click Ripple & Greeting Trigger
+    function triggerGreetingInteraction(e) {
+        if (ripple) {
+            let clientX, clientY;
+            if (e && e.clientX) {
+                const rect = card.getBoundingClientRect();
+                clientX = e.clientX - rect.left;
+                clientY = e.clientY - rect.top;
+            } else {
+                clientX = card.offsetWidth / 2;
+                clientY = card.offsetHeight / 2;
+            }
+            ripple.style.left = `${clientX}px`;
+            ripple.style.top = `${clientY}px`;
+            ripple.classList.remove('animate');
+            void ripple.offsetWidth; // trigger reflow
+            ripple.classList.add('animate');
+        }
+
+        // Open Nova if launcher exists
+        const launcher = document.getElementById('nova-launcher');
+        const chatWindow = document.getElementById('nova-chat-window');
+        if (chatWindow && !chatWindow.classList.contains('open') && launcher) {
+            launcher.click();
+        }
+
+        // Trigger greeting speech
+        if (window.NovaEngine && typeof window.NovaEngine.speakGreeting === 'function') {
+            window.NovaEngine.speakGreeting();
+        } else if ('speechSynthesis' in window) {
+            const greetings = [
+                "Hello! Welcome to Aayush Agarwal's portfolio. I'm Nova, his personal AI assistant. How can I help you explore his work?",
+                "Hi there! Glad you stopped by. Feel free to explore Aayush's machine learning models and web projects!"
+            ];
+            const msg = new SpeechSynthesisUtterance(greetings[Math.floor(Math.random() * greetings.length)]);
+            msg.rate = 1.0;
+            window.speechSynthesis.speak(msg);
+        }
+
+        showToast("Nova: Hello! Welcome to Aayush's portfolio.", "success");
+    }
+
+    card.addEventListener('click', triggerGreetingInteraction);
+    if (greetingBtn) {
+        greetingBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            triggerGreetingInteraction(e);
+        });
+    }
+
+    // 3. AI HUD Mode Toggle
+    if (toggleHudBtn && hudLayer) {
+        toggleHudBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const isDisabled = hudLayer.classList.toggle('disabled');
+            toggleHudBtn.classList.toggle('active', !isDisabled);
+            showToast(isDisabled ? "AI Vision HUD: Offline" : "AI Vision HUD: Online & Tracking", "success");
+        });
+    }
+
+    // 4. Aura Palette Picker
+    auraDots.forEach(dot => {
+        dot.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const aura = dot.getAttribute('data-aura');
+            setAura(aura);
+            localStorage.setItem('portfolio_aura', aura);
+            showToast(`Aura Switched: ${aura.toUpperCase()}`, "success");
+        });
+    });
+
+    function setAura(aura) {
+        container.classList.remove('aura-teal', 'aura-violet', 'aura-emerald', 'aura-solar');
+        if (aura !== 'teal') {
+            container.classList.add(`aura-${aura}`);
+        }
+        auraDots.forEach(d => {
+            d.classList.toggle('active', d.getAttribute('data-aura') === aura);
+        });
+    }
+}
+
+/* ==========================================================================
+   IT OPS TABLE VIEW RENDERER
+   ========================================================================== */
+function renderProjectsTable(projectsArray, container) {
+    if (!container) return;
+    if (projectsArray.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 3rem; color: var(--text-secondary); font-family: var(--font-mono);">No active modules found matching the current search parameters.</div>`;
+        return;
+    }
+
+    container.innerHTML = `
+        <table class="it-ops-table">
+            <thead>
+                <tr>
+                    <th>Module / System</th>
+                    <th>Status</th>
+                    <th>Architecture</th>
+                    <th>Tech Stack</th>
+                    <th>Latency</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${projectsArray.map(p => {
+                    const status = p.status || (p.isRawGitHub ? 'Live GitHub' : 'Production');
+                    const arch = p.architecture || (p.category === 'frontend' ? 'Client UI' : 'Full-Stack Service');
+                    const latency = p.latency || '< 25ms';
+                    const techChips = (p.tech || []).slice(0, 3).map(t => `<span class="table-tech-chip">${t}</span>`).join('');
+                    
+                    return `
+                        <tr data-id="${p.id}">
+                            <td>
+                                <div class="table-project-name">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width: 15px; height: 15px; color: var(--primary); flex-shrink: 0;"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                                    <span>${p.title}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="table-status-pill">
+                                    <span class="status-led green" style="width:6px;height:6px;"></span>
+                                    ${status}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="table-arch-tag">${arch}</span>
+                            </td>
+                            <td>
+                                <div class="table-tech-chips">${techChips}</div>
+                            </td>
+                            <td>
+                                <span style="font-family: var(--font-mono); font-size: 0.76rem; color: var(--primary-light); font-weight: 600;">${latency}</span>
+                            </td>
+                            <td>
+                                <div class="table-actions-cell">
+                                    <button type="button" class="table-btn table-btn-primary btn-table-specs" data-id="${p.id}">
+                                        Specs
+                                    </button>
+                                    <a href="${p.demoUrl}" class="table-btn table-btn-secondary" target="_blank" rel="noopener">
+                                        Live
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                }).join('')}
+            </tbody>
+        </table>
+    `;
+
+    // Bind click events on table spec buttons
+    container.querySelectorAll('.btn-table-specs').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const pid = btn.getAttribute('data-id');
+            openProjectModal(pid);
+        });
+    });
+}
+
+/* ==========================================================================
+   LIVE IT TELEMETRY BAR & CLOCK
+   ========================================================================== */
+function initTelemetryBar() {
+    const clockEl = document.getElementById('telemetry-clock');
+    const pingEl = document.getElementById('telemetry-ping');
+    const cliBtn = document.getElementById('telemetry-cli-btn');
+
+    // Live UTC Clock
+    if (clockEl) {
+        function updateClock() {
+            const now = new Date();
+            const hours = String(now.getUTCHours()).padStart(2, '0');
+            const minutes = String(now.getUTCMinutes()).padStart(2, '0');
+            const seconds = String(now.getUTCSeconds()).padStart(2, '0');
+            clockEl.textContent = `${hours}:${minutes}:${seconds} UTC`;
+        }
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+
+    // Ping Latency Simulator
+    if (pingEl) {
+        setInterval(() => {
+            const ping = Math.floor(Math.random() * 12) + 14; // 14ms - 25ms
+            pingEl.textContent = `${ping}ms`;
+        }, 4000);
+    }
+
+    // Open CLI button
+    if (cliBtn) {
+        cliBtn.addEventListener('click', () => {
+            toggleTerminal(true);
+        });
+    }
+}
+
+/* ==========================================================================
+   SKILLS SEARCH & REAL-TIME HIGHLIGHTING
+   ========================================================================== */
+function initSkillsSearch() {
+    const searchInput = document.getElementById('skill-search-input');
+    if (!searchInput) return;
+
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.trim().toLowerCase();
+        const skillItems = document.querySelectorAll('.skill-item');
+
+        skillItems.forEach(item => {
+            const skillName = item.querySelector('.skill-name')?.textContent.toLowerCase() || '';
+            if (query === '') {
+                item.classList.remove('dimmed', 'highlighted');
+            } else if (skillName.includes(query)) {
+                item.classList.remove('dimmed');
+                item.classList.add('highlighted');
+            } else {
+                item.classList.remove('highlighted');
+                item.classList.add('dimmed');
+            }
+        });
+    });
+}
+
+/* ==========================================================================
+   CLIENT-SIDE AI/ML MODEL PLAYGROUND (FULL EFFICIENT MODEL)
+   ========================================================================== */
+function initModelPlayground() {
+    const paramFeatures = document.getElementById('param-features');
+    const paramSamples = document.getElementById('param-samples');
+    const paramReg = document.getElementById('param-reg');
+    const paramNoise = document.getElementById('param-noise');
+
+    const valFeatures = document.getElementById('val-features');
+    const valSamples = document.getElementById('val-samples');
+    const valReg = document.getElementById('val-reg');
+    const valNoise = document.getElementById('val-noise');
+
+    const scoreDisplay = document.getElementById('model-score-display');
+    const gaugeFillArc = document.getElementById('gauge-fill-arc');
+    const metricLatency = document.getElementById('metric-latency');
+    const metricConfidence = document.getElementById('metric-confidence');
+    const metricLoss = document.getElementById('metric-loss');
+    const metricStatus = document.getElementById('metric-status');
+
+    const featBar1 = document.getElementById('feat-bar-1');
+    const featBar2 = document.getElementById('feat-bar-2');
+    const featBar3 = document.getElementById('feat-bar-3');
+    const featBar4 = document.getElementById('feat-bar-4');
+
+    const featPct1 = document.getElementById('feat-pct-1');
+    const featPct2 = document.getElementById('feat-pct-2');
+    const featPct3 = document.getElementById('feat-pct-3');
+    const featPct4 = document.getElementById('feat-pct-4');
+
+    const presetBtns = document.querySelectorAll('.preset-btn');
+    const runBenchBtn = document.getElementById('btn-run-benchmark');
+    const resetBtn = document.getElementById('btn-reset-model');
+
+    if (!paramFeatures || !gaugeFillArc) return;
+
+    // Presets definitions
+    const presets = {
+        classifier: { features: 8, samples: 15000, reg: 50, noise: 8 },
+        balanced: { features: 6, samples: 10000, reg: 40, noise: 12 },
+        highspeed: { features: 4, samples: 4000, reg: 70, noise: 18 }
+    };
+
+    // Calculate dynamic inference state
+    function evaluateModel(manualLatency = null) {
+        const startTime = performance.now();
+
+        const f = parseInt(paramFeatures.value);
+        const s = parseInt(paramSamples.value);
+        const r = parseInt(paramReg.value);
+        const n = parseInt(paramNoise.value);
+
+        // Update value displays
+        if (valFeatures) valFeatures.textContent = `${f} / 10`;
+        if (valSamples) valSamples.textContent = `${s.toLocaleString()} pts`;
+        if (valReg) valReg.textContent = (r / 1000).toFixed(3);
+        if (valNoise) valNoise.textContent = `${n}%`;
+
+        // Synthetic Model Accuracy / Efficiency formulation
+        let rawScore = 75.0 + (f * 1.9) + (Math.log10(s) * 2.8) - (r * 0.065) - (n * 0.48);
+        const score = Math.min(99.4, Math.max(68.0, rawScore));
+
+        // Gauge arc offset calculation (circumference of arc is 251.2)
+        const circumference = 251.2;
+        const fillOffset = circumference * (1 - (score / 100));
+        gaugeFillArc.style.strokeDashoffset = fillOffset.toFixed(1);
+
+        if (scoreDisplay) {
+            scoreDisplay.textContent = `${score.toFixed(1)}%`;
+        }
+
+        // Feature Importance calculation
+        const p1 = Math.min(98, Math.round(72 + f * 2.2 - n * 0.3));
+        const p2 = Math.min(99, Math.round(68 + f * 3.0 - r * 0.12));
+        const p3 = Math.min(96, Math.round(62 + Math.log10(s) * 7.0));
+        const p4 = Math.min(94, Math.round(48 + r * 0.45));
+
+        if (featBar1) featBar1.style.width = `${p1}%`;
+        if (featPct1) featPct1.textContent = `${p1}%`;
+
+        if (featBar2) featBar2.style.width = `${p2}%`;
+        if (featPct2) featPct2.textContent = `${p2}%`;
+
+        if (featBar3) featBar3.style.width = `${p3}%`;
+        if (featPct3) featPct3.textContent = `${p3}%`;
+
+        if (featBar4) featBar4.style.width = `${p4}%`;
+        if (featPct4) featPct4.textContent = `${p4}%`;
+
+        // Telemetry metrics
+        const endTime = performance.now();
+        const calcTime = manualLatency !== null ? manualLatency : Math.max(1.2, parseFloat((endTime - startTime + Math.random() * 0.8).toFixed(1)));
+        
+        if (metricLatency) metricLatency.textContent = `${calcTime} ms`;
+        if (metricConfidence) metricConfidence.textContent = `${(score * 0.992).toFixed(1)}%`;
+        
+        const loss = Math.max(0.006, parseFloat((1 - (score / 100) * 0.98 + (n * 0.001)).toFixed(3)));
+        if (metricLoss) metricLoss.textContent = loss.toFixed(3);
+
+        if (metricStatus) {
+            if (score > 92) {
+                metricStatus.textContent = 'OPTIMAL';
+                metricStatus.className = 'metric-value text-optimal';
+            } else if (score > 80) {
+                metricStatus.textContent = 'CONVERGED';
+                metricStatus.className = 'metric-value text-teal';
+            } else {
+                metricStatus.textContent = 'SUB-OPTIMAL';
+                metricStatus.className = 'metric-value text-accent';
+            }
+        }
+    }
+
+    // Attach slider listeners
+    [paramFeatures, paramSamples, paramReg, paramNoise].forEach(slider => {
+        slider.addEventListener('input', () => {
+            evaluateModel();
+        });
+    });
+
+    // Attach preset button listeners
+    presetBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            presetBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const presetKey = btn.getAttribute('data-preset');
+            const p = presets[presetKey];
+            if (p) {
+                paramFeatures.value = p.features;
+                paramSamples.value = p.samples;
+                paramReg.value = p.reg;
+                paramNoise.value = p.noise;
+                evaluateModel();
+                showToast(`Model Preset Applied: ${btn.textContent}`, "success");
+            }
+        });
+    });
+
+    // Benchmark button
+    if (runBenchBtn) {
+        runBenchBtn.addEventListener('click', () => {
+            runBenchBtn.disabled = true;
+            const benchLed = document.getElementById('model-engine-led');
+            if (benchLed) benchLed.className = 'status-led blue';
+
+            const startBench = performance.now();
+            // Perform 25,000 synthetic vector dot-products to measure browser speed
+            let accum = 0;
+            for (let i = 0; i < 25000; i++) {
+                accum += Math.sin(i) * Math.cos(i);
+            }
+            const benchDuration = Math.max(1.1, parseFloat((performance.now() - startBench).toFixed(2)));
+
+            setTimeout(() => {
+                evaluateModel(benchDuration);
+                if (benchLed) benchLed.className = 'status-led green';
+                runBenchBtn.disabled = false;
+                showToast(`Benchmark Completed: 25k iterations in ${benchDuration}ms!`, "success");
+            }, 300);
+        });
+    }
+
+    // Reset button
+    if (resetBtn) {
+        resetBtn.addEventListener('click', () => {
+            paramFeatures.value = 8;
+            paramSamples.value = 15000;
+            paramReg.value = 50;
+            paramNoise.value = 8;
+            presetBtns.forEach((b, idx) => b.classList.toggle('active', idx === 0));
+            evaluateModel();
+            showToast("Model Hyperparameters Reset to Defaults", "success");
+        });
+    }
+
+    // Initial evaluation
+    evaluateModel();
+}
+
+/* ==========================================================================
+   DEVELOPER CLI TERMINAL (IT SECTOR CONSOLE)
+   ========================================================================== */
+function initDeveloperTerminal() {
+    const drawer = document.getElementById('dev-terminal-drawer');
+    const backdrop = document.getElementById('terminal-backdrop');
+    const closeBtn = document.getElementById('term-close-btn');
+    const heroTrigger = document.getElementById('hero-cli-trigger');
+    const floatingTrigger = document.getElementById('floating-cli-trigger');
+    const form = document.getElementById('terminal-prompt-form');
+    const input = document.getElementById('terminal-input');
+    const history = document.getElementById('terminal-history');
+    const screen = document.getElementById('terminal-screen');
+
+    if (!drawer || !form || !input) return;
+
+    let commandHistory = [];
+    let historyIndex = -1;
+
+    // Open/Close helper
+    window.toggleTerminal = function(shouldOpen) {
+        const isOpen = drawer.classList.contains('open');
+        const nextState = shouldOpen !== undefined ? shouldOpen : !isOpen;
+        
+        drawer.classList.toggle('open', nextState);
+        drawer.setAttribute('aria-hidden', (!nextState).toString());
+        
+        if (nextState) {
+            setTimeout(() => input.focus(), 150);
+        }
+    };
+
+    // Trigger bindings
+    if (closeBtn) closeBtn.addEventListener('click', () => toggleTerminal(false));
+    if (backdrop) backdrop.addEventListener('click', () => toggleTerminal(false));
+    if (heroTrigger) heroTrigger.addEventListener('click', () => toggleTerminal(true));
+    if (floatingTrigger) floatingTrigger.addEventListener('click', () => toggleTerminal(true));
+
+    // Handle interactive command chips
+    document.addEventListener('click', (e) => {
+        const chip = e.target.closest('.term-cmd-chip');
+        if (chip) {
+            const cmd = chip.getAttribute('data-cmd') || chip.textContent.trim();
+            input.value = cmd;
+            executeCommand(cmd);
+        }
+    });
+
+    // Command submission
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const rawCmd = input.value.trim();
+        input.value = '';
+        if (rawCmd === '') return;
+
+        commandHistory.push(rawCmd);
+        historyIndex = commandHistory.length;
+
+        executeCommand(rawCmd);
+    });
+
+    // Arrow navigation for command history
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowUp') {
+            e.preventDefault();
+            if (historyIndex > 0) {
+                historyIndex--;
+                input.value = commandHistory[historyIndex] || '';
+            }
+        } else if (e.key === 'ArrowDown') {
+            e.preventDefault();
+            if (historyIndex < commandHistory.length - 1) {
+                historyIndex++;
+                input.value = commandHistory[historyIndex] || '';
+            } else {
+                historyIndex = commandHistory.length;
+                input.value = '';
+            }
+        }
+    });
+
+    function appendOutput(contentHTML, isUserCmd = false, userCmdText = '') {
+        const line = document.createElement('div');
+        line.className = 'term-line';
+        if (isUserCmd) {
+            line.innerHTML = `<span class="term-user">guest@aayush.dev</span><span class="term-sep">:</span><span class="term-path">~$</span> <span style="color:#ffffff;">${userCmdText}</span>`;
+        } else {
+            line.innerHTML = contentHTML;
+        }
+        history.appendChild(line);
+        screen.scrollTop = screen.scrollHeight;
+    }
+
+    function executeCommand(raw) {
+        appendOutput('', true, raw);
+
+        const parts = raw.toLowerCase().split(' ').filter(Boolean);
+        const command = parts[0];
+        const arg1 = parts[1];
+
+        switch(command) {
+            case 'help':
+                appendOutput(`
+                    <p class="term-highlight"><strong>Antigravity Core CLI &mdash; Available Commands:</strong></p>
+                    <div style="display:grid; grid-template-columns: 160px 1fr; gap: 0.35rem 1rem; margin-top: 0.4rem; font-size: 0.82rem;">
+                        <span class="term-highlight">projects</span><span>List production modules & open live prototypes</span>
+                        <span class="term-highlight">skills</span><span>Print categorized tech stack & toolkit</span>
+                        <span class="term-highlight">model [bench]</span><span>Inspect or benchmark in-browser ML inference model</span>
+                        <span class="term-highlight">system</span><span>Print host telemetry, environment, and latency</span>
+                        <span class="term-highlight">certs</span><span>List verified certifications with verify links</span>
+                        <span class="term-highlight">contact</span><span>Display communication gateway channels</span>
+                        <span class="term-highlight">theme [toggle]</span><span>Switch dark/light theme mode</span>
+                        <span class="term-highlight">sudo hire-aayush</span><span>Execute developer onboarding protocol</span>
+                        <span class="term-highlight">clear</span><span>Wipe terminal display buffer</span>
+                        <span class="term-highlight">exit</span><span>Close developer console</span>
+                    </div>
+                `);
+                break;
+
+            case 'projects':
+                if (typeof projects !== 'undefined') {
+                    let out = `<p class="term-highlight"><strong>DEPLOYED PRODUCTION MODULES (${projects.length}):</strong></p><ul style="padding-left:1.2rem; margin-top:0.4rem;">`;
+                    projects.forEach((p, idx) => {
+                        out += `<li><strong>[${idx + 1}] ${p.title}</strong> &mdash; <span class="term-muted">${p.architecture || p.category}</span> | <a href="${p.demoUrl}" target="_blank" style="color:var(--primary-light); text-decoration:underline;">Launch Live Demo</a></li>`;
+                    });
+                    out += `</ul>`;
+                    appendOutput(out);
+                } else {
+                    appendOutput(`<span class="term-warn">Projects database initializing...</span>`);
+                }
+                break;
+
+            case 'skills':
+                appendOutput(`
+                    <p class="term-highlight"><strong>TECHNICAL COMPETENCY MATRIX:</strong></p>
+                    <p>• <strong>AI, ML & GenAI:</strong> Python, LLMs, Prompt Engineering, Google Gemini API, Scikit-Learn (85%), Pandas & NumPy (88%), ONNX Runtime, Transformers.js</p>
+                    <p>• <strong>Software Engineering:</strong> JavaScript (ES6+), TypeScript, React, Django, Flask, Node.js, HTML5/CSS3, Three.js WebGL, Java, C</p>
+                    <p>• <strong>Cloud, DevSecOps & DBs:</strong> Azure, AWS, GCP, Supabase (PostgreSQL), MongoDB, MySQL, SAST Alert Triage, Git/GitHub Actions</p>
+                `);
+                break;
+
+            case 'model':
+                if (arg1 === 'run' || arg1 === 'bench' || arg1 === 'benchmark') {
+                    appendOutput(`<p class="term-highlight">Executing in-browser ML model benchmark...</p>`);
+                    const startBench = performance.now();
+                    let accum = 0;
+                    for (let i = 0; i < 20000; i++) accum += Math.sin(i);
+                    const dur = Math.max(1.1, parseFloat((performance.now() - startBench).toFixed(2)));
+                    appendOutput(`<p class="term-success">[SUCCESS] 20,000 algorithmic cycles completed in ${dur}ms. Status: OPTIMAL.</p>`);
+                } else {
+                    appendOutput(`
+                        <p class="term-highlight"><strong>CLIENT-SIDE ML MODEL ENGINE:</strong></p>
+                        <p>Status: ACTIVE | Framework: Client-Side Vector Math / ONNX</p>
+                        <p>Run <span class="term-cmd-chip" data-cmd="model bench">model bench</span> or navigate to <a href="#model-playground" style="color:var(--primary-light); text-decoration:underline;">#model-playground</a> to adjust live hyperparameters.</p>
+                    `);
+                }
+                break;
+
+            case 'system':
+                appendOutput(`
+                    <p class="term-highlight"><strong>HOST ENVIRONMENT TELEMETRY:</strong></p>
+                    <p>• Station: AAYUSH-DEV-PORTFOLIO-CORE (Kanpur, India)</p>
+                    <p>• Platform: Browser JS (V8/Blink/Gecko) on ${navigator.platform || 'x86_64'}</p>
+                    <p>• Screen Resolution: ${window.innerWidth}x${window.innerHeight}</p>
+                    <p>• User Agent: ${navigator.userAgent.substring(0, 65)}...</p>
+                    <p>• Core Architecture: Client-Side Neural Engine (v2.5)</p>
+                    <p>• System Status: <span class="term-success">ALL SERVICES OPERATIONAL</span></p>
+                `);
+                break;
+
+            case 'certs':
+                appendOutput(`
+                    <p class="term-highlight"><strong>VERIFIED CREDENTIALS:</strong></p>
+                    <p>1. <a href="https://www.hackerrank.com/certificates/18029d7bacb0" target="_blank" style="color:var(--primary-light); text-decoration:underline;">SQL (Advanced)</a> &mdash; HackerRank Verified</p>
+                    <p>2. <a href="https://www.hackerrank.com/certificates/becd1c7c7678" target="_blank" style="color:var(--primary-light); text-decoration:underline;">Problem Solving (Intermediate)</a> &mdash; HackerRank Verified</p>
+                    <p>3. <a href="https://www.hackerrank.com/certificates/b454fb575392" target="_blank" style="color:var(--primary-light); text-decoration:underline;">SQL (Intermediate)</a> &mdash; HackerRank Verified</p>
+                    <p>4. <a href="https://www.hackerrank.com/certificates/0122088d128e" target="_blank" style="color:var(--primary-light); text-decoration:underline;">JavaScript (Basic)</a> &mdash; HackerRank Verified</p>
+                    <p>5. <a href="https://www.hackerrank.com/certificates/2a2de6899896" target="_blank" style="color:var(--primary-light); text-decoration:underline;">Python (Basic)</a> &mdash; HackerRank Verified</p>
+                `);
+                break;
+
+            case 'contact':
+                appendOutput(`
+                    <p class="term-highlight"><strong>COMMUNICATION GATEWAYS:</strong></p>
+                    <p>• Direct Email: <a href="mailto:aayushagarwaltech@gmail.com" style="color:var(--primary-light);">aayushagarwaltech@gmail.com</a></p>
+                    <p>• GitHub: <a href="https://github.com/AayushBuilds-codes" target="_blank" style="color:var(--primary-light);">github.com/AayushBuilds-codes</a></p>
+                    <p>• LinkedIn: <a href="https://www.linkedin.com/in/aayush-agarwal-64a461284/" target="_blank" style="color:var(--primary-light);">linkedin.com/in/aayush-agarwal-64a461284</a></p>
+                `);
+                break;
+
+            case 'theme':
+                const current = document.documentElement.getAttribute('data-theme') || 'dark';
+                const nextTheme = arg1 === 'light' ? 'light' : (arg1 === 'dark' ? 'dark' : (current === 'dark' ? 'light' : 'dark'));
+                document.documentElement.setAttribute('data-theme', nextTheme);
+                localStorage.setItem('theme', nextTheme);
+                appendOutput(`<p class="term-success">Environment theme toggled to <strong>${nextTheme.toUpperCase()}</strong>.</p>`);
+                break;
+
+            case 'sudo':
+                if (parts[1] === 'hire-aayush' || (parts[1] === 'hire' && parts[2] === 'aayush')) {
+                    appendOutput(`
+                        <p class="term-success"><strong>[ACCESS GRANTED: ROOT LEVEL PRIVILEGES ENGAGED]</strong></p>
+                        <p>🎉 <strong>Congratulations! You found the Recruiter Protocol.</strong></p>
+                        <p>Aayush Agarwal is actively available for <strong>AI/ML Developer Internships</strong> and <strong>Software Engineering Roles</strong>.</p>
+                        <p>Direct channel: <a href="mailto:aayushagarwaltech@gmail.com?subject=Opportunity%20for%20Aayush%20Agarwal" style="color:#2dd4bf; text-decoration:underline;">Email Aayush Directly</a> or connect on <a href="https://www.linkedin.com/in/aayush-agarwal-64a461284/" target="_blank" style="color:#2dd4bf; text-decoration:underline;">LinkedIn</a>.</p>
+                    `);
+                    showToast("Recruiter Fast-Track Protocol Activated!", "success");
+                } else {
+                    appendOutput(`<p class="term-warn">sudo: user 'guest' is not in the sudoers file. This incident will be reported. Try 'sudo hire-aayush'.</p>`);
+                }
+                break;
+
+            case 'clear':
+            case 'cls':
+                history.innerHTML = '';
+                break;
+
+            case 'exit':
+            case 'quit':
+                appendOutput(`<p class="term-muted">Terminating session...</p>`);
+                setTimeout(() => toggleTerminal(false), 400);
+                break;
+
+            case 'echo':
+                const text = parts.slice(1).join(' ');
+                appendOutput(`<p>${text}</p>`);
+                break;
+
+            default:
+                appendOutput(`<p class="term-error">command not found: ${command}. Type <span class="term-cmd-chip" data-cmd="help">help</span> for a list of available commands.</p>`);
+                break;
+        }
+    }
+}
+
+/* ==========================================================================
+   GLOBAL KEYBOARD SHORTCUTS
+   ========================================================================== */
+function initGlobalShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        // Ignore if user is currently typing in an input or textarea (except for escape)
+        const isInputFocused = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
+
+        // Escape closes any open modal, terminal, or Nova drawer
+        if (e.key === 'Escape') {
+            const terminal = document.getElementById('dev-terminal-drawer');
+            if (terminal && terminal.classList.contains('open')) {
+                toggleTerminal(false);
+                return;
+            }
+            const modal = document.querySelector('.modal-overlay.open');
+            if (modal) {
+                closeModal();
+                return;
+            }
+            const nova = document.getElementById('nova-chat-window');
+            if (nova && nova.classList.contains('open')) {
+                nova.classList.remove('open');
+                return;
+            }
+        }
+
+        // Ctrl + \ or Ctrl + ` toggles Developer CLI
+        if ((e.ctrlKey || e.metaKey) && (e.key === '\\' || e.key === '`')) {
+            e.preventDefault();
+            toggleTerminal();
+            return;
+        }
+
+        // Single key shortcuts when not typing
+        if (!isInputFocused) {
+            if (e.key === 't' || e.key === 'T') {
+                e.preventDefault();
+                toggleTerminal();
+            } else if (e.key === 'n' || e.key === 'N') {
+                e.preventDefault();
+                const launcher = document.getElementById('nova-launcher');
+                if (launcher) launcher.click();
+            }
+        }
+    });
+}
+

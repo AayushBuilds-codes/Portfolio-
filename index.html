@@ -16,6 +16,43 @@
     <div class="ambient-glow glow-bottom-left"></div>
 
     <!-- ==========================================================================
+       IT SECTOR LIVE TELEMETRY & SYSTEM STATUS BAR
+       ========================================================================== -->
+    <aside class="telemetry-bar" id="telemetry-bar" aria-label="Live System Telemetry">
+        <div class="container telemetry-container">
+            <div class="telemetry-item host-badge">
+                <span class="status-led green" id="telemetry-led"></span>
+                <span class="telemetry-label">SYS.STATUS:</span>
+                <strong class="telemetry-val" id="sys-status-text">ONLINE // OPTIMAL</strong>
+            </div>
+            <div class="telemetry-item hide-mobile">
+                <span class="telemetry-label">HOST:</span>
+                <span class="telemetry-val">AAYUSH-WORKSTATION-X</span>
+            </div>
+            <div class="telemetry-item">
+                <span class="telemetry-label">LATENCY:</span>
+                <span class="telemetry-val" id="telemetry-ping">18ms</span>
+            </div>
+            <div class="telemetry-item hide-tablet">
+                <span class="telemetry-label">STACK:</span>
+                <span class="telemetry-val">AI/ML • ONNX • ES6+</span>
+            </div>
+            <div class="telemetry-item hide-mobile">
+                <span class="telemetry-label">TIME:</span>
+                <span class="telemetry-val" id="telemetry-clock">--:--:-- UTC</span>
+            </div>
+            <div class="telemetry-actions">
+                <button type="button" class="btn-telemetry-cli" id="telemetry-cli-btn" title="Launch Developer Terminal (Press Ctrl+\)">
+                    <span class="prompt-icon">&gt;_</span> CLI
+                </button>
+                <a href="#model-playground" class="telemetry-link-badge" title="Launch In-Browser AI/ML Model Playground">
+                    ⚡ ML Playground
+                </a>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ==========================================================================
        HEADER / NAVIGATION BAR
        ========================================================================== -->
     <header class="navbar" id="navbar">
@@ -30,7 +67,10 @@
                 <li><a href="#about" class="nav-link">About</a></li>
                 <li><a href="#journey" class="nav-link">Journey</a></li>
                 <li><a href="#skills" class="nav-link">Skills</a></li>
+                <li><a href="#architecture" class="nav-link">Architecture</a></li>
+                <li><a href="#model-playground" class="nav-link">ML Model</a></li>
                 <li><a href="#work" class="nav-link">Work</a></li>
+                <li><a href="#certifications" class="nav-link">Certs</a></li>
                 <li><a href="Aayush%20Agarwal%20Resume.pdf" download="Aayush_Agarwal_Resume.pdf" class="nav-link">Resume</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
@@ -66,7 +106,12 @@
         <div class="container hero-grid">
             <!-- Text Content -->
             <div class="hero-content scroll-reveal show">
-                <span class="hero-tag">AVAILABLE FOR OPPORTUNITIES</span>
+                <div class="hero-badge-row">
+                    <span class="hero-tag">AVAILABLE FOR OPPORTUNITIES</span>
+                    <span class="hero-it-badge">
+                        <span class="status-led green"></span> IT SECTOR &bull; CLIENT-SIDE ML
+                    </span>
+                </div>
                 <h1 class="hero-title">Hello, I'm <br><span class="highlight">Aayush Agarwal</span></h1>
                 <h2 class="hero-subtitle">
                     I am an 
@@ -81,33 +126,112 @@
                         View Projects
                         <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/></svg>
                     </a>
-                    <a href="Aayush%20Agarwal%20Resume.pdf" download="Aayush_Agarwal_Resume.pdf" class="btn btn-secondary">
-                        Download Resume
-                        <svg style="width: 20px; height: 20px;" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2zm0-10h4V4h6v6h4l-7 7-7-7z"/></svg>
+                    <a href="#model-playground" class="btn btn-primary btn-playground-accent">
+                        <span>⚡ Test ML Model</span>
                     </a>
-                    <a href="#contact" class="btn btn-secondary">Let's Connect</a>
+                    <button type="button" class="btn btn-secondary" id="hero-cli-trigger">
+                        <span style="font-family: monospace; font-weight: 700; margin-right: 4px;">&gt;_</span> CLI
+                    </button>
+                    <a href="Aayush%20Agarwal%20Resume.pdf" download="Aayush_Agarwal_Resume.pdf" class="btn btn-secondary">
+                        Resume
+                        <svg style="width: 18px; height: 18px;" viewBox="0 0 24 24"><path fill="currentColor" d="M5 20h14v-2H5v2zm0-10h4V4h6v6h4l-7 7-7-7z"/></svg>
+                    </a>
                 </div>
             </div>
 
-            <!-- Profile Avatar and Decorative Badges -->
-            <div class="hero-image-container scroll-reveal show">
-                <div class="hero-image-glow"></div>
-                <div class="avatar-wrapper">
-                    <!-- Profile image generated from canvas/illustration -->
-                    <div class="avatar-image-container">
-                        <img src="Screenshot 2026-06-27 232812.png" alt="Profile avatar illustration">
+            <!-- Dynamic 3D Holographic Hero Showcase -->
+            <div class="hero-image-container scroll-reveal show" id="hero-showcase">
+                <!-- Ambient Dynamic Glow Backdrop -->
+                <div class="hero-image-glow" id="avatar-glow"></div>
+                
+                <div class="avatar-stage-wrapper" id="avatar-stage">
+                    <!-- Interactive Cyber Portal Pedestal & Energy Rings -->
+                    <div class="stage-rings">
+                        <div class="ring ring-outer"></div>
+                        <div class="ring ring-inner"></div>
+                        <div class="stage-pedestal"></div>
+                    </div>
+
+                    <!-- 3D Interactive Parallax Card & Cutout Frame -->
+                    <div class="avatar-card-3d" id="avatar-card-3d" title="Click to interact with Aayush & Nova">
+                        <!-- Holographic Specular Glare -->
+                        <div class="holo-glare"></div>
+                        
+                        <!-- AI Vision HUD Scanner Layer -->
+                        <div class="ai-hud-layer" id="ai-hud-layer">
+                            <div class="hud-reticle top-left"></div>
+                            <div class="hud-reticle top-right"></div>
+                            <div class="hud-reticle bottom-left"></div>
+                            <div class="hud-reticle bottom-right"></div>
+                            <div class="hud-scanner-beam"></div>
+                            <div class="hud-data-tag hud-tag-top">
+                                <span class="hud-dot"></span> TARGET: AAYUSH AGARWAL [AI_DEV]
+                            </div>
+                            <div class="hud-data-tag hud-tag-bottom">
+                                <span>CONF: 99.8%</span>
+                                <span class="hud-sep">•</span>
+                                <span>POSE: ACTIVE</span>
+                                <span class="hud-sep">•</span>
+                                <span class="hud-live">LIVE</span>
+                            </div>
+                        </div>
+
+                        <!-- Real Cutout Image Container -->
+                        <div class="avatar-cutout-container">
+                            <img src="assets/aayush_cutout.png" onerror="this.onerror=null; this.src='img cut.png';" alt="Aayush Agarwal - AI & ML Developer" id="hero-cutout-img" class="cutout-img">
+                        </div>
+
+                        <!-- Interactive Click Ripple Wave -->
+                        <div class="avatar-interaction-ripple" id="avatar-ripple"></div>
+                    </div>
+
+                    <!-- Interactive HUD & Aura Mode Switcher Controls -->
+                    <div class="avatar-controls-hud">
+                        <button type="button" class="avatar-hud-btn active" id="toggle-hud-btn" title="Toggle AI Vision Scanner">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                            <span>AI HUD</span>
+                        </button>
+                        <div class="aura-palette-picker" title="Change Cyber Aura Palette">
+                            <button type="button" class="aura-dot active" data-aura="teal" style="--dot-color: #14b8a6;" aria-label="Teal Aura"></button>
+                            <button type="button" class="aura-dot" data-aura="violet" style="--dot-color: #8b5cf6;" aria-label="Violet Aura"></button>
+                            <button type="button" class="aura-dot" data-aura="emerald" style="--dot-color: #10b981;" aria-label="Emerald Aura"></button>
+                            <button type="button" class="aura-dot" data-aura="solar" style="--dot-color: #f59e0b;" aria-label="Solar Aura"></button>
+                        </div>
+                        <button type="button" class="avatar-voice-trigger-btn" id="avatar-greeting-btn" title="Speak with Aayush / Nova">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 11H7V9h2v2zm4 0h-2V9h2v2zm4 0h-2V9h2v2z"/></svg>
+                            <span>Say Hi</span>
+                        </button>
                     </div>
                     
-                    <!-- Interactive Floating Badge 1 -->
-                    <div class="floating-card fc-1">
-                        <svg viewBox="0 0 24 24" style="fill: var(--primary);"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
-                        <span>AI & ML Intern</span>
+                    <!-- Floating Interactive Badges with Micro-Parallax -->
+                    <div class="floating-card fc-1" title="Data & GenAI Intern at SkillCred & AI/ML Intern at Jyesta Corp">
+                        <div class="fc-icon-wrap" style="background: rgba(20, 184, 166, 0.15); color: var(--primary);">
+                            <svg viewBox="0 0 24 24" style="fill: currentColor;"><path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1-1-.45-1-1 .45-1 1-1zm2 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+                        </div>
+                        <div class="fc-text">
+                            <span class="fc-title">GenAI &amp; ML Intern</span>
+                            <span class="fc-sub">SkillCred &bull; Jyesta</span>
+                        </div>
                     </div>
  
-                    <!-- Interactive Floating Badge 2 -->
-                    <div class="floating-card fc-2">
-                        <svg viewBox="0 0 24 24" style="fill: var(--accent);"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
-                        <span>Python Developer</span>
+                    <div class="floating-card fc-2" title="Python & Scikit-Learn Specialist">
+                        <div class="fc-icon-wrap" style="background: rgba(139, 92, 246, 0.15); color: var(--accent);">
+                            <svg viewBox="0 0 24 24" style="fill: currentColor;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
+                        </div>
+                        <div class="fc-text">
+                            <span class="fc-title">Python / ML Stack</span>
+                            <span class="fc-sub">Scikit-Learn • ONNX</span>
+                        </div>
+                    </div>
+
+                    <div class="floating-card fc-3" title="B.Tech Computer Science Specialization in AI & ML">
+                        <div class="fc-icon-wrap" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                            <svg viewBox="0 0 24 24" style="fill: currentColor;"><path d="M12 3L1 9l4 2.18v6L12 21l7-3.82v-6l2-1.09V17h2V9L12 3zm6.82 6L12 12.72 5.18 9 12 5.28 18.82 9zM17 15.99l-5 2.73-5-2.73v-3.72L12 15l5-2.73v3.72z"/></svg>
+                        </div>
+                        <div class="fc-text">
+                            <span class="fc-title">GLA University</span>
+                            <span class="fc-sub">CS (AI & ML)</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -138,10 +262,10 @@
                         Hello! My name is <strong>Aayush Agarwal</strong>, and I specialize in Artificial Intelligence, Machine Learning, and Data Analysis. I am currently pursuing a Bachelor of Technology in Computer Science (specialization in AI & ML) at GLA University, Mathura. My passion lies in extracting insights from complex datasets and designing modern, responsive developer interfaces.
                     </p>
                     <p>
-                        During my internship at Jyesta Corporation Limited, I trained machine learning models, performed feature engineering, and analyzed datasets to drive actionable insights. I love combining robust data science workflows with clean, beautiful frontend design layouts.
+                        During my <strong>Data &amp; Generative AI</strong> internship at <strong>SkillCred</strong> (in collaboration with GLA University) and my AI &amp; ML internship at <strong>Jyesta Corporation Limited</strong>, I engineered GenAI prompt pipelines, trained supervised ML models, performed feature engineering, and built real-world data handling workflows. I also contribute to open-source AI &amp; Agents projects in <strong>GirlScript Summer of Code 2026</strong>.
                     </p>
                     <p>
-                        I am dedicated to continuous learning, building AI-driven solutions, and remaining at the forefront of modern software design.
+                        I love combining robust machine learning, client-side Edge AI (ONNX / Transformers.js), and AI-assisted DevSecOps workflows with clean, responsive frontend interfaces.
                     </p>
                     
                     <div style="display: flex; gap: 1.2rem; margin-top: 1.5rem; flex-wrap: wrap;">
@@ -156,16 +280,16 @@
                 <!-- Animated statistics metrics -->
                 <div class="stats-grid">
                     <div class="stat-card scroll-reveal">
-                        <span class="stat-number" data-target="1" data-suffix="">0</span>
-                        <span class="stat-label">Internship Completed</span>
+                        <span class="stat-number" data-target="2" data-suffix="">0</span>
+                        <span class="stat-label">Internships Completed</span>
                     </div>
                     <div class="stat-card scroll-reveal">
-                        <span class="stat-number" data-target="6" data-suffix="+">0</span>
+                        <span class="stat-number" data-target="18" data-suffix="+">0</span>
                         <span class="stat-label">GitHub Repositories</span>
                     </div>
                     <div class="stat-card scroll-reveal">
-                        <span class="stat-number" data-target="4" data-suffix="">0</span>
-                        <span class="stat-label">AI/ML Certifications</span>
+                        <span class="stat-number" data-target="10" data-suffix="+">0</span>
+                        <span class="stat-label">AI/ML &amp; Cloud Certs</span>
                     </div>
                     <div class="stat-card scroll-reveal">
                         <span class="stat-number" data-target="500" data-suffix="+">0</span>
@@ -187,7 +311,33 @@
             </div>
 
             <div class="timeline">
-                <!-- Timeline Item 1 -->
+                <!-- Timeline Item 0: GSSoC 2026 -->
+                <div class="timeline-item scroll-reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">2026 &bull; REMOTE</span>
+                        <h3 class="timeline-title">Open-Source Contributor (AI &amp; Agents Track)</h3>
+                        <div class="timeline-company">GirlScript Summer of Code 2026 (GSSoC '26)</div>
+                        <p class="timeline-desc">
+                            Contributing to open-source AI and multi-agent repositories via Git/GitHub pull requests, issue resolution, documentation, and collaborative code reviews.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 1: SkillCred -->
+                <div class="timeline-item scroll-reveal">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-date">07/2026 - 09/2026 &bull; REMOTE</span>
+                        <h3 class="timeline-title">Data &amp; Generative AI Intern (Micro-Internship)</h3>
+                        <div class="timeline-company">SkillCred (in collaboration with GLA University)</div>
+                        <p class="timeline-desc">
+                            Gained hands-on experience in modern generative AI workflows, prompt engineering, and real-world data handling with Python and SQL. Collaborated remotely with SkillCred and GLA University to bridge academic ML theory with industry standards.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Timeline Item 2: Jyesta -->
                 <div class="timeline-item scroll-reveal">
                     <div class="timeline-dot"></div>
                     <div class="timeline-content">
@@ -224,6 +374,9 @@
             <div class="section-header">
                 <span class="section-subtitle">Competencies</span>
                 <h2 class="section-title">Skills & Toolkit</h2>
+                <div class="skills-search-wrapper">
+                    <input type="text" id="skill-search-input" class="skill-search-input" placeholder="Filter skills (e.g. Python, Git, Scikit-Learn, C, Pandas)..." autocomplete="off">
+                </div>
             </div>
 
             <div class="skills-grid">
@@ -369,6 +522,266 @@
     </section>
 
     <!-- ==========================================================================
+       IT ENGINEERING LIFECYCLE & ARCHITECTURE SECTION
+       ========================================================================== -->
+    <section class="section" id="architecture">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">IT Sector Pipeline</span>
+                <h2 class="section-title">Engineering Lifecycle</h2>
+                <p class="section-lead-text">
+                    End-to-end IT architecture mapping from raw telemetry ingestion to high-performance client-side deployment and real-time observability.
+                </p>
+            </div>
+
+            <div class="architecture-grid scroll-reveal">
+                <!-- Stage 1 -->
+                <div class="arch-card">
+                    <div class="arch-badge">STAGE 01</div>
+                    <div class="arch-icon-wrap">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm7 13H5v-.23c0-.62.28-1.2.76-1.58C7.47 15.82 9.64 15 12 15s4.53.82 6.24 2.19c.48.38.76.97.76 1.58V19z"/></svg>
+                    </div>
+                    <h3 class="arch-title">Data Ingestion & Cleaning</h3>
+                    <p class="arch-desc">Automated handling of outliers, vector normalization with Pandas and NumPy, missing value imputation, and dataset sanitization.</p>
+                    <div class="arch-tags">
+                        <span>Pandas</span>
+                        <span>NumPy</span>
+                        <span>ETL Pipelines</span>
+                    </div>
+                </div>
+
+                <!-- Stage 2 -->
+                <div class="arch-card">
+                    <div class="arch-badge">STAGE 02</div>
+                    <div class="arch-icon-wrap">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></svg>
+                    </div>
+                    <h3 class="arch-title">Feature Engineering</h3>
+                    <p class="arch-desc">Statistical feature selection, collinearity verification, StandardScaler/MinMaxScaler scaling, and dimensionality reduction for optimal convergence.</p>
+                    <div class="arch-tags">
+                        <span>StandardScaler</span>
+                        <span>OneHot</span>
+                        <span>Correlation Matrix</span>
+                    </div>
+                </div>
+
+                <!-- Stage 3 -->
+                <div class="arch-card">
+                    <div class="arch-badge">STAGE 03</div>
+                    <div class="arch-icon-wrap">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+                    </div>
+                    <h3 class="arch-title">Model Formulation & Training</h3>
+                    <p class="arch-desc">Scikit-Learn model training, cross-validation tuning, hyperparameter optimization, and evaluation across accuracy, precision, recall, and F1 metrics.</p>
+                    <div class="arch-tags">
+                        <span>Scikit-Learn</span>
+                        <span>GridSearchCV</span>
+                        <span>F1 Optimization</span>
+                    </div>
+                </div>
+
+                <!-- Stage 4 -->
+                <div class="arch-card highlight">
+                    <div class="arch-badge">STAGE 04</div>
+                    <div class="arch-icon-wrap">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                    </div>
+                    <h3 class="arch-title">Client-Side Web Deployment</h3>
+                    <p class="arch-desc">Compiling models to ONNX Runtime and Transformers.js for zero-latency in-browser inference, integrated with Three.js WebGL and reactive DOM layouts.</p>
+                    <div class="arch-tags">
+                        <span>ONNX Runtime</span>
+                        <span>Three.js</span>
+                        <span>Vanilla ES6+</span>
+                    </div>
+                </div>
+
+                <!-- Stage 5 -->
+                <div class="arch-card">
+                    <div class="arch-badge">STAGE 05</div>
+                    <div class="arch-icon-wrap">
+                        <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 14c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6zm1-10h-2v5h5v-2h-3z"/></svg>
+                    </div>
+                    <h3 class="arch-title">Telemetry & Observability</h3>
+                    <p class="arch-desc">Real-time latency profiling, cloud database synchronization with Supabase, responsive ApexCharts data dashboards, and continuous telemetry feedback.</p>
+                    <div class="arch-tags">
+                        <span>Supabase</span>
+                        <span>ApexCharts</span>
+                        <span>Live Telemetry</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
+       INTERACTIVE AI/ML MODEL INFERENCE PLAYGROUND (FULL EFFICIENT MODEL)
+       ========================================================================== -->
+    <section class="section" id="model-playground">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-subtitle">Interactive Full-Efficient Model</span>
+                <h2 class="section-title">Client-Side ML Playground</h2>
+                <p class="section-lead-text">
+                    Experience an interactive predictive machine learning inference model running live directly inside your browser. Adjust hyperparameters, feature engineering depth, and sample density to evaluate real-time outputs and confidence scores with sub-5ms latency.
+                </p>
+            </div>
+
+            <div class="playground-card scroll-reveal">
+                <!-- Top Status Bar of Model Engine -->
+                <div class="playground-header-bar">
+                    <div class="model-status-indicator">
+                        <span class="status-led green" id="model-engine-led"></span>
+                        <span class="model-engine-name">INFERENCE ENGINE: ACTIVE (CLIENT-SIDE V2.5)</span>
+                    </div>
+                    <div class="model-presets-row">
+                        <span class="preset-label">Preset:</span>
+                        <button type="button" class="preset-btn active" data-preset="classifier">High Precision</button>
+                        <button type="button" class="preset-btn" data-preset="balanced">Balanced Production</button>
+                        <button type="button" class="preset-btn" data-preset="highspeed">Sub-Millisecond</button>
+                    </div>
+                </div>
+
+                <div class="playground-body">
+                    <!-- Left: Interactive Parameter Controls -->
+                    <div class="playground-controls-panel">
+                        <h3 class="panel-heading">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+                            Hyperparameters & Data Pipeline
+                        </h3>
+
+                        <!-- Slider 1 -->
+                        <div class="control-slider-group">
+                            <div class="slider-header">
+                                <label for="param-features">Feature Engineering Depth</label>
+                                <span class="slider-value" id="val-features">8 / 10</span>
+                            </div>
+                            <input type="range" id="param-features" min="1" max="10" value="8" class="cyber-slider">
+                            <span class="slider-hint">Polynomial features, interaction terms & vector scaling</span>
+                        </div>
+
+                        <!-- Slider 2 -->
+                        <div class="control-slider-group">
+                            <div class="slider-header">
+                                <label for="param-samples">Training Sample Density</label>
+                                <span class="slider-value" id="val-samples">15,000 pts</span>
+                            </div>
+                            <input type="range" id="param-samples" min="1000" max="30000" step="1000" value="15000" class="cyber-slider">
+                            <span class="slider-hint">Synthetic training distribution volume for gradient descent</span>
+                        </div>
+
+                        <!-- Slider 3 -->
+                        <div class="control-slider-group">
+                            <div class="slider-header">
+                                <label for="param-reg">Regularization Penalty (&lambda;)</label>
+                                <span class="slider-value" id="val-reg">0.050</span>
+                            </div>
+                            <input type="range" id="param-reg" min="1" max="100" value="50" class="cyber-slider">
+                            <span class="slider-hint">L2 ridge penalty mitigating variance and overfitting</span>
+                        </div>
+
+                        <!-- Slider 4 -->
+                        <div class="control-slider-group">
+                            <div class="slider-header">
+                                <label for="param-noise">Tolerance / Noise Margin</label>
+                                <span class="slider-value" id="val-noise">8%</span>
+                            </div>
+                            <input type="range" id="param-noise" min="0" max="30" value="8" class="cyber-slider">
+                            <span class="slider-hint">Stochastic perturbation threshold in training loss</span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="playground-actions-row">
+                            <button type="button" class="btn btn-primary" id="btn-run-benchmark">
+                                <span>⚡ Benchmark (<span id="benchmark-latency-text">&lt; 3ms</span>)</span>
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="btn-reset-model">
+                                <span>↺ Reset Defaults</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Real-time Telemetry & Dynamic Predictive Gauges -->
+                    <div class="playground-telemetry-panel">
+                        <h3 class="panel-heading">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 2c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm6 12H6v-1c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1z"/></svg>
+                            Real-Time Inference Telemetry
+                        </h3>
+
+                        <!-- Circular Gauge Visualization -->
+                        <div class="gauge-display-wrapper">
+                            <div class="circular-gauge-container">
+                                <svg class="gauge-svg" viewBox="0 0 200 120">
+                                    <!-- Gauge Background Arc -->
+                                    <path class="gauge-bg-arc" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke-width="14" stroke-linecap="round"/>
+                                    <!-- Gauge Active Dynamic Value Arc -->
+                                    <path class="gauge-fill-arc" id="gauge-fill-arc" d="M 20 100 A 80 80 0 0 1 180 100" fill="none" stroke-width="14" stroke-linecap="round" stroke-dasharray="251.2" stroke-dashoffset="25"/>
+                                </svg>
+                                <div class="gauge-text-overlay">
+                                    <span class="gauge-score-val" id="model-score-display">96.8%</span>
+                                    <span class="gauge-score-label">MODEL EFFICIENCY</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 4-Stat Telemetry Grid -->
+                        <div class="model-metrics-grid">
+                            <div class="metric-box">
+                                <span class="metric-label">INFERENCE TIME</span>
+                                <strong class="metric-value text-teal" id="metric-latency">1.8 ms</strong>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-label">CONFIDENCE</span>
+                                <strong class="metric-value text-accent" id="metric-confidence">98.4%</strong>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-label">GENERALIZATION LOSS</span>
+                                <strong class="metric-value text-emerald" id="metric-loss">0.016</strong>
+                            </div>
+                            <div class="metric-box">
+                                <span class="metric-label">CONVERGENCE STATE</span>
+                                <strong class="metric-value text-optimal" id="metric-status">OPTIMAL</strong>
+                            </div>
+                        </div>
+
+                        <!-- Feature Importance Distribution -->
+                        <div class="feature-importance-box">
+                            <div class="importance-title">Feature Contribution Matrix</div>
+                            <div class="feature-bar-row">
+                                <div class="feature-name">Data Sanitization</div>
+                                <div class="feature-track">
+                                    <div class="feature-fill" id="feat-bar-1" style="width: 88%;"></div>
+                                </div>
+                                <div class="feature-pct" id="feat-pct-1">88%</div>
+                            </div>
+                            <div class="feature-bar-row">
+                                <div class="feature-name">Polynomial Expansion</div>
+                                <div class="feature-track">
+                                    <div class="feature-fill" id="feat-bar-2" style="width: 94%;"></div>
+                                </div>
+                                <div class="feature-pct" id="feat-pct-2">94%</div>
+                            </div>
+                            <div class="feature-bar-row">
+                                <div class="feature-name">Vector Normalization</div>
+                                <div class="feature-track">
+                                    <div class="feature-fill" id="feat-bar-3" style="width: 82%;"></div>
+                                </div>
+                                <div class="feature-pct" id="feat-pct-3">82%</div>
+                            </div>
+                            <div class="feature-bar-row">
+                                <div class="feature-name">L2 Regularization</div>
+                                <div class="feature-track">
+                                    <div class="feature-fill" id="feat-bar-4" style="width: 76%;"></div>
+                                </div>
+                                <div class="feature-pct" id="feat-pct-4">76%</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==========================================================================
        VERIFIED CREDENTIALS / CERTIFICATIONS SECTION
        ========================================================================== -->
     <section class="section" id="certifications">
@@ -458,6 +871,26 @@
                 <h2 class="section-title">Recent Works</h2>
             </div>
 
+            <!-- Dynamic Project Search & IT View Controls -->
+            <div class="projects-controls-bar">
+                <div class="project-search-wrap">
+                    <svg class="search-icon" viewBox="0 0 24 24"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                    <input type="text" id="project-search-input" class="project-search-input" placeholder="Search 10+ modules by tech (Python, Three.js, Supabase, API) or keyword..." autocomplete="off">
+                    <button type="button" class="search-clear-btn" id="search-clear-btn" aria-label="Clear Search" style="display: none;">&times;</button>
+                </div>
+
+                <div class="view-mode-toggle" title="Switch View Mode">
+                    <button type="button" class="view-btn active" id="view-grid-btn" data-view="grid" aria-label="Card Grid View">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        <span>Card Grid</span>
+                    </button>
+                    <button type="button" class="view-btn" id="view-table-btn" data-view="table" aria-label="IT Ops Table View">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                        <span>IT Ops Table</span>
+                    </button>
+                </div>
+            </div>
+
             <!-- Dynamic category filter buttons -->
             <div class="projects-filter">
                 <button class="filter-btn active" data-filter="all">All Specs</button>
@@ -472,15 +905,25 @@
                     <span class="status-dot pulsing" id="sync-status-dot"></span>
                     <span class="status-text" id="sync-status-text">GitHub API: Connected</span>
                 </div>
-                <button class="btn-sync" id="github-sync-btn" title="Sync live repositories from GitHub">
-                    <svg class="sync-icon" viewBox="0 0 24 24" id="sync-btn-icon"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 6.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
-                    <span>Sync Live Data</span>
-                </button>
+                <div class="sync-actions-group">
+                    <span class="projects-count-indicator" id="projects-count-indicator">
+                        Showing <strong>13</strong> active modules
+                    </span>
+                    <button class="btn-sync" id="github-sync-btn" title="Sync live repositories from GitHub">
+                        <svg class="sync-icon" viewBox="0 0 24 24" id="sync-btn-icon"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 6.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3c-3.31 0-6-2.69-6-6z"/></svg>
+                        <span>Sync Live Data</span>
+                    </button>
+                </div>
             </div>
 
             <!-- Projects Grid Container for app.js rendering -->
-            <div class="projects-grid scroll-reveal">
+            <div class="projects-grid scroll-reveal" id="projects-grid">
                 <!-- Javascript will inject cards dynamically here -->
+            </div>
+
+            <!-- IT Ops Table View Container (toggled via button) -->
+            <div class="projects-table-wrapper" id="projects-table-container" style="display: none;">
+                <!-- Javascript will inject table rows dynamically here -->
             </div>
         </div>
     </section>
@@ -703,6 +1146,12 @@
                     </div>
                 </div>
                 <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <button class="nova-train-btn" id="nova-train-btn" aria-label="Open Nova AI Training Studio" title="Train Nova Dynamically">
+                        <svg viewBox="0 0 24 24" style="width: 17px; height: 17px; fill: currentColor;">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/>
+                        </svg>
+                        <span class="train-badge">TRAIN</span>
+                    </button>
                     <button class="nova-voice-btn" id="nova-voice-btn" aria-label="Toggle Voice Mute" title="Mute/Unmute Nova's Voice">
                         <!-- Volume High Icon -->
                         <svg class="volume-up-icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; fill: currentColor;">
@@ -725,7 +1174,7 @@
             <div class="nova-messages" id="nova-messages">
                 <div class="nova-message-bubble assistant">
                     <div class="message-content">
-                        Hello! I am <strong>Nova</strong>, Aayush's personal AI assistant. Ask me anything about his skills, machine learning projects, internship experience, or how to contact him!
+                        Hello! I am <strong>Nova</strong>, Aayush's personal AI assistant. Ask me anything about his skills, machine learning projects, internship experience, or how to contact him! You can also click the <strong>TRAIN</strong> button above to teach me dynamically.
                     </div>
                     <span class="message-time">Just now</span>
                 </div>
@@ -755,7 +1204,194 @@
                 </button>
             </form>
         </div>
+
+        <!-- Nova Dynamic AI Training Studio Modal/Drawer -->
+        <div class="nova-training-modal" id="nova-training-modal" aria-hidden="true">
+            <div class="training-modal-content">
+                <div class="training-header">
+                    <div class="training-title-wrap">
+                        <div class="training-brain-icon">
+                            <svg viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a9 9 0 0 0-9 9c0 3.6 2.1 6.7 5.2 8.1l.8-1.8A7.03 7.03 0 0 1 5 11a7 7 0 1 1 14 0c0 2.8-1.7 5.3-4.2 6.3l.8 1.8c3.1-1.4 5.2-4.5 5.2-8.1a9 9 0 0 0-9-9zm-1 5v4.27l3.7 2.14.75-1.3-3-1.73V7H11z"/></svg>
+                        </div>
+                        <div>
+                            <h3>Nova Training Studio</h3>
+                            <span class="training-subtitle">Teach Nova new skills & knowledge dynamically in real-time</span>
+                        </div>
+                    </div>
+                    <button class="training-close-btn" id="training-close-btn" aria-label="Close Training Studio">&times;</button>
+                </div>
+
+                <!-- Training Tabs -->
+                <div class="training-tabs">
+                    <button class="training-tab-btn active" data-tab="teach">➕ Teach Nova</button>
+                    <button class="training-tab-btn" data-tab="knowledge">🧠 Knowledge Graph (<span id="knowledge-count">0</span>)</button>
+                    <button class="training-tab-btn" data-tab="test">🧪 Live Test Bench</button>
+                    <button class="training-tab-btn" data-tab="data">💾 Datasets & Export</button>
+                </div>
+
+                <!-- Tab 1: Teach Nova -->
+                <div class="training-tab-pane active" id="tab-teach">
+                    <form class="training-form" id="nova-train-form">
+                        <div class="form-group">
+                            <label for="train-intent">User Question / Topic Prompt</label>
+                            <input type="text" id="train-intent" placeholder="e.g. What is Aayush's experience with Deep Learning and CNNs?" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="train-response">Nova's Dynamic Response</label>
+                            <textarea id="train-response" rows="3" placeholder="e.g. Aayush builds computer vision models using PyTorch, Scikit-Learn, and lightweight ONNX pipelines..." required></textarea>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label for="train-category">Category</label>
+                                <select id="train-category">
+                                    <option value="ai-ml">AI & Machine Learning</option>
+                                    <option value="projects">Projects & Code</option>
+                                    <option value="experience">Internship & Experience</option>
+                                    <option value="education">Academics & Education</option>
+                                    <option value="interview">Interview & Availability</option>
+                                    <option value="general">General / Custom</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label for="train-tags">Keywords (comma separated)</label>
+                                <input type="text" id="train-tags" placeholder="e.g. deep learning, pytorch, cnn, transformers">
+                            </div>
+                        </div>
+                        <div class="training-actions">
+                            <button type="submit" class="btn btn-primary training-submit-btn">
+                                <span class="btn-sparkle">⚡</span> Train Nova Now
+                            </button>
+                            <span class="training-status-msg" id="training-status-msg"></span>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tab 2: Knowledge Base List -->
+                <div class="training-tab-pane" id="tab-knowledge">
+                    <div class="knowledge-controls">
+                        <input type="text" id="knowledge-search" placeholder="Search active knowledge nodes...">
+                        <button type="button" class="btn-sm btn-ghost" id="reload-dom-knowledge-btn" title="Re-scrape current page">🔄 Sync DOM Knowledge</button>
+                    </div>
+                    <div class="knowledge-list" id="knowledge-items-list">
+                        <!-- Rendered dynamically -->
+                    </div>
+                </div>
+
+                <!-- Tab 3: Live Test Bench -->
+                <div class="training-tab-pane" id="tab-test">
+                    <div class="test-bench-wrap">
+                        <label for="test-query-input">Simulate User Query:</label>
+                        <div class="test-input-group">
+                            <input type="text" id="test-query-input" placeholder="Type a test question to evaluate Nova's confidence...">
+                            <button type="button" class="btn btn-primary" id="run-test-btn">Evaluate</button>
+                        </div>
+                        <div class="test-results" id="test-results-panel" style="display: none;">
+                            <div class="confidence-bar-wrap">
+                                <div class="confidence-label">
+                                    <span>Confidence Match:</span>
+                                    <strong id="test-confidence-pct">0%</strong>
+                                </div>
+                                <div class="confidence-meter-bg">
+                                    <div class="confidence-meter-fill" id="test-confidence-fill" style="width: 0%;"></div>
+                                </div>
+                            </div>
+                            <div class="test-detail-box">
+                                <span class="test-detail-title">Matched Knowledge Source:</span>
+                                <p id="test-matched-source" class="test-source-tag"></p>
+                                <span class="test-detail-title">Predicted Response:</span>
+                                <div id="test-predicted-response" class="test-predicted-content"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab 4: Datasets & Export/Import -->
+                <div class="training-tab-pane" id="tab-data">
+                    <div class="data-mgmt-section">
+                        <h4>Pre-Loaded Training Packs</h4>
+                        <p class="data-mgmt-desc">Inject pre-curated deep technical Q&A packs directly into Nova's neural memory.</p>
+                        <div class="dataset-cards">
+                            <div class="dataset-card">
+                                <div>
+                                    <h5>AI/ML Deep-Dive Pack</h5>
+                                    <span>10 in-depth Q&A on model training, scikit-learn, math & metrics</span>
+                                </div>
+                                <button type="button" class="btn-sm btn-primary" id="load-pack-aiml">Load Pack</button>
+                            </div>
+                            <div class="dataset-card">
+                                <div>
+                                    <h5>Recruiter & Interview FAQ Pack</h5>
+                                    <span>Availability, relocation, remote work, graduation timeline & strengths</span>
+                                </div>
+                                <button type="button" class="btn-sm btn-primary" id="load-pack-interview">Load Pack</button>
+                            </div>
+                        </div>
+
+                        <h4 style="margin-top: 1.5rem;">Backup & Portability</h4>
+                        <div class="data-actions-row">
+                            <button type="button" class="btn btn-secondary" id="export-knowledge-btn">📥 Export Knowledge (JSON)</button>
+                            <label class="btn btn-secondary" style="cursor: pointer; margin: 0;">
+                                📤 Import Knowledge (JSON)
+                                <input type="file" id="import-knowledge-file" accept=".json" style="display: none;">
+                            </label>
+                            <button type="button" class="btn btn-danger-ghost" id="reset-knowledge-btn">⚠️ Reset Custom Training</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <!-- ==========================================================================
+       DEVELOPER CLI TERMINAL DRAWER (IT SECTOR CONSOLE)
+       ========================================================================== -->
+    <div class="dev-terminal-drawer" id="dev-terminal-drawer" aria-hidden="true">
+        <div class="terminal-overlay-backdrop" id="terminal-backdrop"></div>
+        <div class="terminal-window">
+            <div class="terminal-header">
+                <div class="terminal-controls">
+                    <span class="term-btn term-close" id="term-close-btn" title="Close [ESC]"></span>
+                    <span class="term-btn term-min" id="term-min-btn"></span>
+                    <span class="term-btn term-max" id="term-max-btn"></span>
+                </div>
+                <div class="terminal-title">
+                    <span class="term-icon">&gt;_</span> aayush@portfolio-core:~$ (bash)
+                </div>
+                <div class="terminal-status-tag">STATUS: ONLINE</div>
+            </div>
+
+            <div class="terminal-screen" id="terminal-screen">
+                <div class="terminal-history" id="terminal-history">
+                    <div class="term-line term-welcome">
+                        <pre class="term-ascii">
+   _____  ___  _____ _____  _   _   ___   ____  ______ _   _ 
+  / _ \ \/ / |/ / __/  _  \| | | | / _ \ / ___||  ___/| | | |
+ / /_\ \  /| ' /\__ \ /_\  | | | |/ /_\ \\___ \| |__  | |_| |
+/_/   \_//_/|_/ /___//_/ \_\ \_/ /_/   \_|____/|____/  \__,_|
+                        </pre>
+                        <p class="term-muted">IT Systems Terminal [Version 2.5.0-Release]</p>
+                        <p class="term-muted">Interactive Developer Shell. Type <strong class="term-highlight">help</strong> for a list of commands, or press <strong class="term-highlight">ESC</strong> to exit.</p>
+                        <p class="term-muted">Try commands: <span class="term-cmd-chip" data-cmd="projects">projects</span>, <span class="term-cmd-chip" data-cmd="skills">skills</span>, <span class="term-cmd-chip" data-cmd="model">model</span>, <span class="term-cmd-chip" data-cmd="system">system</span>, <span class="term-cmd-chip" data-cmd="certs">certs</span>, <span class="term-cmd-chip" data-cmd="sudo hire-aayush">sudo hire-aayush</span></p>
+                    </div>
+                </div>
+
+                <!-- Active Prompt Line -->
+                <form class="terminal-prompt-form" id="terminal-prompt-form">
+                    <span class="term-user">guest@aayush.dev</span><span class="term-sep">:</span><span class="term-path">~$</span>
+                    <input type="text" id="terminal-input" class="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Developer Terminal Launcher Button -->
+    <button class="floating-cli-trigger" id="floating-cli-trigger" aria-label="Open Developer CLI Terminal" title="Developer CLI Terminal (Ctrl+\)">
+        <span class="cli-icon-wrap">
+            <span class="cli-prompt-symbol">&gt;_</span>
+        </span>
+        <span class="cli-trigger-text">CLI</span>
+        <span class="cli-shortcut-hint">Ctrl+\</span>
+    </button>
 
     <!-- Core Javascript Files -->
     <script src="js/neural-bg.js"></script>
