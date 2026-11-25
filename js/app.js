@@ -12,7 +12,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initDynamicAvatar();
     initTelemetryBar();
     initSkillsSearch();
-    initModelPlayground();
     initDeveloperTerminal();
     initGlobalShortcuts();
 });
@@ -1187,187 +1186,6 @@ function initSkillsSearch() {
 }
 
 /* ==========================================================================
-   CLIENT-SIDE AI/ML MODEL PLAYGROUND (FULL EFFICIENT MODEL)
-   ========================================================================== */
-function initModelPlayground() {
-    const paramFeatures = document.getElementById('param-features');
-    const paramSamples = document.getElementById('param-samples');
-    const paramReg = document.getElementById('param-reg');
-    const paramNoise = document.getElementById('param-noise');
-
-    const valFeatures = document.getElementById('val-features');
-    const valSamples = document.getElementById('val-samples');
-    const valReg = document.getElementById('val-reg');
-    const valNoise = document.getElementById('val-noise');
-
-    const scoreDisplay = document.getElementById('model-score-display');
-    const gaugeFillArc = document.getElementById('gauge-fill-arc');
-    const metricLatency = document.getElementById('metric-latency');
-    const metricConfidence = document.getElementById('metric-confidence');
-    const metricLoss = document.getElementById('metric-loss');
-    const metricStatus = document.getElementById('metric-status');
-
-    const featBar1 = document.getElementById('feat-bar-1');
-    const featBar2 = document.getElementById('feat-bar-2');
-    const featBar3 = document.getElementById('feat-bar-3');
-    const featBar4 = document.getElementById('feat-bar-4');
-
-    const featPct1 = document.getElementById('feat-pct-1');
-    const featPct2 = document.getElementById('feat-pct-2');
-    const featPct3 = document.getElementById('feat-pct-3');
-    const featPct4 = document.getElementById('feat-pct-4');
-
-    const presetBtns = document.querySelectorAll('.preset-btn');
-    const runBenchBtn = document.getElementById('btn-run-benchmark');
-    const resetBtn = document.getElementById('btn-reset-model');
-
-    if (!paramFeatures || !gaugeFillArc) return;
-
-    // Presets definitions
-    const presets = {
-        classifier: { features: 8, samples: 15000, reg: 50, noise: 8 },
-        balanced: { features: 6, samples: 10000, reg: 40, noise: 12 },
-        highspeed: { features: 4, samples: 4000, reg: 70, noise: 18 }
-    };
-
-    // Calculate dynamic inference state
-    function evaluateModel(manualLatency = null) {
-        const startTime = performance.now();
-
-        const f = parseInt(paramFeatures.value);
-        const s = parseInt(paramSamples.value);
-        const r = parseInt(paramReg.value);
-        const n = parseInt(paramNoise.value);
-
-        // Update value displays
-        if (valFeatures) valFeatures.textContent = `${f} / 10`;
-        if (valSamples) valSamples.textContent = `${s.toLocaleString()} pts`;
-        if (valReg) valReg.textContent = (r / 1000).toFixed(3);
-        if (valNoise) valNoise.textContent = `${n}%`;
-
-        // Synthetic Model Accuracy / Efficiency formulation
-        let rawScore = 75.0 + (f * 1.9) + (Math.log10(s) * 2.8) - (r * 0.065) - (n * 0.48);
-        const score = Math.min(99.4, Math.max(68.0, rawScore));
-
-        // Gauge arc offset calculation (circumference of arc is 251.2)
-        const circumference = 251.2;
-        const fillOffset = circumference * (1 - (score / 100));
-        gaugeFillArc.style.strokeDashoffset = fillOffset.toFixed(1);
-
-        if (scoreDisplay) {
-            scoreDisplay.textContent = `${score.toFixed(1)}%`;
-        }
-
-        // Feature Importance calculation
-        const p1 = Math.min(98, Math.round(72 + f * 2.2 - n * 0.3));
-        const p2 = Math.min(99, Math.round(68 + f * 3.0 - r * 0.12));
-        const p3 = Math.min(96, Math.round(62 + Math.log10(s) * 7.0));
-        const p4 = Math.min(94, Math.round(48 + r * 0.45));
-
-        if (featBar1) featBar1.style.width = `${p1}%`;
-        if (featPct1) featPct1.textContent = `${p1}%`;
-
-        if (featBar2) featBar2.style.width = `${p2}%`;
-        if (featPct2) featPct2.textContent = `${p2}%`;
-
-        if (featBar3) featBar3.style.width = `${p3}%`;
-        if (featPct3) featPct3.textContent = `${p3}%`;
-
-        if (featBar4) featBar4.style.width = `${p4}%`;
-        if (featPct4) featPct4.textContent = `${p4}%`;
-
-        // Telemetry metrics
-        const endTime = performance.now();
-        const calcTime = manualLatency !== null ? manualLatency : Math.max(1.2, parseFloat((endTime - startTime + Math.random() * 0.8).toFixed(1)));
-        
-        if (metricLatency) metricLatency.textContent = `${calcTime} ms`;
-        if (metricConfidence) metricConfidence.textContent = `${(score * 0.992).toFixed(1)}%`;
-        
-        const loss = Math.max(0.006, parseFloat((1 - (score / 100) * 0.98 + (n * 0.001)).toFixed(3)));
-        if (metricLoss) metricLoss.textContent = loss.toFixed(3);
-
-        if (metricStatus) {
-            if (score > 92) {
-                metricStatus.textContent = 'OPTIMAL';
-                metricStatus.className = 'metric-value text-optimal';
-            } else if (score > 80) {
-                metricStatus.textContent = 'CONVERGED';
-                metricStatus.className = 'metric-value text-teal';
-            } else {
-                metricStatus.textContent = 'SUB-OPTIMAL';
-                metricStatus.className = 'metric-value text-accent';
-            }
-        }
-    }
-
-    // Attach slider listeners
-    [paramFeatures, paramSamples, paramReg, paramNoise].forEach(slider => {
-        slider.addEventListener('input', () => {
-            evaluateModel();
-        });
-    });
-
-    // Attach preset button listeners
-    presetBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            presetBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-
-            const presetKey = btn.getAttribute('data-preset');
-            const p = presets[presetKey];
-            if (p) {
-                paramFeatures.value = p.features;
-                paramSamples.value = p.samples;
-                paramReg.value = p.reg;
-                paramNoise.value = p.noise;
-                evaluateModel();
-                showToast(`Model Preset Applied: ${btn.textContent}`, "success");
-            }
-        });
-    });
-
-    // Benchmark button
-    if (runBenchBtn) {
-        runBenchBtn.addEventListener('click', () => {
-            runBenchBtn.disabled = true;
-            const benchLed = document.getElementById('model-engine-led');
-            if (benchLed) benchLed.className = 'status-led blue';
-
-            const startBench = performance.now();
-            // Perform 25,000 synthetic vector dot-products to measure browser speed
-            let accum = 0;
-            for (let i = 0; i < 25000; i++) {
-                accum += Math.sin(i) * Math.cos(i);
-            }
-            const benchDuration = Math.max(1.1, parseFloat((performance.now() - startBench).toFixed(2)));
-
-            setTimeout(() => {
-                evaluateModel(benchDuration);
-                if (benchLed) benchLed.className = 'status-led green';
-                runBenchBtn.disabled = false;
-                showToast(`Benchmark Completed: 25k iterations in ${benchDuration}ms!`, "success");
-            }, 300);
-        });
-    }
-
-    // Reset button
-    if (resetBtn) {
-        resetBtn.addEventListener('click', () => {
-            paramFeatures.value = 8;
-            paramSamples.value = 15000;
-            paramReg.value = 50;
-            paramNoise.value = 8;
-            presetBtns.forEach((b, idx) => b.classList.toggle('active', idx === 0));
-            evaluateModel();
-            showToast("Model Hyperparameters Reset to Defaults", "success");
-        });
-    }
-
-    // Initial evaluation
-    evaluateModel();
-}
-
-/* ==========================================================================
    DEVELOPER CLI TERMINAL (IT SECTOR CONSOLE)
    ========================================================================== */
 function initDeveloperTerminal() {
@@ -1474,7 +1292,6 @@ function initDeveloperTerminal() {
                     <div style="display:grid; grid-template-columns: 160px 1fr; gap: 0.35rem 1rem; margin-top: 0.4rem; font-size: 0.82rem;">
                         <span class="term-highlight">projects</span><span>List production modules & open live prototypes</span>
                         <span class="term-highlight">skills</span><span>Print categorized tech stack & toolkit</span>
-                        <span class="term-highlight">model [bench]</span><span>Inspect or benchmark in-browser ML inference model</span>
                         <span class="term-highlight">system</span><span>Print host telemetry, environment, and latency</span>
                         <span class="term-highlight">certs</span><span>List verified certifications with verify links</span>
                         <span class="term-highlight">contact</span><span>Display communication gateway channels</span>
@@ -1506,23 +1323,6 @@ function initDeveloperTerminal() {
                     <p>• <strong>Software Engineering:</strong> JavaScript (ES6+), TypeScript, React, Django, Flask, Node.js, HTML5/CSS3, Three.js WebGL, Java, C</p>
                     <p>• <strong>Cloud, DevSecOps & DBs:</strong> Azure, AWS, GCP, Supabase (PostgreSQL), MongoDB, MySQL, SAST Alert Triage, Git/GitHub Actions</p>
                 `);
-                break;
-
-            case 'model':
-                if (arg1 === 'run' || arg1 === 'bench' || arg1 === 'benchmark') {
-                    appendOutput(`<p class="term-highlight">Executing in-browser ML model benchmark...</p>`);
-                    const startBench = performance.now();
-                    let accum = 0;
-                    for (let i = 0; i < 20000; i++) accum += Math.sin(i);
-                    const dur = Math.max(1.1, parseFloat((performance.now() - startBench).toFixed(2)));
-                    appendOutput(`<p class="term-success">[SUCCESS] 20,000 algorithmic cycles completed in ${dur}ms. Status: OPTIMAL.</p>`);
-                } else {
-                    appendOutput(`
-                        <p class="term-highlight"><strong>CLIENT-SIDE ML MODEL ENGINE:</strong></p>
-                        <p>Status: ACTIVE | Framework: Client-Side Vector Math / ONNX</p>
-                        <p>Run <span class="term-cmd-chip" data-cmd="model bench">model bench</span> or navigate to <a href="#model-playground" style="color:var(--primary-light); text-decoration:underline;">#model-playground</a> to adjust live hyperparameters.</p>
-                    `);
-                }
                 break;
 
             case 'system':
