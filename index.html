@@ -42,6 +42,10 @@
                 <span class="telemetry-val" id="telemetry-clock">--:--:-- UTC</span>
             </div>
             <div class="telemetry-actions">
+                <button type="button" class="btn-telemetry-history" id="telemetry-history-btn" title="View Session & Viewer History (Press H)">
+                    <span class="history-eye-icon">👁</span> History
+                    <span class="history-count-pill" id="viewer-history-count">1</span>
+                </button>
                 <button type="button" class="btn-telemetry-cli" id="telemetry-cli-btn" title="Launch Developer Terminal (Press Ctrl+\)">
                     <span class="prompt-icon">&gt;_</span> CLI
                 </button>
@@ -1168,6 +1172,64 @@
     </div>
 
     <!-- ==========================================================================
+       VIEWER HISTORY & SESSION TELEMETRY DRAWER
+       ========================================================================== -->
+    <div class="viewer-history-drawer" id="viewer-history-drawer" aria-hidden="true">
+        <div class="vh-overlay-backdrop" id="vh-backdrop"></div>
+        <div class="vh-window">
+            <div class="vh-header">
+                <div class="vh-title-group">
+                    <span class="status-led green"></span>
+                    <h3>Viewer History &amp; Session Telemetry</h3>
+                </div>
+                <div class="vh-header-actions">
+                    <button type="button" class="btn-sm btn-danger-ghost" id="vh-clear-btn" title="Reset stored viewer history">Clear History</button>
+                    <button type="button" class="vh-close-btn" id="vh-close-btn" aria-label="Close Viewer History">&times;</button>
+                </div>
+            </div>
+
+            <div class="vh-body">
+                <div class="vh-stats-grid">
+                    <div class="vh-stat-card">
+                        <span class="vh-stat-label">TOTAL VISITS</span>
+                        <strong class="vh-stat-val" id="vh-total-visits">1</strong>
+                    </div>
+                    <div class="vh-stat-card">
+                        <span class="vh-stat-label">SECTIONS EXPLORED</span>
+                        <strong class="vh-stat-val" id="vh-sections-count">0</strong>
+                    </div>
+                    <div class="vh-stat-card">
+                        <span class="vh-stat-label">PROJECTS VIEWED</span>
+                        <strong class="vh-stat-val" id="vh-projects-count">0</strong>
+                    </div>
+                    <div class="vh-stat-card">
+                        <span class="vh-stat-label">SESSION DURATION</span>
+                        <strong class="vh-stat-val" id="vh-session-duration">0s</strong>
+                    </div>
+                </div>
+
+                <div class="vh-section-block">
+                    <div class="vh-block-header">
+                        <h4>Recently Viewed Projects</h4>
+                        <span class="vh-sub-hint">Click to reopen specs</span>
+                    </div>
+                    <div class="vh-recent-projects" id="vh-recent-projects">
+                        <span class="vh-empty-msg">No projects inspected yet. Open any project card to log it here.</span>
+                    </div>
+                </div>
+
+                <div class="vh-section-block">
+                    <div class="vh-block-header">
+                        <h4>Activity Timeline</h4>
+                        <span class="vh-sub-hint" id="vh-last-visit-label">Current Session</span>
+                    </div>
+                    <div class="vh-timeline-list" id="vh-timeline-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================================================
        DEVELOPER CLI TERMINAL DRAWER (IT SECTOR CONSOLE)
        ========================================================================== -->
     <div class="dev-terminal-drawer" id="dev-terminal-drawer" aria-hidden="true">
@@ -1189,14 +1251,14 @@
                 <div class="terminal-history" id="terminal-history">
                     <div class="term-line term-welcome">
                         <pre class="term-ascii">
-   _____  ___  _____ _____  _   _   ___   ____  ______ _   _ 
-  / _ \ \/ / |/ / __/  _  \| | | | / _ \ / ___||  ___/| | | |
- / /_\ \  /| ' /\__ \ /_\  | | | |/ /_\ \\___ \| |__  | |_| |
-/_/   \_//_/|_/ /___//_/ \_\ \_/ /_/   \_|____/|____/  \__,_|
+   ___       ___    __   __  _   _   ____    _   _ 
+  / _ \     / _ \   \ \ / / | | | | / ___|  | | | |
+ / /_\ \   / /_\ \   \ V /  | |_| | \___ \  | |_| |
+/_/   \_\ /_/   \_\   \_/    \___/  |____/  |_| |_|
                         </pre>
                         <p class="term-muted">IT Systems Terminal [Version 2.5.0-Release]</p>
                         <p class="term-muted">Interactive Developer Shell. Type <strong class="term-highlight">help</strong> for a list of commands, or press <strong class="term-highlight">ESC</strong> to exit.</p>
-                        <p class="term-muted">Try commands: <span class="term-cmd-chip" data-cmd="projects">projects</span>, <span class="term-cmd-chip" data-cmd="skills">skills</span>, <span class="term-cmd-chip" data-cmd="system">system</span>, <span class="term-cmd-chip" data-cmd="certs">certs</span>, <span class="term-cmd-chip" data-cmd="sudo hire-aayush">sudo hire-aayush</span></p>
+                        <p class="term-muted">Try commands: <span class="term-cmd-chip" data-cmd="projects">projects</span>, <span class="term-cmd-chip" data-cmd="skills">skills</span>, <span class="term-cmd-chip" data-cmd="history">history</span>, <span class="term-cmd-chip" data-cmd="system">system</span>, <span class="term-cmd-chip" data-cmd="certs">certs</span>, <span class="term-cmd-chip" data-cmd="sudo hire-aayush">sudo hire-aayush</span></p>
                     </div>
                 </div>
 

@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDynamicAvatar();
     initTelemetryBar();
     initSkillsSearch();
+    initViewerHistory();
     initDeveloperTerminal();
     initGlobalShortcuts();
 });
@@ -47,6 +48,9 @@ function initTheme() {
         
         // Re-draw canvas elements if any
         triggerThemeChangeEvents(newTheme);
+        if (typeof window.recordViewerEvent === 'function') {
+            window.recordViewerEvent('theme', 'Theme Switched', `Mode changed to ${newTheme.toUpperCase()}`);
+        }
     });
 }
 
@@ -529,6 +533,10 @@ function openProjectModal(projectId) {
     // Open Modal
     modalOverlay.classList.add('open');
     document.body.classList.add('modal-open');
+
+    if (typeof window.recordProjectView === 'function') {
+        window.recordProjectView(project);
+    }
 }
 
 function closeModal() {
@@ -1186,6 +1194,258 @@ function initSkillsSearch() {
 }
 
 /* ==========================================================================
+   VIEWER HISTORY & SESSION TELEMETRY
+   ========================================================================== */
+function initViewerHistory() {
+    const STORAGE_KEY = 'aayush_viewer_history_v1';
+    const sessionStart = Date.now();
+
+    const drawer = document.getElementById('viewer-history-drawer');
+    const backdrop = document.getElementById('vh-backdrop');
+    const closeBtn = document.getElementById('vh-close-btn');
+    const clearBtn = document.getElementById('vh-clear-btn');
+    const triggerBtn = document.getElementById('telemetry-history-btn');
+    const countPill = document.getElementById('viewer-history-count');
+
+    const totalVisitsEl = document.getElementById('vh-total-visits');
+    const sectionsCountEl = document.getElementById('vh-sections-count');
+    const projectsCountEl = document.getElementById('vh-projects-count');
+    const sessionDurationEl = document.getElementById('vh-session-duration');
+    const recentProjectsEl = document.getElementById('vh-recent-projects');
+    const timelineListEl = document.getElementById('vh-timeline-list');
+    const lastVisitLabelEl = document.getElementById('vh-last-visit-label');
+
+    function escapeHtml(str) {
+        return String(str || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;');
+    }
+
+    function loadState() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY);
+            if (raw) {
+                const parsed = JSON.parse(raw);
+                if (parsed && typeof parsed === 'object') {
+                    return {
+                        totalVisits: Number(parsed.totalVisits) || 0,
+                        lastVisit: parsed.lastVisit || null,
+                        sectionsVisited: Array.isArray(parsed.sectionsVisited) ? parsed.sectionsVisited : [],
+                        recentProjects: Array.isArray(parsed.recentProjects) ? parsed.recentProjects : [],
+                        events: Array.isArray(parsed.events) ? parsed.events : []
+                    };
+                }
+            }
+        } catch (e) {
+            console.warn('Unable to read viewer history:', e);
+        }
+        return {
+            totalVisits: 0,
+            lastVisit: null,
+            sectionsVisited: [],
+            recentProjects: [],
+            events: []
+        };
+    }
+
+    let state = loadState();
+    const previousVisit = state.lastVisit;
+
+    function saveState() {
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+        } catch (e) {
+            console.warn('Unable to persist viewer history:', e);
+        }
+    }
+
+    function formatTime(iso) {
+        try {
+            return new Date(iso).toLocaleString([], {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        } catch (e) {
+            return iso;
+        }
+    }
+
+    function formatDuration(ms) {
+        const totalSec = Math.max(0, Math.floor(ms / 1000));
+        const mins = Math.floor(totalSec / 60);
+        const secs = totalSec % 60;
+        return mins > 0 ? `${mins}m ${secs}s` : `${secs}s`;
+    }
+
+    function renderViewerHistory() {
+        if (countPill) countPill.textContent = String(state.totalVisits);
+        if (totalVisitsEl) totalVisitsEl.textContent = String(state.totalVisits);
+        if (sectionsCountEl) sectionsCountEl.textContent = String(state.sectionsVisited.length);
+        if (projectsCountEl) projectsCountEl.textContent = String(state.recentProjects.length);
+        if (sessionDurationEl) sessionDurationEl.textContent = formatDuration(Date.now() - sessionStart);
+        if (lastVisitLabelEl) {
+            lastVisitLabelEl.textContent = previousVisit
+                ? `Previous visit: ${formatTime(previousVisit)}`
+                : 'First recorded session';
+        }
+
+        if (recentProjectsEl) {
+            if (state.recentProjects.length === 0) {
+                recentProjectsEl.innerHTML = '<span class="vh-empty-msg">No projects inspected yet. Open any project card to log it here.</span>';
+            } else {
+                recentProjectsEl.innerHTML = state.recentProjects
+                    .map(p => `<button type="button" class="vh-project-chip" data-project-id="${escapeHtml(p.id)}">
+                        <span>${escapeHtml(p.title)}</span>
+                        <small>${escapeHtml(formatTime(p.timestamp))}</small>
+                    </button>`)
+                    .join('');
+            }
+        }
+
+        if (timelineListEl) {
+            if (state.events.length === 0) {
+                timelineListEl.innerHTML = '<div class="vh-empty-msg">No activity logged yet.</div>';
+            } else {
+                timelineListEl.innerHTML = state.events
+                    .map(ev => `<div class="vh-timeline-item">
+                        <div class="vh-event-dot vh-dot-${escapeHtml(ev.type || 'info')}"></div>
+                        <div class="vh-event-body">
+                            <div class="vh-event-top">
+                                <strong>${escapeHtml(ev.label)}</strong>
+                                <span class="vh-event-time">${escapeHtml(formatTime(ev.timestamp))}</span>
+                            </div>
+                            ${ev.detail ? `<p class="vh-event-detail">${escapeHtml(ev.detail)}</p>` : ''}
+                        </div>
+                    </div>`)
+                    .join('');
+            }
+        }
+    }
+
+    window.recordViewerEvent = function(type, label, detail = '') {
+        state.events.unshift({
+            type,
+            label,
+            detail,
+            timestamp: new Date().toISOString()
+        });
+        if (state.events.length > 40) {
+            state.events = state.events.slice(0, 40);
+        }
+        saveState();
+        renderViewerHistory();
+    };
+
+    window.recordProjectView = function(project) {
+        if (!project || !project.id) return;
+        const now = new Date().toISOString();
+        state.recentProjects = [
+            { id: project.id, title: project.title, timestamp: now },
+            ...state.recentProjects.filter(p => p.id !== project.id)
+        ].slice(0, 8);
+        window.recordViewerEvent('project', `Inspected Project: ${project.title}`, project.architecture || project.category || '');
+    };
+
+    window.getViewerHistorySnapshot = function() {
+        return {
+            ...state,
+            sessionDuration: formatDuration(Date.now() - sessionStart)
+        };
+    };
+
+    window.toggleViewerHistory = function(shouldOpen) {
+        if (!drawer) return;
+        const isOpen = drawer.classList.contains('open');
+        const nextState = shouldOpen !== undefined ? shouldOpen : !isOpen;
+        drawer.classList.toggle('open', nextState);
+        drawer.setAttribute('aria-hidden', (!nextState).toString());
+        if (nextState) {
+            renderViewerHistory();
+        }
+    };
+
+    // Log current visit once on load
+    state.totalVisits += 1;
+    state.lastVisit = new Date().toISOString();
+    const refSource = document.referrer ? document.referrer : 'Direct Navigation';
+    window.recordViewerEvent(
+        'visit',
+        `Session #${state.totalVisits} Started`,
+        `Source: ${refSource} • Viewport: ${window.innerWidth}x${window.innerHeight}`
+    );
+
+    // Track section visits via IntersectionObserver (deduped per session)
+    const sessionSections = new Set();
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) return;
+            const id = entry.target.getAttribute('id');
+            if (!id || sessionSections.has(id)) return;
+            sessionSections.add(id);
+
+            const label = id.charAt(0).toUpperCase() + id.slice(1);
+            if (!state.sectionsVisited.includes(label)) {
+                state.sectionsVisited.push(label);
+            }
+            window.recordViewerEvent('section', `Viewed Section: ${label}`, `#${id}`);
+        });
+    }, { threshold: 0.35 });
+
+    document.querySelectorAll('section[id]').forEach(sec => sectionObserver.observe(sec));
+
+    // Track Resume downloads
+    document.querySelectorAll('a[download]').forEach(link => {
+        link.addEventListener('click', () => {
+            window.recordViewerEvent('resume', 'Downloaded Resume PDF', 'Aayush Agarwal Resume.pdf');
+        });
+    });
+
+    if (triggerBtn) triggerBtn.addEventListener('click', () => window.toggleViewerHistory(true));
+    if (closeBtn) closeBtn.addEventListener('click', () => window.toggleViewerHistory(false));
+    if (backdrop) backdrop.addEventListener('click', () => window.toggleViewerHistory(false));
+
+    if (recentProjectsEl) {
+        recentProjectsEl.addEventListener('click', (e) => {
+            const chip = e.target.closest('.vh-project-chip');
+            if (!chip) return;
+            const pid = chip.getAttribute('data-project-id');
+            window.toggleViewerHistory(false);
+            if (typeof openProjectModal === 'function') {
+                openProjectModal(pid);
+            }
+        });
+    }
+
+    if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+            state = {
+                totalVisits: 1,
+                lastVisit: new Date().toISOString(),
+                sectionsVisited: [],
+                recentProjects: [],
+                events: []
+            };
+            sessionSections.clear();
+            window.recordViewerEvent('visit', 'Viewer History Cleared', 'Started fresh session log');
+            if (typeof showToast === 'function') {
+                showToast('Viewer history cleared.', 'success');
+            }
+        });
+    }
+
+    setInterval(() => {
+        if (drawer && drawer.classList.contains('open') && sessionDurationEl) {
+            sessionDurationEl.textContent = formatDuration(Date.now() - sessionStart);
+        }
+    }, 1000);
+}
+
+/* ==========================================================================
    DEVELOPER CLI TERMINAL (IT SECTOR CONSOLE)
    ========================================================================== */
 function initDeveloperTerminal() {
@@ -1214,6 +1474,9 @@ function initDeveloperTerminal() {
         
         if (nextState) {
             setTimeout(() => input.focus(), 150);
+            if (typeof window.recordViewerEvent === 'function') {
+                window.recordViewerEvent('cli', 'Opened Developer CLI', 'Launched interactive terminal');
+            }
         }
     };
 
@@ -1292,6 +1555,7 @@ function initDeveloperTerminal() {
                     <div style="display:grid; grid-template-columns: 160px 1fr; gap: 0.35rem 1rem; margin-top: 0.4rem; font-size: 0.82rem;">
                         <span class="term-highlight">projects</span><span>List production modules & open live prototypes</span>
                         <span class="term-highlight">skills</span><span>Print categorized tech stack & toolkit</span>
+                        <span class="term-highlight">history</span><span>Show viewer history & session telemetry</span>
                         <span class="term-highlight">system</span><span>Print host telemetry, environment, and latency</span>
                         <span class="term-highlight">certs</span><span>List verified certifications with verify links</span>
                         <span class="term-highlight">contact</span><span>Display communication gateway channels</span>
@@ -1323,6 +1587,22 @@ function initDeveloperTerminal() {
                     <p>• <strong>Software Engineering:</strong> JavaScript (ES6+), TypeScript, React, Django, Flask, Node.js, HTML5/CSS3, Three.js WebGL, Java, C</p>
                     <p>• <strong>Cloud, DevSecOps & DBs:</strong> Azure, AWS, GCP, Supabase (PostgreSQL), MongoDB, MySQL, SAST Alert Triage, Git/GitHub Actions</p>
                 `);
+                break;
+
+            case 'history':
+                if (typeof window.getViewerHistorySnapshot === 'function') {
+                    const snap = window.getViewerHistorySnapshot();
+                    const recent = snap.events.slice(0, 6).map(ev =>
+                        `<li><span class="term-highlight">${ev.label}</span> &mdash; <span class="term-muted">${new Date(ev.timestamp).toLocaleTimeString()}</span></li>`
+                    ).join('');
+                    appendOutput(`
+                        <p class="term-highlight"><strong>VIEWER HISTORY &amp; SESSION TELEMETRY:</strong></p>
+                        <p>• Total Visits: <strong>${snap.totalVisits}</strong> | Sections Explored: <strong>${snap.sectionsVisited.length}</strong> | Projects Viewed: <strong>${snap.recentProjects.length}</strong> | Session: <strong>${snap.sessionDuration}</strong></p>
+                        <ul style="padding-left:1.2rem; margin-top:0.35rem;">${recent || '<li class="term-muted">No events recorded yet.</li>'}</ul>
+                    `);
+                } else {
+                    appendOutput(`<span class="term-warn">Viewer history module unavailable.</span>`);
+                }
                 break;
 
             case 'system':
@@ -1410,8 +1690,13 @@ function initGlobalShortcuts() {
         // Ignore if user is currently typing in an input or textarea (except for escape)
         const isInputFocused = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA');
 
-        // Escape closes any open modal, terminal, or Nova drawer
+        // Escape closes any open modal, viewer history, terminal, or Nova drawer
         if (e.key === 'Escape') {
+            const vhDrawer = document.getElementById('viewer-history-drawer');
+            if (vhDrawer && vhDrawer.classList.contains('open') && typeof window.toggleViewerHistory === 'function') {
+                window.toggleViewerHistory(false);
+                return;
+            }
             const terminal = document.getElementById('dev-terminal-drawer');
             if (terminal && terminal.classList.contains('open')) {
                 toggleTerminal(false);
@@ -1441,6 +1726,9 @@ function initGlobalShortcuts() {
             if (e.key === 't' || e.key === 'T') {
                 e.preventDefault();
                 toggleTerminal();
+            } else if (e.key === 'h' || e.key === 'H') {
+                e.preventDefault();
+                if (typeof window.toggleViewerHistory === 'function') window.toggleViewerHistory();
             } else if (e.key === 'n' || e.key === 'N') {
                 e.preventDefault();
                 const launcher = document.getElementById('nova-launcher');
